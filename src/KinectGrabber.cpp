@@ -23,14 +23,11 @@ typedef pcl::PointCloud<pcl::PointXYZRGB> cloud_t;
 class SimpleKinectGrabber
 {
 public:
-  SimpleKinectGrabber() :
-    thread_(boost::ref(*this))
-  {
-  }
+  SimpleKinectGrabber() 
+    : thread_(boost::ref(*this))
+  { }
 
-  ~SimpleKinectGrabber()
-  {
-  }
+  ~SimpleKinectGrabber() { }
 
   void operator ()()
   {
@@ -90,50 +87,6 @@ public:
 ECTO_CELL(ecto_pcl, SimpleKinectGrabber, "SimpleKinectGrabber", "Simple kinect grabber");
 
 
-struct VoxelGrid
-{
-  static void declare_params(ecto::tendrils& params)
-  {
-    params.declare<float> ("leaf_size", "The size of the leaf(meters), smaller means more points...", 0.05);
-
-  }
-  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
-  {
-    inputs.declare<cloud_t::ConstPtr> ("input", "The cloud to filter");
-    outputs.declare<cloud_t::ConstPtr> ("output", "Filtered cloud.");
-
-  }
-  VoxelGrid() :
-    cloud_out_(new cloud_t)
-  {
-  }
-
-  void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
-  {
-    //set the voxel grid size
-    float leaf_size = params.get<float> ("leaf_size");
-    voxel_grid_.setLeafSize(leaf_size, leaf_size, leaf_size);
-  }
-
-  int process(const tendrils& inputs, tendrils& outputs)
-  {
-    //grab the input cloud
-    cloud_t::ConstPtr cloud = inputs.get<cloud_t::ConstPtr> ("input");
-    //voxel grid filter it.
-    voxel_grid_.setInputCloud(cloud);
-    voxel_grid_.filter(*cloud_out_);
-    //set the output to the voxelized cloud.
-    outputs.get<cloud_t::ConstPtr> ("output") = cloud_out_;
-    return 0;
-  }
-  pcl::VoxelGrid<cloud_t::PointType> voxel_grid_;
-  cloud_t::Ptr cloud_out_;
-
-};
-
-ECTO_CELL(ecto_pcl, VoxelGrid, "VoxelGrid", "Voxel grid filter");
-
-
 struct KinectGrabber
 {
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
@@ -157,39 +110,4 @@ struct KinectGrabber
 };
 
 ECTO_CELL(ecto_pcl, KinectGrabber, "KinectGrabber", "Grabber from kinect");
-
-struct CloudViewer
-{
-  static void declare_params(ecto::tendrils& params)
-  {
-    params.declare<std::string> ("window_name", "The window name", "cloud viewer");
-
-  }
-  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
-  {
-    inputs.declare<cloud_t::ConstPtr> ("input", "The cloud to view");
-    outputs.declare<bool> ("stop", "True if stop requested", false);
-  }
-  void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
-  {
-    viewer_.reset(new pcl::visualization::CloudViewer(params.get<std::string> ("window_name")));
-  }
-  int process(const tendrils& inputs, tendrils& outputs)
-  {
-    if (!viewer_)
-      return 1;
-    cloud_t::ConstPtr cloud = inputs.get<cloud_t::ConstPtr> ("input");
-    if (cloud)
-      viewer_->showCloud(cloud, "cloud");
-    if (viewer_->wasStopped(10))
-      outputs.get<bool> ("stop") = true;
-    return 0;
-  }
-  boost::shared_ptr<pcl::visualization::CloudViewer> viewer_;
-};
-
-ECTO_CELL(ecto_pcl, CloudViewer, "CloudViewer", "Viewer of clouds");
-
-ECTO_DEFINE_MODULE(ecto_pcl)
-{ }
 

@@ -16,6 +16,4 @@ message(STATUS "pcl library  :\n    ${PCL_LIBRARIES}")
 
 include_directories(${PCL_INCLUDE_DIRS})
 
-ectomodule(ecto_pcl pcl.cpp)
-link_ecto(ecto_pcl ${PCL_LIBRARIES})
-install_ecto_module(ecto_pcl)
+add_subdirectory(src)
