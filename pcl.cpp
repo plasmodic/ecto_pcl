@@ -87,6 +87,8 @@ public:
   boost::thread thread_;
 
 };
+ECTO_CELL(ecto_pcl, SimpleKinectGrabber, "SimpleKinectGrabber", "Simple kinect grabber");
+
 
 struct VoxelGrid
 {
@@ -129,6 +131,9 @@ struct VoxelGrid
 
 };
 
+ECTO_CELL(ecto_pcl, VoxelGrid, "VoxelGrid", "Voxel grid filter");
+
+
 struct KinectGrabber
 {
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
@@ -150,6 +155,8 @@ struct KinectGrabber
 
   SimpleKinectGrabber grabber_;
 };
+
+ECTO_CELL(ecto_pcl, KinectGrabber, "KinectGrabber", "Grabber from kinect");
 
 struct CloudViewer
 {
@@ -181,10 +188,8 @@ struct CloudViewer
   boost::shared_ptr<pcl::visualization::CloudViewer> viewer_;
 };
 
-BOOST_PYTHON_MODULE(pcl)
-{
-  ecto::wrap<VoxelGrid>("VoxelGrid", "Does a voxel grid downsampling of a point cloud.");
-  ecto::wrap<KinectGrabber>("KinectGrabber", "This grabs frames from the kinect!!!");
-  ecto::wrap<CloudViewer>("CloudViewer", "View a point cloud.");
-}
+ECTO_CELL(ecto_pcl, CloudViewer, "CloudViewer", "Viewer of clouds");
+
+ECTO_DEFINE_MODULE(ecto_pcl)
+{ }
 

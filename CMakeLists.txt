@@ -1,8 +1,9 @@
-project(pcl)
+cmake_minimum_required(VERSION 2.8)
+project(ecto_pcl)
 
-#http://www.pointclouds.org/downloads/linux.html
-return()
-find_package(PCL)
+find_package(ecto REQUIRED)
+find_package(PCL REQUIRED)
+find_package(OpenCV 2.3.1 EXACT REQUIRED)
 
 if(NOT PCL_FOUND)
 return()
@@ -15,6 +16,6 @@ message(STATUS "pcl library  :\n    ${PCL_LIBRARIES}")
 
 include_directories(${PCL_INCLUDE_DIRS})
 
-ectomodule(pcl pcl.cpp)
-link_ecto(pcl ${PCL_LIBRARIES})
-install_ecto_module(pcl)
+ectomodule(ecto_pcl pcl.cpp)
+link_ecto(ecto_pcl ${PCL_LIBRARIES})
+install_ecto_module(ecto_pcl)
