@@ -9,6 +9,8 @@ if(NOT PCL_FOUND)
 return()
 endif()
 
+set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+ecto_python_env_gen(${CMAKE_BINARY_DIR})
 find_package(Boost COMPONENTS signals thread)
 
 message(STATUS "pcl includes :\n    ${PCL_INCLUDE_DIRS}")
