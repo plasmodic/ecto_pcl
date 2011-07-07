@@ -50,7 +50,7 @@ struct VoxelGrid
     filter_.setInputCloud(*input_);
     filter_.filter(*cloud);
     //set the output.
-    *output_ = (cloud_t::ConstPtr) cloud;
+    *output_ = cloud;
     return 0;
   }
   pcl::VoxelGrid<cloud_t::PointType> filter_;
