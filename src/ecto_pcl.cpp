@@ -7,7 +7,7 @@
 
 namespace bp = boost::python;
 
-#define ENUMVAL(r, data, ELEM) \
+#define ENUMVAL(r, data, ELEM)                              \
   .value(BOOST_PP_STRINGIZE(BOOST_PP_CAT(SACMODEL_, ELEM)), \
          BOOST_PP_CAT(pcl::SACMODEL_, ELEM))
 
@@ -32,11 +32,9 @@ ECTO_DEFINE_MODULE(ecto_pcl)
 { 
   bp::enum_<pcl::SacModel>("SacModel")
     BOOST_PP_SEQ_FOR_EACH(ENUMVAL, ~, MODELTYPES)
+    .export_values()
     ;
     
-  bp::def("showmemodel", &fleh)
-    ;
-
 }
 
 
