@@ -6,7 +6,7 @@
 
 /* enumerations and values to be wrapped */
 #include <pcl/sample_consensus/model_types.h>
-#include <pcl/features/normal_3d.h>
+#include <pcl/kdtree/tree_types.h>
 
 namespace bp = boost::python;
 
