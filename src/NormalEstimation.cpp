@@ -2,10 +2,7 @@
 #include <pcl/features/normal_3d.h>
 
 struct NormalEstimation
-{
-  const static int flann = pcl::KDTREE_FLANN;
-  const static int organized = pcl::KDTREE_ORGANIZED_INDEX;
- 
+{ 
   static void declare_params(ecto::tendrils& params)
   {
     // filter params
