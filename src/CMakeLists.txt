@@ -2,12 +2,12 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 ectomodule(ecto_pcl 
   ecto_pcl.cpp
-  PassThrough.cpp
-  VoxelGrid.cpp
-  ProjectInliers.cpp
   filters/ExtractIndices.cpp
+  filters/PassThrough.cpp
+  filters/ProjectInliers.cpp
+  filters/VoxelGrid.cpp
+  segmentation/SACSegmentation.cpp
   NormalEstimation.cpp
-  SACSegmentation.cpp
   CloudViewer.cpp
   KinectGrabber.cpp
   )
