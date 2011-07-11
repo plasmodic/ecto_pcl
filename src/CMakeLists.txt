@@ -5,7 +5,9 @@ ectomodule(ecto_pcl
   PassThrough.cpp
   VoxelGrid.cpp
   ProjectInliers.cpp
+  ExtractIndices.cpp
   NormalEstimation.cpp
+  SACSegmentation.cpp
   CloudViewer.cpp
   KinectGrabber.cpp
   )
