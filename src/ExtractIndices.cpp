@@ -1,12 +1,12 @@
 #include "ecto_pcl.hpp"
-#include <pcl/filters/project_inliers.h>
+#include <pcl/filters/extract_indices.h>
 
-struct ProjectInliers
+struct ExtractIndices
 {
   static void declare_params(ecto::tendrils& params)
   {
     // filter params
-    pcl::ProjectInliers<cloud_t::PointType> default_;
+    pcl::ExtractIndices<cloud_t::PointType> default_;
     params.declare<std::string> ("filter_field_name", "The name of the field to use for filtering.", "");
     double filter_limit_min, filter_limit_max;
     default_.getFilterLimits(filter_limit_min, filter_limit_max);
@@ -15,18 +15,17 @@ struct ProjectInliers
     params.declare<bool> ("filter_limit_negative", "To negate the limits or not.", default_.getFilterLimitsNegative());
 
     // custom params
-    params.declare<int> ("model_type", "The type of model to use.", 0);
-    params.declare<bool> ("copy_all_data", "Sets whether all data will be returned, or only the projected inliers.", false);
+    params.declare<bool> ("negative", "Sets whether the indices should be returned, or all points _except_ the indices.", default_.getNegative());
   }
 
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
   {
     inputs.declare<cloud_t::ConstPtr> ("input", "The cloud to filter");
-    inputs.declare<model_t::ConstPtr> ("model_coefficients", "Model to use for projection.");
+    inputs.declare<indices_t::ConstPtr> ("indices", "The indices to extract.");
     outputs.declare<cloud_t::ConstPtr> ("output", "Filtered cloud.");
   }
 
-  ProjectInliers() {}
+  ExtractIndices() {}
 
   void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
   {
@@ -39,15 +38,13 @@ struct ProjectInliers
     bool filter_limit_negative = params.get<bool> ("filter_limit_negative");
     impl_.setFilterLimitsNegative(filter_limit_negative);
 
-    //set the model info
-    int model_type = params.get<int> ("model_type");
-    impl_.setModelType(model_type);
-    bool copy_all = params.get<bool> ("copy_all_data");
-    impl_.setCopyAllData(copy_all);
+    //custom
+    bool negative = params.get<bool> ("negative");
+    impl_.setNegative(negative);
 
     //set in/out
     input_ = inputs.at("input");
-    model_ = inputs.at("model_coefficients");
+    indices_ = inputs.at("indices");
     output_ = outputs.at("output");
   }
 
@@ -56,20 +53,19 @@ struct ProjectInliers
     cloud_t::Ptr cloud ( new cloud_t() );    
     //filter it.
     impl_.setInputCloud(*input_);
-    impl_.setModelCoefficients(*model_);
+    impl_.setIndices(*indices_);
     impl_.filter(*cloud);
     //set the output.
     *output_ = cloud;
     return 0;
   }
-  pcl::ProjectInliers<cloud_t::PointType> impl_;
-  ecto::spore<model_t::ConstPtr> model_;
+  pcl::ExtractIndices<cloud_t::PointType> impl_;
   ecto::spore<cloud_t::ConstPtr> input_;
-  //ecto::spore<cloud_t::ConstPtr> indicies_;
+  ecto::spore<indices_t::ConstPtr> indices_;
   ecto::spore<cloud_t::ConstPtr> output_;
 
 };
 
-ECTO_CELL(ecto_pcl, ProjectInliers, "ProjectInliers", "...");
+ECTO_CELL(ecto_pcl, ExtractIndices, "ExtractIndices", "...");
 
 

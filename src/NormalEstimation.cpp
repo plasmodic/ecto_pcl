@@ -3,7 +3,6 @@
 
 struct NormalEstimation
 {
-  typedef pcl::PointCloud<pcl::Normal> cloud_normal;
   const static int flann = pcl::KDTREE_FLANN;
   const static int organized = pcl::KDTREE_ORGANIZED_INDEX;
  
@@ -18,7 +17,7 @@ struct NormalEstimation
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
   {
     inputs.declare<cloud_t::ConstPtr> ("input", "The cloud to filter");
-    outputs.declare<pcl::PointCloud<pcl::Normal>::ConstPtr> ("output", "Feature cloud.");
+    outputs.declare<normals_t::ConstPtr> ("output", "Feature cloud.");
   }
 
   NormalEstimation() {}
@@ -43,7 +42,7 @@ struct NormalEstimation
 
   int process(const tendrils& inputs, tendrils& outputs)
   {
-    cloud_normal::Ptr cloud ( new cloud_normal() );
+    normals_t::Ptr cloud ( new normals_t() );
     // compute it.
     impl_.setInputCloud(*input_);
     //impl_.setIndices (indices);
@@ -57,7 +56,7 @@ struct NormalEstimation
   pcl::NormalEstimation<cloud_t::PointType, pcl::Normal> impl_;
   pcl::KdTree<pcl::PointXYZRGB>::Ptr tree_;
   ecto::spore<cloud_t::ConstPtr> input_;
-  ecto::spore<cloud_normal::ConstPtr> output_;
+  ecto::spore<normals_t::ConstPtr> output_;
 
 };
 
