@@ -59,4 +59,3 @@ struct NormalEstimation
 
 ECTO_CELL(ecto_pcl, NormalEstimation, "NormalEstimation", "Normal estimation");
 
-

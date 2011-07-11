@@ -6,7 +6,9 @@ ectomodule(ecto_pcl
   filters/PassThrough.cpp
   filters/ProjectInliers.cpp
   filters/VoxelGrid.cpp
+  segmentation/ExtractPolygonalPrismData.cpp
   segmentation/SACSegmentation.cpp
+  surface/ConvexHull.cpp
   NormalEstimation.cpp
   CloudViewer.cpp
   KinectGrabber.cpp
