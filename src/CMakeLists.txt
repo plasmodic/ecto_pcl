@@ -2,6 +2,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 ectomodule(ecto_pcl 
   ecto_pcl.cpp
+  features/NormalEstimation.cpp
   filters/ExtractIndices.cpp
   filters/PassThrough.cpp
   filters/ProjectInliers.cpp
@@ -9,7 +10,6 @@ ectomodule(ecto_pcl
   segmentation/ExtractPolygonalPrismData.cpp
   segmentation/SACSegmentation.cpp
   surface/ConvexHull.cpp
-  NormalEstimation.cpp
   CloudViewer.cpp
   KinectGrabber.cpp
   )
