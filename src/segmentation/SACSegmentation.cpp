@@ -6,7 +6,7 @@ struct SACSegmentation
   static void declare_params(ecto::tendrils& params)
   {
     pcl::SACSegmentation<cloud_t::PointType> default_;
-    params.declare<int> ("model", "Type of model to use.", default_.getModelType());
+    params.declare<int> ("model_type", "Type of model to use.", default_.getModelType());
     params.declare<int> ("method", "Type of sample consensus method to use.", default_.getMethodType());
     params.declare<double> ("eps_angle", "Angle epsilon (delta) threshold.", default_.getEpsAngle());
     params.declare<double> ("distance_threshold", "Doistance to model threshold.", default_.getDistanceThreshold());
@@ -33,7 +33,7 @@ struct SACSegmentation
   void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
   {
     // set parameters
-    int model = params.get<int> ("model");
+    int model = params.get<int> ("model_type");
     impl_.setModelType(model);
     int method = params.get<int> ("method");
     impl_.setMethodType(method);
@@ -88,7 +88,7 @@ struct SACSegmentationFromNormals
   {
     // segmentation params
     pcl::SACSegmentationFromNormals<cloud_t::PointType, normals_t::PointType> default_;
-    params.declare<int> ("model", "Type of model to use.", default_.getModelType());
+    params.declare<int> ("model_type", "Type of model to use.", default_.getModelType());
     params.declare<int> ("method", "Type of sample consensus method to use.", default_.getMethodType());
     params.declare<double> ("eps_angle", "Angle epsilon (delta) threshold.", default_.getEpsAngle());
     params.declare<double> ("distance_threshold", "Doistance to model threshold.", default_.getDistanceThreshold());
@@ -119,7 +119,7 @@ struct SACSegmentationFromNormals
   void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
   {
     // set parameters
-    int model = params.get<int> ("model");
+    int model = params.get<int> ("model_type");
     impl_.setModelType(model);
     int method = params.get<int> ("method");
     impl_.setMethodType(method);

@@ -68,4 +68,3 @@ struct ExtractIndices
 
 ECTO_CELL(ecto_pcl, ExtractIndices, "ExtractIndices", "...");
 
-

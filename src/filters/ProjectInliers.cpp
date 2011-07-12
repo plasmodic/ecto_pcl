@@ -22,7 +22,7 @@ struct ProjectInliers
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
   {
     inputs.declare<cloud_t::ConstPtr> ("input", "The cloud to filter");
-    inputs.declare<model_t::ConstPtr> ("model_coefficients", "Model to use for projection.");
+    inputs.declare<model_t::ConstPtr> ("model", "Model to use for projection.");
     outputs.declare<cloud_t::ConstPtr> ("output", "Filtered cloud.");
   }
 
@@ -47,7 +47,7 @@ struct ProjectInliers
 
     //set in/out
     input_ = inputs.at("input");
-    model_ = inputs.at("model_coefficients");
+    model_ = inputs.at("model");
     output_ = outputs.at("output");
   }
 
