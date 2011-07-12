@@ -38,8 +38,8 @@ plasm.connect(grabber[:] >> voxgrid[:],
               grabber[:] >> extract["input"],
               extract[:] >> viewer[:])
 
-ecto.view_plasm(plasm)
+# ecto.view_plasm(plasm)
 sched = ecto.schedulers.Threadpool(plasm)
-sched.execute(niter=100, nthreads=4)
+sched.execute()
 
 
