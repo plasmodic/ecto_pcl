@@ -1,4 +1,5 @@
 #include <ecto/ecto.hpp>
+#include <ecto_pcl.hpp>
 
 #undef  BOOST_PARAMETER_MAX_ARITY
 #define BOOST_PARAMETER_MAX_ARITY 7
@@ -17,9 +18,6 @@
 
 #include <iostream>
 
-using ecto::tendrils;
-
-typedef pcl::PointCloud<pcl::PointXYZRGB> cloud_t;
 class SimpleKinectGrabber
 {
 public:
@@ -55,18 +53,17 @@ public:
     interface->stop();
   }
 
-
   /**
    * \brief don't hang on to this cloud!! or it won't get updated.
    */
-  cloud_t::ConstPtr getLatestCloud()
+  PointCloudXYZRGB::ConstPtr getLatestCloud()
   {
     boost::mutex::scoped_lock lock(datamutex_);
 
     while (!cloud_)
       cond_.wait(lock);
 
-    cloud_t::ConstPtr p = cloud_;
+    PointCloudXYZRGB::ConstPtr p = cloud_;
     cloud_.reset();
     return p;
   }
@@ -81,7 +78,7 @@ public:
   boost::mutex datamutex_, runmutex_;
   boost::condition_variable cond_;
 
-  cloud_t::ConstPtr cloud_;
+  PointCloudXYZRGB::ConstPtr cloud_;
   boost::thread thread_;
 };
 ECTO_CELL(ecto_pcl, SimpleKinectGrabber, "SimpleKinectGrabber", "Simple kinect grabber");
@@ -91,7 +88,7 @@ struct KinectGrabber
 {
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    outputs.declare<cloud_t::ConstPtr> ("output", "An rgb xyz point cloud from the kinect");
+    outputs.declare<PointCloud> ("output", "An XYZRGB point cloud from the kinect");
   }
 
   int configure(const tendrils& parameters, tendrils& inputs, tendrils& outputs)
@@ -101,16 +98,12 @@ struct KinectGrabber
 
   int process(const tendrils& /*inputs*/, tendrils& outputs)
   {
-    cloud_t::ConstPtr p;
-    p = impl_->getLatestCloud();
-    outputs.get<cloud_t::ConstPtr> ("output") = p;
+    PointCloud p( impl_->getLatestCloud() );
+    outputs.get<PointCloud> ("output") = p;
     return 0;
   }
 
   ~KinectGrabber() { impl_->stop(); }
-
-
-
   boost::scoped_ptr<SimpleKinectGrabber> impl_;
 };
 
