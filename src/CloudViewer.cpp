@@ -3,8 +3,6 @@
 
 #include <boost/variant/get.hpp>
 
-typedef boost::variant< boost::shared_ptr<pcl::visualization::CloudViewer> > cloud_viewer_variant_t;
-
 struct CloudViewer
 {
   static void declare_params(ecto::tendrils& params)
