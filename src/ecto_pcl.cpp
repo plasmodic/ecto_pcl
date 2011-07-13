@@ -3,7 +3,10 @@
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/stringize.hpp>
 #include <ecto/ecto.hpp>
+
+/* enumerations and values to be wrapped */
 #include <pcl/sample_consensus/model_types.h>
+#include <pcl/kdtree/tree_types.h>
 
 namespace bp = boost::python;
 
@@ -34,7 +37,10 @@ ECTO_DEFINE_MODULE(ecto_pcl)
     BOOST_PP_SEQ_FOR_EACH(ENUMVAL, ~, MODELTYPES)
     .export_values()
     ;
-    
+
+  bp::scope().attr("KDTREE_FLANN") = pcl::KDTREE_FLANN;
+  bp::scope().attr("KDTREE_ORGANIZED_INDEX") = pcl::KDTREE_ORGANIZED_INDEX;
+
 }
 
 
