@@ -3,7 +3,7 @@
 
 struct ConvexHull
 { 
-  static void declare_params(ecto::tendrils& params)
+  static void declare_params(tendrils& params)
   {
     // no params
   }
