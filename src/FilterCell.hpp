@@ -119,6 +119,11 @@ namespace ecto {
       /* dispatch to handle process */
       struct filter_dispatch : boost::static_visitor<cloud_variant_t>
       {
+        FilterType& ft;
+
+        filter_dispatch(FilterType& ft_) : ft(ft_) { }
+
+
         template <typename Filter, typename CloudType>
         cloud_variant_t operator()(Filter& f, CloudType& i) const
         {
@@ -128,6 +133,8 @@ namespace ecto {
         template <typename Filter, typename CloudType>
         cloud_variant_t impl(Filter& f, boost::shared_ptr<const CloudType>& i, boost::true_type) const
         {
+          ft.process(f);
+
           CloudType o;
           f.setInputCloud(i);
           f.filter(o);
@@ -146,7 +153,7 @@ namespace ecto {
       {
         this_()->process(inputs, outputs);
         cloud_variant_t cvar = input_->make_variant();
-        *output_ = boost::apply_visitor(filter_dispatch(), impl_, cvar);
+        *output_ = boost::apply_visitor(filter_dispatch(*this_()), impl_, cvar);
         
       }
 

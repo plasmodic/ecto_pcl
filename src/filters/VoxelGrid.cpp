@@ -76,6 +76,12 @@ struct VoxelGrid : ecto::pcl::FilterCell<VoxelGrid>
     f.setLeafSize(leaf_size, leaf_size, leaf_size);
   }
 
+  template <typename Point>
+  void process(pcl::VoxelGrid<Point>& f)
+  {
+    // can set indices here
+  }
+
   void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
   {
     // set in/out.
@@ -92,7 +98,6 @@ struct VoxelGrid : ecto::pcl::FilterCell<VoxelGrid>
 
   int process(const tendrils& inputs, tendrils& outputs)
   {
-    // possibly dispatch visitor on impl_ to set indices
     return 0;
   }
 
