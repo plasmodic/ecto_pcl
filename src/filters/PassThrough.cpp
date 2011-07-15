@@ -39,7 +39,7 @@ typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLAREPASSTHROUGH, ~, POINTTYPE
 
 #include "FilterCell.hpp"
 
-struct PassThrough : ecto::pcl::FilterCell<PassThrough>
+struct PassThrough
 {
   template <typename Point>
   struct filter {

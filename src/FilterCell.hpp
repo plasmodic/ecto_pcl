@@ -35,8 +35,7 @@ namespace ecto {
     template <typename FilterType>
     struct FilterCell
     {
-      // typedef typename FilterType::filter_variant_t filter_variant_t;
-      FilterType* this_() { return static_cast<FilterType*>(this); }
+      FilterType custom;
 
       struct FilterParams {
         std::string filter_field_name; 
@@ -105,12 +104,12 @@ namespace ecto {
         fp.filter_limit_max = params.get<double> ("filter_limit_max");
         fp.filter_limit_negative = params.get<bool> ("filter_limit_negative");
 
-        this_()->configure(params, inputs, outputs);
+        custom.configure(params, inputs, outputs);
 
         cloud_variant_t cv = input_->make_variant();
         if(!configured_){
           impl_ = boost::apply_visitor(make_filter_variant<FilterType::template filter>(), cv);
-          boost::apply_visitor(filter_configurator(fp, *this_()), impl_);
+          boost::apply_visitor(filter_configurator(fp, custom), impl_);
           configured_ = true;
         }
 
@@ -151,9 +150,9 @@ namespace ecto {
 
       int process(const tendrils& inputs, tendrils& outputs)
       {
-        this_()->process(inputs, outputs);
+        custom.process(inputs, outputs);
         cloud_variant_t cvar = input_->make_variant();
-        *output_ = boost::apply_visitor(filter_dispatch(*this_()), impl_, cvar);
+        *output_ = boost::apply_visitor(filter_dispatch(custom), impl_, cvar);
         
       }
 

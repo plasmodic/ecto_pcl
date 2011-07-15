@@ -39,7 +39,7 @@ typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLAREVOXELGRID, ~, POINTTYPES)
 
 #include "FilterCell.hpp"
 
-struct VoxelGrid : ecto::pcl::FilterCell<VoxelGrid>
+struct VoxelGrid
 {
   template <typename Point>
   struct filter {
