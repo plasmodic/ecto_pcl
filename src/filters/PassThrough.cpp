@@ -55,6 +55,9 @@ struct PassThrough : ecto::pcl::FilterCell<PassThrough>
 
   PassThrough() { }
 
+  template <typename Point>
+  void configure(pcl::PassThrough<Point>&) { }
+
   void configure(tendrils& params, tendrils& inputs, tendrils& outputs) { }
 
   int process(const tendrils& inputs, tendrils& outputs) { return 0; }

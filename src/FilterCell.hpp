@@ -59,7 +59,8 @@ namespace ecto {
       struct filter_configurator : boost::static_visitor<void>
       { 
         FilterParams& fp;
-        filter_configurator(FilterParams& fp_) : fp(fp_) {}
+        FilterType& ft;
+        filter_configurator(FilterParams& fp_, FilterType& ft_) : fp(fp_), ft(ft_) {}
 
         template <typename T>
         void operator()(T& impl_) const 
@@ -67,6 +68,7 @@ namespace ecto {
           impl_.setFilterFieldName(fp.filter_field_name);
           impl_.setFilterLimits(fp.filter_limit_min, fp.filter_limit_max);
           impl_.setFilterLimitsNegative(fp.filter_limit_negative);
+          ft.configure(impl_);
         } 
       };
 
@@ -108,7 +110,7 @@ namespace ecto {
         cloud_variant_t cv = input_->make_variant();
         if(!configured_){
           impl_ = boost::apply_visitor(make_filter_variant<FilterType::template filter>(), cv);
-          boost::apply_visitor(filter_configurator(fp), impl_);
+          boost::apply_visitor(filter_configurator(fp, *this_()), impl_);
           configured_ = true;
         }
 

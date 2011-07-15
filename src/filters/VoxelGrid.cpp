@@ -46,9 +46,6 @@ struct VoxelGrid : ecto::pcl::FilterCell<VoxelGrid>
     typedef typename ::pcl::VoxelGrid<Point> type;
   };
 
-  /* used to configure filter */
-  struct filter_params { double leaf_size; };
-
   /*
   struct filter_configurator : boost::static_visitor<void>
   { 
@@ -73,12 +70,17 @@ struct VoxelGrid : ecto::pcl::FilterCell<VoxelGrid>
 
   VoxelGrid() {}
 
+  template <typename Point>
+  void configure(pcl::VoxelGrid<Point>& f)
+  {
+    f.setLeafSize(leaf_size, leaf_size, leaf_size);
+  }
+
   void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
   {
     // set in/out.
     // instantiate and set filter details.
-    filter_params fp;
-    fp.leaf_size = params.get<float> ("leaf_size");
+    leaf_size = params.get<float> ("leaf_size");
     
     //    cloud_variant_t cv = input_->make_variant();
     //    if(!configured_){
@@ -93,6 +95,8 @@ struct VoxelGrid : ecto::pcl::FilterCell<VoxelGrid>
     // possibly dispatch visitor on impl_ to set indices
     return 0;
   }
+
+  double leaf_size;
 
 };
 
