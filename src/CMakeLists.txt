@@ -4,9 +4,9 @@ ectomodule(ecto_pcl
   ecto_pcl.cpp
   #features/NormalEstimation.cpp
   #filters/ExtractIndices.cpp
-  #filters/PassThrough.cpp
+  filters/PassThrough.cpp
   #filters/ProjectInliers.cpp
-  #filters/VoxelGrid.cpp
+  filters/VoxelGrid.cpp
   #segmentation/ExtractPolygonalPrismData.cpp
   #segmentation/EuclideanClusterExtraction.cpp
   #segmentation/SACSegmentation.cpp
