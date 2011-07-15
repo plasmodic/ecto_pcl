@@ -17,5 +17,6 @@ message(STATUS "pcl includes :\n    ${PCL_INCLUDE_DIRS}")
 message(STATUS "pcl library  :\n    ${PCL_LIBRARIES}")
 
 include_directories(${PCL_INCLUDE_DIRS})
+include_directories(include)
 
 add_subdirectory(src)

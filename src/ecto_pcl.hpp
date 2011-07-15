@@ -29,35 +29,14 @@
 
 #pragma once
 
-#include <ecto/ecto.hpp>
+#include "ecto_pcl_prelude.hpp"
 
-#include <boost/variant.hpp>
-#include <boost/shared_ptr.hpp>
-
-#include <boost/preprocessor/seq/for_each.hpp>
-#include <boost/preprocessor/seq/for_each_i.hpp>
-#include <boost/preprocessor/punctuation/comma.hpp>
-#include <boost/preprocessor/cat.hpp>
-
-#include <pcl/point_cloud.h>
-#include <pcl/point_types.h>
-#include <pcl/PointIndices.h>
-#include <pcl/ModelCoefficients.h>
-
-#define POINTTYPES                      \
-  (XYZ)                                 \
-  (XYZRGB)                              \
-  (XYZI)                                \
-  (XYZRGBA)                             \
-  (XYZINormal)                          \
-  (XYZRGBNormal)
-
-#define DECLARECLOUD(r, data, ELEM)     \
+#define DECLARECLOUD(r, data, ELEM)                                     \
   typedef pcl::PointCloud<BOOST_PP_CAT(pcl::Point, ELEM)> BOOST_PP_CAT(PointCloud, ELEM);
 BOOST_PP_SEQ_FOR_EACH(DECLARECLOUD, ~, POINTTYPES);
 
-#define DECLARECLOUDVARIANT(r, data, i, ELEM)    \
-   BOOST_PP_COMMA_IF(i) BOOST_PP_CAT(PointCloud,ELEM)::ConstPtr
+#define DECLARECLOUDVARIANT(r, data, i, ELEM)                   \
+  BOOST_PP_COMMA_IF(i) BOOST_PP_CAT(PointCloud,ELEM)::ConstPtr
 typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLARECLOUDVARIANT, ~, POINTTYPES) > cloud_variant_t;
 
 struct PointCloud {

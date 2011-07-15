@@ -27,39 +27,28 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "ecto_pcl_prelude.hpp"
-#include <pcl/filters/passthrough.h>
+#pragma once
 
-#define DECLAREPASSTHROUGH(r, data, i, ELEM)                            \
-  BOOST_PP_COMMA_IF(i) BOOST_PP_CAT(pcl::PassThrough<pcl::Point,ELEM)>
+#include <ecto/ecto.hpp>
 
-#include "ecto_pcl.hpp"
+#include <boost/variant.hpp>
+#include <boost/shared_ptr.hpp>
 
-typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLAREPASSTHROUGH, ~, POINTTYPES) > filter_variant_t;
+#include <boost/preprocessor/seq/for_each.hpp>
+#include <boost/preprocessor/seq/for_each_i.hpp>
+#include <boost/preprocessor/punctuation/comma.hpp>
+#include <boost/preprocessor/cat.hpp>
 
-#include "FilterCell.hpp"
+#include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
+#include <pcl/PointIndices.h>
+#include <pcl/ModelCoefficients.h>
 
-struct PassThrough : ecto::pcl::FilterCell<PassThrough>
-{
-  template <typename Point>
-  struct filter {
-    typedef typename pcl::PassThrough<Point> type;
-  };
-
-  /* used to configure filter */
-  struct filter_params { };
-  
-  static void declare_params(ecto::tendrils& params) { }
-
-  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs) { }
-
-  PassThrough() { }
-
-  void configure(tendrils& params, tendrils& inputs, tendrils& outputs) { }
-
-  int process(const tendrils& inputs, tendrils& outputs) { return 0; }
-
-};
-
-ECTO_CELL(ecto_pcl, ecto::pcl::FilterCell<PassThrough>, "PassThrough", "PassThrough filter");
+#define POINTTYPES                              \
+  (XYZ)                                         \
+  (XYZRGB)                                      \
+  (XYZI)                                        \
+  (XYZRGBA)                                     \
+  (XYZINormal)                                  \
+  (XYZRGBNormal)
 
