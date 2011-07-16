@@ -27,13 +27,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "ecto_pcl_prelude.hpp"
+#include "ecto_pcl.hpp"
 #include <pcl/filters/passthrough.h>
 
 #define DECLAREPASSTHROUGH(r, data, i, ELEM)                            \
   BOOST_PP_COMMA_IF(i) BOOST_PP_CAT(pcl::PassThrough<pcl::Point,ELEM)>
-
-#include "ecto_pcl.hpp"
 
 typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLAREPASSTHROUGH, ~, POINTTYPES) > filter_variant_t;
 

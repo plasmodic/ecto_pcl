@@ -29,7 +29,28 @@
 
 #pragma once
 
-#include "ecto_pcl_prelude.hpp"
+#include <ecto/ecto.hpp>
+
+#include <boost/variant.hpp>
+#include <boost/shared_ptr.hpp>
+
+#include <boost/preprocessor/seq/for_each.hpp>
+#include <boost/preprocessor/seq/for_each_i.hpp>
+#include <boost/preprocessor/punctuation/comma.hpp>
+#include <boost/preprocessor/cat.hpp>
+
+#include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
+#include <pcl/PointIndices.h>
+#include <pcl/ModelCoefficients.h>
+
+#define POINTTYPES                              \
+  (XYZ)                                         \
+  (XYZRGB)                                      \
+  (XYZI)                                        \
+  (XYZRGBA)                                     \
+  (XYZINormal)                                  \
+  (XYZRGBNormal)
 
 #define DECLARECLOUD(r, data, ELEM)                                     \
   typedef pcl::PointCloud<BOOST_PP_CAT(pcl::Point, ELEM)> BOOST_PP_CAT(PointCloud, ELEM);

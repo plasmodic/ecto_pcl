@@ -27,13 +27,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "ecto_pcl_prelude.hpp"
+#include "ecto_pcl.hpp"
 #include <pcl/filters/voxel_grid.h>
 
 #define DECLAREVOXELGRID(r, data, i, ELEM)                              \
   BOOST_PP_COMMA_IF(i) BOOST_PP_CAT(pcl::VoxelGrid<pcl::Point,ELEM)>
-
-#include "ecto_pcl.hpp"
 
 typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLAREVOXELGRID, ~, POINTTYPES) > filter_variant_t;
 
