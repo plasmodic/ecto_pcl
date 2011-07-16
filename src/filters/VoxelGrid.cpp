@@ -44,26 +44,10 @@ struct VoxelGrid
     typedef typename ::pcl::VoxelGrid<Point> type;
   };
 
-  /*
-  struct filter_configurator : boost::static_visitor<void>
-  { 
-    filter_params& fp;
-    filter_configurator(filter_params& fp_) : fp(fp_) {}
-
-    template <typename PointType>
-    void operator()(pcl::VoxelGrid<PointType>& impl_) const
-    {
-      impl_.setLeafSize(fp.leaf_size, fp.leaf_size, fp.leaf_size);
-    }
-  };
-
-  */
   static void declare_params(ecto::tendrils& params)
   {
-    // custom params
     params.declare<float> ("leaf_size", "The size of the leaf(meters), smaller means more points...", 0.05);
   }
-
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs) { }
 
   VoxelGrid() {}
@@ -73,36 +57,18 @@ struct VoxelGrid
   {
     f.setLeafSize(leaf_size, leaf_size, leaf_size);
   }
-
-  template <typename Point>
-  void process(pcl::VoxelGrid<Point>& f)
-  {
-    // can set indices here
-  }
-
   void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    // set in/out.
-    // instantiate and set filter details.
     leaf_size = params.get<float> ("leaf_size");
-    
-    //    cloud_variant_t cv = input_->make_variant();
-    //    if(!configured_){
-    //      impl_ = boost::apply_visitor(make_filter_variant<pcl::VoxelGrid>(), cv);
-    //      boost::apply_visitor(filter_configurator(fp), impl_);
-    //      configured_ = true;
-    //    }
   }
 
-  int process(const tendrils& inputs, tendrils& outputs)
-  {
-    return 0;
-  }
+  template <typename Point>
+  int process(pcl::VoxelGrid<Point>& f) { return 0; }
+  int process(const tendrils& inputs, tendrils& outputs){ return 0; }
 
   double leaf_size;
 
 };
 
 ECTO_CELL(ecto_pcl, ecto::pcl::FilterCell<VoxelGrid>, "VoxelGrid", "Voxel grid filter");
-
 

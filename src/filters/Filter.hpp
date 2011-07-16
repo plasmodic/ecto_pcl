@@ -73,7 +73,6 @@ namespace ecto {
 
       static void declare_params(ecto::tendrils& params)
       {
-
         typename FilterType::template filter< ::pcl::PointXYZRGB>::type default_;
         params.declare<std::string> ("filter_field_name", "The name of the field to use for filtering.", "");
         double filter_limit_min, filter_limit_max;
@@ -81,7 +80,6 @@ namespace ecto {
         params.declare<double> ("filter_limit_min", "Minimum value for the filter.", filter_limit_min);
         params.declare<double> ("filter_limit_max", "Maximum value for the filter.", filter_limit_max);
         params.declare<bool> ("filter_limit_negative", "To negate the limits or not.", default_.getFilterLimitsNegative());
-
         FilterType::declare_params(params);
       }
 
@@ -112,7 +110,6 @@ namespace ecto {
           boost::apply_visitor(filter_configurator(fp, custom), impl_);
           configured_ = true;
         }
-
       }
 
       /* dispatch to handle process */
@@ -122,18 +119,16 @@ namespace ecto {
 
         filter_dispatch(FilterType& ft_) : ft(ft_) { }
 
-
         template <typename Filter, typename CloudType>
         cloud_variant_t operator()(Filter& f, CloudType& i) const
         {
-          return impl(f, i, filter_takes_point_trait<Filter, CloudType>());
+          return impl(f, i, pcl_takes_point_trait<Filter, CloudType>());
         }
 
         template <typename Filter, typename CloudType>
         cloud_variant_t impl(Filter& f, boost::shared_ptr<const CloudType>& i, boost::true_type) const
         {
-          ft.process(f);
-
+          ft.process(f); // preprocess using the filter (for instance, set indices)
           CloudType o;
           f.setInputCloud(i);
           f.filter(o);
@@ -150,10 +145,10 @@ namespace ecto {
 
       int process(const tendrils& inputs, tendrils& outputs)
       {
-        custom.process(inputs, outputs);
         cloud_variant_t cvar = input_->make_variant();
         *output_ = boost::apply_visitor(filter_dispatch(custom), impl_, cvar);
-        
+        custom.process(inputs, outputs);
+        return 0;
       }
 
       bool configured_;

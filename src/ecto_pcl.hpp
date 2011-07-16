@@ -96,11 +96,11 @@ struct PointCloud {
 };
 
 // hacky pcl workaround for private PointCloud
-template <typename Filter, typename PointType>
-struct filter_takes_point_trait : boost::false_type {};
+template <typename PclType, typename PointType>
+struct pcl_takes_point_trait : boost::false_type {};
 
-template <template <class> class Filter, typename PointType>
-struct filter_takes_point_trait<Filter<PointType>, boost::shared_ptr<const pcl::PointCloud<PointType> > > : boost::true_type {};
+template <template <class> class PclType, typename PointType>
+struct pcl_takes_point_trait<PclType<PointType>, boost::shared_ptr<const pcl::PointCloud<PointType> > > : boost::true_type {};
 
 typedef pcl::PointIndices indices_t;
 typedef pcl::ModelCoefficients model_t;
