@@ -35,7 +35,7 @@
 
 typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLAREPASSTHROUGH, ~, POINTTYPES) > filter_variant_t;
 
-#include "FilterCell.hpp"
+#include "filters/Filter.hpp"
 
 struct PassThrough
 {
