@@ -30,10 +30,10 @@
 #include "ecto_pcl.hpp"
 #include <pcl/filters/extract_indices.h>
 
-#define DECLAREEXTRACTINDICES(a, data, i, ELEM)                              \
-  BOOST_PP_COMMA_IF(i) BOOST_PP_CAT(pcl::ExtractIndices<pcl::Point,ELEM)>
+#define DECLAREEXTRACTINDICES(r, data, i, ELEM)                            \
+  BOOST_PP_COMMA_IF(i) pcl::ExtractIndices< BOOST_PP_TUPLE_ELEM(2, 0, ELEM) >
 
-typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLAREEXTRACTINDICES, ~, POINTTYPES) > filter_variant_t;
+typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLAREEXTRACTINDICES, ~, ECTO_XYZ_POINT_TYPES) > filter_variant_t;
 
 #include "filters/Filter.hpp"
 

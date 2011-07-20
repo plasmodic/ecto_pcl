@@ -104,7 +104,7 @@ namespace ecto {
 
         custom.configure(params, inputs, outputs);
 
-        cloud_variant_t cv = input_->make_variant();
+        xyz_cloud_variant_t cv = input_->make_variant();
         if(!configured_){
           impl_ = boost::apply_visitor(make_filter_variant<FilterType::template filter>(), cv);
           boost::apply_visitor(filter_configurator(fp, custom), impl_);
@@ -113,39 +113,38 @@ namespace ecto {
       }
 
       /* dispatch to handle process */
-      struct filter_dispatch : boost::static_visitor<cloud_variant_t>
+      struct filter_dispatch : boost::static_visitor<xyz_cloud_variant_t>
       {
         FilterType& ft;
 
         filter_dispatch(FilterType& ft_) : ft(ft_) { }
 
         template <typename Filter, typename CloudType>
-        cloud_variant_t operator()(Filter& f, CloudType& i) const
+        xyz_cloud_variant_t operator()(Filter& f, CloudType& i) const
         {
           return impl(f, i, pcl_takes_point_trait<Filter, CloudType>());
         }
 
         template <typename Filter, typename CloudType>
-        cloud_variant_t impl(Filter& f, boost::shared_ptr<const CloudType>& i, boost::true_type) const
+        xyz_cloud_variant_t impl(Filter& f, boost::shared_ptr<const CloudType>& i, boost::true_type) const
         {
           ft.process(f); // preprocess using the filter (for instance, set indices)
           CloudType o;
           f.setInputCloud(i);
           f.filter(o);
-          return cloud_variant_t(o.makeShared());
+          return xyz_cloud_variant_t(o.makeShared());
         }
 
         template <typename Filter, typename CloudType>
-        cloud_variant_t impl(Filter& f, CloudType& i, boost::false_type) const
+        xyz_cloud_variant_t impl(Filter& f, CloudType& i, boost::false_type) const
         {
           throw std::runtime_error("types aren't the same, you are doing something baaaaaad");
         }
       };
 
-
       int process(const tendrils& inputs, tendrils& outputs)
       {
-        cloud_variant_t cvar = input_->make_variant();
+        xyz_cloud_variant_t cvar = input_->make_variant();
         *output_ = boost::apply_visitor(filter_dispatch(custom), impl_, cvar);
         custom.process(inputs, outputs);
         return 0;
@@ -159,3 +158,4 @@ namespace ecto {
 
   }
 }
+

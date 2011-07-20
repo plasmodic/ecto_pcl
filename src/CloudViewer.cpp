@@ -55,14 +55,14 @@ struct CloudViewer
       return 1;
 
     PointCloud cloud = inputs.get<PointCloud> ("input");
-    cloud_variant_t cv = cloud.make_variant();
+    xyz_cloud_variant_t cv = cloud.make_variant();
     try{
-      PointCloudXYZRGB::ConstPtr c = boost::get<PointCloudXYZRGB::ConstPtr>(cv);
+      CloudPOINTXYZRGB::ConstPtr c = boost::get<CloudPOINTXYZRGB::ConstPtr>(cv);
       if(c)
         viewer_->showCloud(c, "cloud");
     }catch(boost::bad_get){
       try{
-        PointCloudXYZ::ConstPtr c = boost::get<PointCloudXYZ::ConstPtr>(cv);
+        CloudPOINTXYZ::ConstPtr c = boost::get<CloudPOINTXYZ::ConstPtr>(cv);
         if(c)
           viewer_->showCloud(c, "cloud");
       }catch(boost::bad_get){

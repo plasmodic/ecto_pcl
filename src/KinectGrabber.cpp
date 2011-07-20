@@ -85,14 +85,14 @@ public:
   /**
    * \brief don't hang on to this cloud!! or it won't get updated.
    */
-  PointCloudXYZRGB::ConstPtr getLatestCloud()
+  CloudPOINTXYZRGB::ConstPtr getLatestCloud()
   {
     boost::mutex::scoped_lock lock(datamutex_);
 
     while (!cloud_)
       cond_.wait(lock);
 
-    PointCloudXYZRGB::ConstPtr p = cloud_;
+    CloudPOINTXYZRGB::ConstPtr p = cloud_;
     cloud_.reset();
     return p;
   }
@@ -107,7 +107,7 @@ public:
   boost::mutex datamutex_, runmutex_;
   boost::condition_variable cond_;
 
-  PointCloudXYZRGB::ConstPtr cloud_;
+  CloudPOINTXYZRGB::ConstPtr cloud_;
   boost::thread thread_;
 };
 ECTO_CELL(ecto_pcl, SimpleKinectGrabber, "SimpleKinectGrabber", "Simple kinect grabber");

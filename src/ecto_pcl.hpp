@@ -44,27 +44,31 @@
 #include <pcl/PointIndices.h>
 #include <pcl/ModelCoefficients.h>
 
-#define POINTTYPES                              \
-  (XYZ)                                         \
-  (XYZRGB)                                      \
-  (XYZI)                                        \
-  (XYZRGBA)                                     \
-  (XYZINormal)                                  \
-  (XYZRGBNormal)
+#define ECTO_XYZ_POINT_TYPES                         \
+  ((pcl::PointXYZRGB, POINTXYZRGB))                  \
+  ((pcl::PointXYZ, POINTXYZ))                        \
+  ((pcl::PointXYZI, POINTXYZI))                      \
+  ((pcl::PointXYZRGBA, POINTXYZRGBA))
 
-#define DECLARECLOUD(r, data, ELEM)                                     \
-  typedef pcl::PointCloud<BOOST_PP_CAT(pcl::Point, ELEM)> BOOST_PP_CAT(PointCloud, ELEM);
-BOOST_PP_SEQ_FOR_EACH(DECLARECLOUD, ~, POINTTYPES);
+#define ECTO_FEATURE_POINT_TYPES                     \
+  ((pcl::Normal, NORMAL))                            \
+  ((pcl::PFHSignature125, PFHSIGNATURE125))          \
+  ((pcl::FPFHSignature33, FPFHSIGNATURE33))          \
+  ((pcl::VFHSignature308, VFHSIGNATURE308))          \
+  ((pcl::Narf36, NARF36))
 
-#define DECLARECLOUDVARIANT(r, data, i, ELEM)                   \
-  BOOST_PP_COMMA_IF(i) BOOST_PP_CAT(PointCloud,ELEM)::ConstPtr
-typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLARECLOUDVARIANT, ~, POINTTYPES) > cloud_variant_t;
+#define DECLARECLOUD(r, data, ELEM) \
+  typedef pcl::PointCloud< BOOST_PP_TUPLE_ELEM(2, 0, ELEM) > BOOST_PP_CAT(Cloud, BOOST_PP_TUPLE_ELEM(2, 1, ELEM));
+BOOST_PP_SEQ_FOR_EACH(DECLARECLOUD, ~, ECTO_XYZ_POINT_TYPES);
+BOOST_PP_SEQ_FOR_EACH(DECLARECLOUD, ~, ECTO_FEATURE_POINT_TYPES);
+
+#define DECLARECLOUDVARIANT(r, data, i, ELEM) \
+  BOOST_PP_COMMA_IF(i) BOOST_PP_CAT(Cloud, BOOST_PP_TUPLE_ELEM(2, 1, ELEM))::ConstPtr
+typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLARECLOUDVARIANT, ~, ECTO_XYZ_POINT_TYPES) > xyz_cloud_variant_t;
+typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLARECLOUDVARIANT, ~, ECTO_FEATURE_POINT_TYPES) > feature_cloud_variant_t;
 
 struct PointCloud {
-
-  struct holder_base {
-    virtual cloud_variant_t make_variant() = 0;
-  };
+  struct holder_base { virtual xyz_cloud_variant_t make_variant() = 0; };
 
   template <typename T>
   struct holder : holder_base
@@ -72,10 +76,7 @@ struct PointCloud {
     T t;
     holder(T t_) : t(t_) { }
 
-    cloud_variant_t make_variant()
-    {
-      return cloud_variant_t(t);
-    }
+    xyz_cloud_variant_t make_variant() { return xyz_cloud_variant_t(t); }
   };
 
   boost::shared_ptr<holder_base> held;
@@ -85,22 +86,43 @@ struct PointCloud {
   {
     held.reset(new holder<T>(t_));
   }
+  PointCloud() {}
+  xyz_cloud_variant_t make_variant() { return held->make_variant(); }
+};
 
-  PointCloud()
-  {}
+struct FeatureCloud {
+  struct holder_base { virtual feature_cloud_variant_t make_variant() = 0; };
 
-  cloud_variant_t make_variant()
+  template <typename T>
+  struct holder : holder_base
   {
-    return held->make_variant();
+    T t;
+    holder(T t_) : t(t_) { }
+
+    feature_cloud_variant_t make_variant() { return feature_cloud_variant_t(t); }
+  };
+
+  boost::shared_ptr<holder_base> held;
+
+  template <typename T>
+  FeatureCloud(T t_)
+  {
+    held.reset(new holder<T>(t_));
   }
+  FeatureCloud() {}
+  feature_cloud_variant_t make_variant() { return held->make_variant();  }
 };
 
 // hacky pcl workaround for private PointCloud
 template <typename PclType, typename PointType>
 struct pcl_takes_point_trait : boost::false_type {};
-
 template <template <class> class PclType, typename PointType>
 struct pcl_takes_point_trait<PclType<PointType>, boost::shared_ptr<const pcl::PointCloud<PointType> > > : boost::true_type {};
+
+template <typename PclType, typename PointIn, typename PointOut>
+struct pcl_takes_point_trait2 : boost::false_type {};
+template <template <class, class> class PclType, typename PointIn, typename PointOut>
+struct pcl_takes_point_trait2<PclType<PointIn, PointOut>, boost::shared_ptr<const pcl::PointCloud<PointIn> >, PointOut > : boost::true_type {};
 
 typedef pcl::PointIndices indices_t;
 typedef pcl::ModelCoefficients model_t;

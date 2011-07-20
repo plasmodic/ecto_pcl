@@ -1,61 +1,73 @@
+/*
+ * Copyright (c) 2011, Willow Garage, Inc.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Willow Garage, Inc. nor the names of its
+ *       contributors may be used to endorse or promote products derived from
+ *       this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+
 #include "ecto_pcl.hpp"
+#include <boost/preprocessor/seq/for_each_product.hpp>
 #include <pcl/features/normal_3d.h>
+
+//#define DECLARENORMALESTIMATION(r, ELEM) \
+  pcl::NormalEstimation< BOOST_PP_TUPLE_ELEM(2, 0, BOOST_PP_SEQ_ELEM(0,ELEM)),BOOST_PP_TUPLE_ELEM(2, 0, BOOST_PP_SEQ_ELEM(1,ELEM)) > BOOST_PP_COMMA()
+  
+//typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_PRODUCT(DECLARENORMALESTIMATION, (ECTO_XYZ_POINT_TYPES) (ECTO_NORMAL_POINT_TYPES)) boost::detail::variant::void_ > feature_estimator_variant_t;
+
+
+#define DECLARENORMALESTIMATION(r, data, i, ELEM)                            \
+  BOOST_PP_COMMA_IF(i) pcl::NormalEstimation< BOOST_PP_TUPLE_ELEM(2, 0, ELEM), pcl::Normal >
+
+typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLARENORMALESTIMATION, ~, ECTO_XYZ_POINT_TYPES) > feature_estimator_variant_t;
+
+#include "features/Feature.hpp"
 
 struct NormalEstimation
 { 
-  static void declare_params(ecto::tendrils& params)
-  {
-    // filter params
-    params.declare<int> ("k_search", "The number of k nearest neighbors to use for feature estimation.", 0);
-    params.declare<double> ("radius_search", "The sphere radius to use for determining the nearest neighbors used for feature estimation.", 0);
-    params.declare<int> ("spatial_locator", "The search method to use: FLANN(0), ORGANIZED(1).",0);
-  }
+  template <typename Point>
+  struct feature_estimator {
+    typedef typename ::pcl::NormalEstimation<Point, ::pcl::Normal> type;
+  };
+  struct feature {
+    typedef ::pcl::Normal type;
+  };
 
-  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
-  {
-    inputs.declare<cloud_t::ConstPtr> ("input", "The cloud to filter");
-    outputs.declare<normals_t::ConstPtr> ("output", "Feature cloud.");
-  }
+  static void declare_params(ecto::tendrils& params) { }
+  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs){ }
 
   NormalEstimation() {}
 
-  void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
-  {
-    // set params
-    int k = params.get<int> ("k_search");
-    impl_.setKSearch(k);
-    double radius = params.get<double> ("radius_search");
-    impl_.setRadiusSearch(radius);
+  template <typename Point>
+  void configure(pcl::NormalEstimation<Point, pcl::Normal>& f) {}
+  void configure(tendrils& params, tendrils& inputs, tendrils& outputs) { }
 
-    // init spatial locator
-    int locator = params.get<int> ("spatial_locator");    
-    initTree (locator, tree_, k);
-    impl_.setSearchMethod (tree_);
-
-    // set in/out
-    input_ = inputs.at("input");
-    output_ = outputs.at("output");
-  }
-
-  int process(const tendrils& inputs, tendrils& outputs)
-  {
-    normals_t::Ptr cloud ( new normals_t() );
-    // compute it.
-    impl_.setInputCloud(*input_);
-    //impl_.setIndices (indices);
-    //impl_.setSearchSurface (surface);
-    impl_.compute(*cloud);
-    //cloud.header = input_->header;
-    // set the output.
-    *output_ = cloud;
-    return 0;
-  }
-  pcl::NormalEstimation<cloud_t::PointType, pcl::Normal> impl_;
-  pcl::KdTree<pcl::PointXYZRGB>::Ptr tree_;
-  ecto::spore<cloud_t::ConstPtr> input_;
-  ecto::spore<normals_t::ConstPtr> output_;
+  template <typename Point>
+  int process(pcl::NormalEstimation<Point,pcl::Normal>& f) { return 0; }
+  int process(const tendrils& inputs, tendrils& outputs){ return 0; }
 
 };
 
-ECTO_CELL(ecto_pcl, NormalEstimation, "NormalEstimation", "Normal estimation");
+ECTO_CELL(ecto_pcl, ecto::pcl::FeatureCell<NormalEstimation>, "NormalEstimation", "Normal estimation");
 

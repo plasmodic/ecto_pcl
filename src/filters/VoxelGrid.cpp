@@ -30,10 +30,10 @@
 #include "ecto_pcl.hpp"
 #include <pcl/filters/voxel_grid.h>
 
-#define DECLAREVOXELGRID(r, data, i, ELEM)                              \
-  BOOST_PP_COMMA_IF(i) BOOST_PP_CAT(pcl::VoxelGrid<pcl::Point,ELEM)>
+#define DECLAREVOXELGRID(r, data, i, ELEM)                            \
+  BOOST_PP_COMMA_IF(i) pcl::VoxelGrid< BOOST_PP_TUPLE_ELEM(2, 0, ELEM) >
 
-typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLAREVOXELGRID, ~, POINTTYPES) > filter_variant_t;
+typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLAREVOXELGRID, ~, ECTO_XYZ_POINT_TYPES) > filter_variant_t;
 
 #include "filters/Filter.hpp"
 

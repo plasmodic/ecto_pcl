@@ -30,12 +30,14 @@
 #include "ecto_pcl.hpp"
 #include <pcl/surface/convex_hull.h>
 
+
+#define DECLARECONVEXHULL(r, data, i, ELEM)                            \
+  BOOST_PP_COMMA_IF(i) pcl::ConvexHull< BOOST_PP_TUPLE_ELEM(2, 0, ELEM) >
+
+typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLARECONVEXHULL, ~, ECTO_XYZ_POINT_TYPES) > surface_variant_t;
+
 struct ConvexHull
 {
-  #define DECLARECONVEXHULL(r, data, i, ELEM)    \
-    BOOST_PP_COMMA_IF(i) BOOST_PP_CAT(pcl::ConvexHull<pcl::Point,ELEM)>
-  typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLARECONVEXHULL, ~, POINTTYPES) > surface_variant_t;
-
   /* used to create a surface */
   template <template <class> class SurfacePolicy>
   struct make_surface_variant : boost::static_visitor<surface_variant_t>
@@ -48,25 +50,25 @@ struct ConvexHull
   };
 
   /* dispatch to handle process */
-  struct surface_dispatch : boost::static_visitor<cloud_variant_t>
+  struct surface_dispatch : boost::static_visitor<xyz_cloud_variant_t>
   {
     template <typename Surface, typename CloudType>
-    cloud_variant_t operator()(Surface& f, CloudType& i) const
+    xyz_cloud_variant_t operator()(Surface& f, CloudType& i) const
     {
       return impl(f, i, pcl_takes_point_trait<Surface, CloudType>());
     }
 
     template <typename Surface, typename CloudType>
-    cloud_variant_t impl(Surface& f, boost::shared_ptr<const CloudType>& i, boost::true_type) const
+    xyz_cloud_variant_t impl(Surface& f, boost::shared_ptr<const CloudType>& i, boost::true_type) const
     {
       CloudType o;
       f.setInputCloud(i);
       f.reconstruct(o);
-      return cloud_variant_t(o.makeShared());
+      return xyz_cloud_variant_t(o.makeShared());
     }
 
     template <typename Surface, typename CloudType>
-    cloud_variant_t impl(Surface& f, CloudType& i, boost::false_type) const
+    xyz_cloud_variant_t impl(Surface& f, CloudType& i, boost::false_type) const
     {
       throw std::runtime_error("types aren't the same, you are doing something baaaaaad");
     }
@@ -85,15 +87,13 @@ struct ConvexHull
 
   ConvexHull() : configured_(false) {}
 
-
-
   void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
   {
     // set in/out.
     input_ = inputs.at("input");
     output_ = outputs.at("output");
 
-    cloud_variant_t cv = input_->make_variant();
+    xyz_cloud_variant_t cv = input_->make_variant();
     if(!configured_){
       impl_ = boost::apply_visitor(make_surface_variant<pcl::ConvexHull>(), cv);
       configured_ = true;
@@ -102,7 +102,7 @@ struct ConvexHull
 
   int process(const tendrils& inputs, tendrils& outputs)
   {
-    cloud_variant_t cvar = input_->make_variant();
+    xyz_cloud_variant_t cvar = input_->make_variant();
     *output_ = boost::apply_visitor(surface_dispatch(), impl_, cvar);
     return 0;
   }

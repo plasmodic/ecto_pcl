@@ -31,9 +31,9 @@
 #include <pcl/filters/passthrough.h>
 
 #define DECLAREPASSTHROUGH(r, data, i, ELEM)                            \
-  BOOST_PP_COMMA_IF(i) BOOST_PP_CAT(pcl::PassThrough<pcl::Point,ELEM)>
+  BOOST_PP_COMMA_IF(i) pcl::PassThrough< BOOST_PP_TUPLE_ELEM(2, 0, ELEM) >
 
-typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLAREPASSTHROUGH, ~, POINTTYPES) > filter_variant_t;
+typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLAREPASSTHROUGH, ~, ECTO_XYZ_POINT_TYPES) > filter_variant_t;
 
 #include "filters/Filter.hpp"
 
