@@ -1,4 +1,34 @@
+/*
+ * Copyright (c) 2011, Willow Garage, Inc.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Willow Garage, Inc. nor the names of its
+ *       contributors may be used to endorse or promote products derived from
+ *       this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+
 #include <ecto/ecto.hpp>
+#include <ecto_pcl.hpp>
 
 #undef  BOOST_PARAMETER_MAX_ARITY
 #define BOOST_PARAMETER_MAX_ARITY 7
@@ -17,9 +47,6 @@
 
 #include <iostream>
 
-using ecto::tendrils;
-
-typedef pcl::PointCloud<pcl::PointXYZRGB> cloud_t;
 class SimpleKinectGrabber
 {
 public:
@@ -55,18 +82,17 @@ public:
     interface->stop();
   }
 
-
   /**
    * \brief don't hang on to this cloud!! or it won't get updated.
    */
-  cloud_t::ConstPtr getLatestCloud()
+  CloudPOINTXYZRGB::ConstPtr getLatestCloud()
   {
     boost::mutex::scoped_lock lock(datamutex_);
 
     while (!cloud_)
       cond_.wait(lock);
 
-    cloud_t::ConstPtr p = cloud_;
+    CloudPOINTXYZRGB::ConstPtr p = cloud_;
     cloud_.reset();
     return p;
   }
@@ -81,7 +107,7 @@ public:
   boost::mutex datamutex_, runmutex_;
   boost::condition_variable cond_;
 
-  cloud_t::ConstPtr cloud_;
+  CloudPOINTXYZRGB::ConstPtr cloud_;
   boost::thread thread_;
 };
 ECTO_CELL(ecto_pcl, SimpleKinectGrabber, "SimpleKinectGrabber", "Simple kinect grabber");
@@ -91,7 +117,7 @@ struct KinectGrabber
 {
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    outputs.declare<cloud_t::ConstPtr> ("output", "An rgb xyz point cloud from the kinect");
+    outputs.declare<PointCloud> ("output", "An XYZRGB point cloud from the kinect");
   }
 
   int configure(const tendrils& parameters, tendrils& inputs, tendrils& outputs)
@@ -101,16 +127,12 @@ struct KinectGrabber
 
   int process(const tendrils& /*inputs*/, tendrils& outputs)
   {
-    cloud_t::ConstPtr p;
-    p = impl_->getLatestCloud();
-    outputs.get<cloud_t::ConstPtr> ("output") = p;
+    PointCloud p( impl_->getLatestCloud() );
+    outputs.get<PointCloud> ("output") = p;
     return 0;
   }
 
   ~KinectGrabber() { impl_->stop(); }
-
-
-
   boost::scoped_ptr<SimpleKinectGrabber> impl_;
 };
 
