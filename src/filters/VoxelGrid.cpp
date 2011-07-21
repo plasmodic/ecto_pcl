@@ -50,8 +50,6 @@ struct VoxelGrid
   }
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs) { }
 
-  VoxelGrid() {}
-
   template <typename Point>
   void configure(pcl::VoxelGrid<Point>& f)
   {
