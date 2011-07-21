@@ -8,7 +8,9 @@ ectomodule(ecto_pcl
   filters/ProjectInliers.cpp
   filters/VoxelGrid.cpp
   segmentation/ExtractPolygonalPrismData.cpp
+  #segmentation/EuclideanClusterExtraction.cpp
   segmentation/SACSegmentation.cpp
+  segmentation/SACSegmentationFromNormals.cpp
   surface/ConvexHull.cpp
   CloudViewer.cpp
   KinectGrabber.cpp

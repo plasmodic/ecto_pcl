@@ -1,75 +1,87 @@
+/*
+ * Copyright (c) 2011, Willow Garage, Inc.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Willow Garage, Inc. nor the names of its
+ *       contributors may be used to endorse or promote products derived from
+ *       this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+
 #include "ecto_pcl.hpp"
 #include <pcl/filters/project_inliers.h>
 
+#define DECLAREPROJECTINLIERS(r, data, i, ELEM)                            \
+  BOOST_PP_COMMA_IF(i) pcl::ProjectInliers< BOOST_PP_TUPLE_ELEM(2, 0, ELEM) >
+
+typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLAREPROJECTINLIERS, ~, ECTO_XYZ_POINT_TYPES) > filter_variant_t;
+
+#include "filters/Filter.hpp"
+
 struct ProjectInliers
 {
+  template <typename Point>
+  struct filter {
+    typedef typename ::pcl::ProjectInliers<Point> type;
+  };
+
   static void declare_params(ecto::tendrils& params)
   {
-    // filter params
-    pcl::ProjectInliers<cloud_t::PointType> default_;
-    params.declare<std::string> ("filter_field_name", "The name of the field to use for filtering.", "");
-    double filter_limit_min, filter_limit_max;
-    default_.getFilterLimits(filter_limit_min, filter_limit_max);
-    params.declare<double> ("filter_limit_min", "Minimum value for the filter.", filter_limit_min);
-    params.declare<double> ("filter_limit_max", "Maximum value for the filter.", filter_limit_max);
-    params.declare<bool> ("filter_limit_negative", "To negate the limits or not.", default_.getFilterLimitsNegative());
-
-    // custom params
     params.declare<int> ("model_type", "The type of model to use.", 0);
     params.declare<bool> ("copy_all_data", "Sets whether all data will be returned, or only the projected inliers.", false);
   }
-
-  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
-  {
-    inputs.declare<cloud_t::ConstPtr> ("input", "The cloud to filter");
+  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs) {
     inputs.declare<model_t::ConstPtr> ("model", "Model to use for projection.");
-    outputs.declare<cloud_t::ConstPtr> ("output", "Filtered cloud.");
   }
 
   ProjectInliers() {}
 
+  template <typename Point>
+  void configure(pcl::ProjectInliers<Point>& f)
+  {
+    f.setModelType(model_type);
+    f.setCopyAllData(copy_all);
+  }
   void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    //set filter details
-    std::string filter_field_name = params.get<std::string> ("filter_field_name");
-    impl_.setFilterFieldName(filter_field_name);
-    double filter_limit_min = params.get<double> ("filter_limit_min");
-    double filter_limit_max = params.get<double> ("filter_limit_max");
-    impl_.setFilterLimits(filter_limit_min,filter_limit_max);
-    bool filter_limit_negative = params.get<bool> ("filter_limit_negative");
-    impl_.setFilterLimitsNegative(filter_limit_negative);
-
-    //set the model info
-    int model_type = params.get<int> ("model_type");
-    impl_.setModelType(model_type);
-    bool copy_all = params.get<bool> ("copy_all_data");
-    impl_.setCopyAllData(copy_all);
-
-    //set in/out
-    input_ = inputs.at("input");
+    model_type = params.get<int> ("model_type");
+    copy_all = params.get<bool> ("copy_all_data");
     model_ = inputs.at("model");
-    output_ = outputs.at("output");
   }
 
-  int process(const tendrils& inputs, tendrils& outputs)
+  template <typename Point>
+  int process(pcl::ProjectInliers<Point>& f)
   {
-    cloud_t::Ptr cloud ( new cloud_t() );    
-    //filter it.
-    impl_.setInputCloud(*input_);
-    impl_.setModelCoefficients(*model_);
-    impl_.filter(*cloud);
-    //set the output.
-    *output_ = cloud;
+    f.setModelCoefficients(*model_);
     return 0;
   }
-  pcl::ProjectInliers<cloud_t::PointType> impl_;
+  int process(const tendrils& inputs, tendrils& outputs){ return 0; }
+
   ecto::spore<model_t::ConstPtr> model_;
-  ecto::spore<cloud_t::ConstPtr> input_;
-  //ecto::spore<cloud_t::ConstPtr> indicies_;
-  ecto::spore<cloud_t::ConstPtr> output_;
+  int model_type;
+  bool copy_all;
 
 };
 
-ECTO_CELL(ecto_pcl, ProjectInliers, "ProjectInliers", "...");
+ECTO_CELL(ecto_pcl, ecto::pcl::FilterCell<ProjectInliers>, "ProjectInliers", "...");
 
 

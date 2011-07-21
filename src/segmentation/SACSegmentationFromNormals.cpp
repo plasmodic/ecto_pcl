@@ -30,18 +30,19 @@
 #include "ecto_pcl.hpp"
 #include <pcl/segmentation/sac_segmentation.h>
 
-#define DECLARESACSEGMENTATION(r, data, i, ELEM)                            \
-  BOOST_PP_COMMA_IF(i) pcl::SACSegmentation< BOOST_PP_TUPLE_ELEM(2, 0, ELEM) >
+#define DECLARESACSEGMENTATIONFROMNORMALS(r, data, i, ELEM)                            \
+  BOOST_PP_COMMA_IF(i) pcl::SACSegmentationFromNormals< BOOST_PP_TUPLE_ELEM(2, 0, ELEM), pcl::Normal >
 
-typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLARESACSEGMENTATION, ~, ECTO_XYZ_POINT_TYPES) > segmentation_variant_t;
+typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLARESACSEGMENTATIONFROMNORMALS, ~, ECTO_XYZ_POINT_TYPES) > segmentation_variant_t;
 
 #include <segmentation/Segmentation.hpp>
+#include <boost/variant/get.hpp>
 
-struct SACSegmentation
+struct SACSegmentationFromNormals
 {
   template <typename Point>
   struct segmentation {
-    typedef typename ::pcl::SACSegmentation<Point> type;
+    typedef typename ::pcl::SACSegmentationFromNormals<Point, ::pcl::Normal> type;
   };
   struct normals {
     typedef ::pcl::Normal type;
@@ -49,7 +50,7 @@ struct SACSegmentation
 
   static void declare_params(ecto::tendrils& params)
   {
-    pcl::SACSegmentation<pcl::PointXYZ> default_;
+    pcl::SACSegmentationFromNormals<pcl::PointXYZ, pcl::Normal> default_;
     params.declare<int> ("model_type", "Type of model to use.", default_.getModelType());
     params.declare<int> ("method", "Type of sample consensus method to use.", default_.getMethodType());
     params.declare<double> ("eps_angle", "Angle epsilon (delta) threshold.", default_.getEpsAngle());
@@ -60,9 +61,11 @@ struct SACSegmentation
     double t_min, t_max;
     default_.getRadiusLimits (t_min, t_max);
     params.declare<double> ("radius_min", "Minimum allowable radius limits for the model.", t_min);
-    params.declare<double> ("radius_max", "Maximum allowable radius limits for the model.", t_max);
+    params.declare<double> ("radius_max", "Maximum allowable radius limits for the model.", t_max);    
+    params.declare<double> ("normal_distance_weight", "Relative weight (between 0 and 1) to give to the angular distance (0 to pi/2) betwen point normals and the plane normal.", default_.getNormalDistanceWeight());
   }
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs) {
+    inputs.declare<FeatureCloud> ("normals", "The input normals.");
     outputs.declare<indices_t::ConstPtr> ("inliers", "Inliers of the model.");
     outputs.declare<model_t::ConstPtr> ("model", "Model found during segmentation.");
   }
@@ -81,6 +84,7 @@ struct SACSegmentation
   }
   void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
   {
+    normals_ = inputs.at("normals");
     inliers_ = outputs.at("inliers");
     model_ = outputs.at("model");
 
@@ -93,16 +97,26 @@ struct SACSegmentation
     probability = params.get<double> ("probability");
     radius_min = params.get<double> ("radius_min");
     radius_max = params.get<double> ("radius_max");
+    normal_distance_weight = params.get<double> ("normal_distance_weight");
   }
 
   template <typename Point>
-  int process(pcl::SACSegmentation<Point>& impl_) { 
+  int process(pcl::SACSegmentationFromNormals<Point, ::pcl::Normal>& impl_) {
     indices_t::Ptr inliers ( new indices_t() );
     model_t::Ptr model ( new model_t() );
 
     // copy header
     //inliers->header = model->header = (*input_)->header;
 
+    feature_cloud_variant_t cv = normals_->make_variant();
+    try{
+      CloudNORMAL::ConstPtr c = boost::get<CloudNORMAL::ConstPtr>(cv);
+      if(c)
+        impl_.setInputNormals (c);
+    }catch(boost::bad_get){
+      throw std::runtime_error("SACSegmentation works only with pcl::Normal feature clouds!");
+    }
+    
     impl_.segment (*inliers, *model);
 
     *model_ = model;
@@ -121,11 +135,13 @@ struct SACSegmentation
   double probability;
   double radius_min;
   double radius_max;
+  double normal_distance_weight;
 
-  ecto::spore<indices_t::ConstPtr> inliers_;
-  ecto::spore<model_t::ConstPtr> model_;
+  ecto::spore< FeatureCloud > normals_;
+  ecto::spore< indices_t::ConstPtr > inliers_;
+  ecto::spore< model_t::ConstPtr > model_;
 
 };
 
-ECTO_CELL(ecto_pcl, ecto::pcl::SegmentationCell<SACSegmentation>, "SACSegmentation", "Segmentation using Sample Consensus.");
+ECTO_CELL(ecto_pcl, ecto::pcl::SegmentationCell<SACSegmentationFromNormals>, "SACSegmentationFromNormals", "Segmentation using Sample Consensus from Normals.");
 
