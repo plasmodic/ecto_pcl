@@ -28,14 +28,7 @@
  */
 
 #include "ecto_pcl.hpp"
-#include <boost/preprocessor/seq/for_each_product.hpp>
 #include <pcl/features/normal_3d.h>
-
-//#define DECLARENORMALESTIMATION(r, ELEM) \
-  pcl::NormalEstimation< BOOST_PP_TUPLE_ELEM(2, 0, BOOST_PP_SEQ_ELEM(0,ELEM)),BOOST_PP_TUPLE_ELEM(2, 0, BOOST_PP_SEQ_ELEM(1,ELEM)) > BOOST_PP_COMMA()
-  
-//typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_PRODUCT(DECLARENORMALESTIMATION, (ECTO_XYZ_POINT_TYPES) (ECTO_NORMAL_POINT_TYPES)) boost::detail::variant::void_ > feature_estimator_variant_t;
-
 
 #define DECLARENORMALESTIMATION(r, data, i, ELEM)                            \
   BOOST_PP_COMMA_IF(i) pcl::NormalEstimation< BOOST_PP_TUPLE_ELEM(2, 0, ELEM), pcl::Normal >

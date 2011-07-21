@@ -9,7 +9,7 @@ ectomodule(ecto_pcl
   filters/VoxelGrid.cpp
   #segmentation/ExtractPolygonalPrismData.cpp
   #segmentation/EuclideanClusterExtraction.cpp
-  #segmentation/SACSegmentation.cpp
+  segmentation/SACSegmentation.cpp
   surface/ConvexHull.cpp
   CloudViewer.cpp
   KinectGrabber.cpp
