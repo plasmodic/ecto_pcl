@@ -47,11 +47,18 @@
 
 #include <iostream>
 
+#include <io/KinectGrabber.h>
+
 class SimpleKinectGrabber
 {
 public:
-  SimpleKinectGrabber() 
-    : thread_(boost::ref(*this))
+  SimpleKinectGrabber()  
+    : format(0), thread_(boost::ref(*this))
+  { 
+    runmutex_.lock(); // when this gets unlocked in the destructor, the thread unblocks
+  }
+  SimpleKinectGrabber(int format_)  
+    : format(format_), thread_(boost::ref(*this))
   { 
     runmutex_.lock(); // when this gets unlocked in the destructor, the thread unblocks
   }
@@ -66,11 +73,17 @@ public:
   void operator ()()
   {
     boost::scoped_ptr<pcl::Grabber> interface(new pcl::OpenNIGrabber);
+    boost::signals2::connection c;
 
-    boost::function<void(const pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr&)> point_cloud_cb =
-        boost::bind(&SimpleKinectGrabber::cloud_cb_, this, _1);
-
-    boost::signals2::connection c = interface->registerCallback(point_cloud_cb);
+    if(format == GRABBER_XYZRGB){
+      boost::function<void(const pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr&)> point_cloud_cb =
+          boost::bind(&SimpleKinectGrabber::cloud_xyzrgb_cb_, this, _1);
+      c = interface->registerCallback(point_cloud_cb);
+    }else if(format == GRABBER_XYZ){
+      boost::function<void(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr&)> point_cloud_cb =
+          boost::bind(&SimpleKinectGrabber::cloud_xyz_cb_, this, _1);
+      c = interface->registerCallback(point_cloud_cb);
+    }
 
     interface->start();
 
@@ -85,29 +98,50 @@ public:
   /**
    * \brief don't hang on to this cloud!! or it won't get updated.
    */
-  CloudPOINTXYZRGB::ConstPtr getLatestCloud()
+  CloudPOINTXYZRGB::ConstPtr getLatestXYZRGBCloud()
   {
     boost::mutex::scoped_lock lock(datamutex_);
 
-    while (!cloud_)
+    while (!cloud_xyzrgb_)
       cond_.wait(lock);
+    CloudPOINTXYZRGB::ConstPtr p = cloud_xyzrgb_;
+    cloud_xyzrgb_.reset();
+    return p;
+  }
+  CloudPOINTXYZ::ConstPtr getLatestXYZCloud()
+  {
+    boost::mutex::scoped_lock lock(datamutex_);
 
-    CloudPOINTXYZRGB::ConstPtr p = cloud_;
-    cloud_.reset();
+    while (!cloud_xyz_)
+      cond_.wait(lock);
+    CloudPOINTXYZ::ConstPtr p = cloud_xyz_;
+    cloud_xyz_.reset();
     return p;
   }
 
-  void cloud_cb_(const pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr &cloud)
+
+  void cloud_xyzrgb_cb_(const pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr &cloud)
   {
     boost::lock_guard<boost::mutex> lock(datamutex_);
-    cloud_ = cloud;
+    cloud_xyzrgb_ = cloud;
     cond_.notify_one();
   }
+
+  void cloud_xyz_cb_(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud)
+  {
+    boost::lock_guard<boost::mutex> lock(datamutex_);
+    cloud_xyz_ = cloud;
+    cond_.notify_one();
+  }
+
+
+  int format;
 
   boost::mutex datamutex_, runmutex_;
   boost::condition_variable cond_;
 
-  CloudPOINTXYZRGB::ConstPtr cloud_;
+  CloudPOINTXYZRGB::ConstPtr cloud_xyzrgb_;
+  CloudPOINTXYZ::ConstPtr cloud_xyz_;
   boost::thread thread_;
 };
 ECTO_CELL(ecto_pcl, SimpleKinectGrabber, "SimpleKinectGrabber", "Simple kinect grabber");
@@ -115,23 +149,38 @@ ECTO_CELL(ecto_pcl, SimpleKinectGrabber, "SimpleKinectGrabber", "Simple kinect g
 
 struct KinectGrabber
 {
-  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
+
+  static void declare_params(tendrils& params)
   {
-    outputs.declare<PointCloud> ("output", "An XYZRGB point cloud from the kinect");
+    params.declare<int> ("format", "Format of cloud to grab. Choices are: XYZ, XYZRGB (default)", GRABBER_XYZRGB);
   }
 
-  int configure(const tendrils& parameters, tendrils& inputs, tendrils& outputs)
+  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    impl_.reset(new SimpleKinectGrabber);
+    outputs.declare<PointCloud> ("output", "An XYZ/XYZRGB point cloud from the kinect");
+  }
+
+  int configure(const tendrils& params, tendrils& inputs, tendrils& outputs)
+  {
+    format = params.get<int> ("format");
+    impl_.reset(new SimpleKinectGrabber(format));
   }
 
   int process(const tendrils& /*inputs*/, tendrils& outputs)
   {
-    PointCloud p( impl_->getLatestCloud() );
-    outputs.get<PointCloud> ("output") = p;
+    if(format == GRABBER_XYZRGB){
+      PointCloud p( impl_->getLatestXYZRGBCloud() );
+      outputs.get<PointCloud> ("output") = p;
+    }else if(format == GRABBER_XYZ){
+      PointCloud p( impl_->getLatestXYZCloud() );
+      outputs.get<PointCloud> ("output") = p;
+    }else{
+      throw std::runtime_error("KinectGrabber supports only XYZ and XYZRGB point clouds!");
+    }
     return 0;
   }
 
+  int format;
   ~KinectGrabber() { impl_->stop(); }
   boost::scoped_ptr<SimpleKinectGrabber> impl_;
 };

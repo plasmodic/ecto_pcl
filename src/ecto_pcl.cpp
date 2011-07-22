@@ -36,6 +36,7 @@
 /* enumerations and values to be wrapped */
 #include <pcl/sample_consensus/model_types.h>
 #include <pcl/kdtree/tree_types.h>
+#include <io/KinectGrabber.h>
 
 namespace bp = boost::python;
 
@@ -69,5 +70,8 @@ ECTO_DEFINE_MODULE(ecto_pcl)
 
   bp::scope().attr("KDTREE_FLANN") = pcl::KDTREE_FLANN;
   bp::scope().attr("KDTREE_ORGANIZED_INDEX") = pcl::KDTREE_ORGANIZED_INDEX;
+
+  bp::scope().attr("XYZRGB") = GRABBER_XYZRGB;  // default
+  bp::scope().attr("XYZ") = GRABBER_XYZ;
 }
 
