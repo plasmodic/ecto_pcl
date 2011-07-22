@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 
+"""
+A VoxelGrid can be used to downsample very dense clouds.
+This can be especially useful when estimating normals. 
+"""
+
 import ecto, ecto_pcl
 
 plasm = ecto.Plasm()

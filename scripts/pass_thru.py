@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 
+"""
+A PassThrough filter can filter a point cloud on a single field. 
+In this example we set the field to "z", and filter all points
+with "z" > 2.0 (meters). One could also set a filter_limit_min.
+"""
+
 import ecto, ecto_pcl
 
 plasm = ecto.Plasm()
