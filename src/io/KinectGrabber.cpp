@@ -47,8 +47,6 @@
 
 #include <iostream>
 
-#include <io/KinectGrabber.h>
-
 class SimpleKinectGrabber
 {
 public:
@@ -75,11 +73,11 @@ public:
     boost::scoped_ptr<pcl::Grabber> interface(new pcl::OpenNIGrabber);
     boost::signals2::connection c;
 
-    if(format == GRABBER_XYZRGB){
+    if(format == FORMAT_XYZRGB){
       boost::function<void(const pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr&)> point_cloud_cb =
           boost::bind(&SimpleKinectGrabber::cloud_xyzrgb_cb_, this, _1);
       c = interface->registerCallback(point_cloud_cb);
-    }else if(format == GRABBER_XYZ){
+    }else if(format == FORMAT_XYZ){
       boost::function<void(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr&)> point_cloud_cb =
           boost::bind(&SimpleKinectGrabber::cloud_xyz_cb_, this, _1);
       c = interface->registerCallback(point_cloud_cb);
@@ -119,7 +117,6 @@ public:
     return p;
   }
 
-
   void cloud_xyzrgb_cb_(const pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr &cloud)
   {
     boost::lock_guard<boost::mutex> lock(datamutex_);
@@ -133,7 +130,6 @@ public:
     cloud_xyz_ = cloud;
     cond_.notify_one();
   }
-
 
   int format;
 
@@ -152,7 +148,7 @@ struct KinectGrabber
 
   static void declare_params(tendrils& params)
   {
-    params.declare<int> ("format", "Format of cloud to grab. Choices are: XYZ, XYZRGB (default)", GRABBER_XYZRGB);
+    params.declare<int> ("format", "Format of cloud to grab. Choices are: XYZ, XYZRGB (default)", FORMAT_XYZRGB);
   }
 
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
@@ -160,7 +156,7 @@ struct KinectGrabber
     outputs.declare<PointCloud> ("output", "An XYZ/XYZRGB point cloud from the kinect");
   }
 
-  int configure(const tendrils& params, tendrils& inputs, tendrils& outputs)
+  int configure(tendrils& params, tendrils& inputs, tendrils& outputs)
   {
     format = params.get<int> ("format");
     impl_.reset(new SimpleKinectGrabber(format));
@@ -168,10 +164,10 @@ struct KinectGrabber
 
   int process(const tendrils& /*inputs*/, tendrils& outputs)
   {
-    if(format == GRABBER_XYZRGB){
+    if(format == FORMAT_XYZRGB){
       PointCloud p( impl_->getLatestXYZRGBCloud() );
       outputs.get<PointCloud> ("output") = p;
-    }else if(format == GRABBER_XYZ){
+    }else if(format == FORMAT_XYZ){
       PointCloud p( impl_->getLatestXYZCloud() );
       outputs.get<PointCloud> ("output") = p;
     }else{

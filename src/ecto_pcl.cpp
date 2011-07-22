@@ -32,11 +32,11 @@
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/stringize.hpp>
 #include <ecto/ecto.hpp>
+#include <ecto_pcl.hpp>
 
 /* enumerations and values to be wrapped */
 #include <pcl/sample_consensus/model_types.h>
 #include <pcl/kdtree/tree_types.h>
-#include <io/KinectGrabber.h>
 
 namespace bp = boost::python;
 
@@ -71,7 +71,13 @@ ECTO_DEFINE_MODULE(ecto_pcl)
   bp::scope().attr("KDTREE_FLANN") = pcl::KDTREE_FLANN;
   bp::scope().attr("KDTREE_ORGANIZED_INDEX") = pcl::KDTREE_ORGANIZED_INDEX;
 
-  bp::scope().attr("XYZRGB") = GRABBER_XYZRGB;  // default
-  bp::scope().attr("XYZ") = GRABBER_XYZ;
+  bp::scope().attr("XYZ") = FORMAT_XYZ;
+  bp::scope().attr("XYZI") = FORMAT_XYZI;
+  bp::scope().attr("XYZRGB") = FORMAT_XYZRGB;
+  bp::scope().attr("XYZRGBA") = FORMAT_XYZRGBA;
+  bp::scope().attr("NORMAL") = FORMAT_NORMAL;
+  bp::scope().attr("PFHSIGNATURE") = FORMAT_PFHSIGNATURE;
+  bp::scope().attr("FPFHSIGNATURE") = FORMAT_FPFHSIGNATURE;
+  bp::scope().attr("VFHSIGNATURE") = FORMAT_VFHSIGNATURE;
 }
 
