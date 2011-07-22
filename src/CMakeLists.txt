@@ -8,12 +8,13 @@ ectomodule(ecto_pcl
   filters/ProjectInliers.cpp
   filters/VoxelGrid.cpp
   segmentation/ExtractPolygonalPrismData.cpp
-  #segmentation/EuclideanClusterExtraction.cpp
+  segmentation/EuclideanClusterExtraction.cpp
   segmentation/SACSegmentation.cpp
   segmentation/SACSegmentationFromNormals.cpp
+  #segmentation/SegmentDifferences.cpp
   surface/ConvexHull.cpp
-  CloudViewer.cpp
-  KinectGrabber.cpp
+  io/CloudViewer.cpp
+  io/KinectGrabber.cpp
   )
 
 link_ecto(ecto_pcl ${PCL_LIBRARIES})

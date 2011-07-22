@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 
 """
-This example shows how to capture a Kinect point 
-cloud and display it to a cloud viewer.
+This example shows how to capture a Kinect point cloud with
+XYZ-only (no RGB information) and display it to a cloud viewer.
 """
 
 import ecto, ecto_pcl
 
 plasm = ecto.Plasm()
 
-grabber = ecto_pcl.KinectGrabber("Grabber")
+grabber = ecto_pcl.KinectGrabber("Grabber", format=ecto_pcl.XYZ)
 
 viewer = ecto_pcl.CloudViewer("Viewer", window_name="Clouds!")
 

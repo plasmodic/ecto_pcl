@@ -1,5 +1,20 @@
 #!/usr/bin/env python
 
+"""
+This example shows how to extract points corresponding to objects on a table. 
+
+  1) The example downsamples using a VoxelGrid before estimating 
+     normals for the downsampled cloud. 
+  2) These normals are then used for segmentation using RANSAC. 
+  3) Segmentation produces a planar model to which all inliers are 
+     projected so that a 2D convex hull can be created. 
+  4) We then extract the indices of all points that are above the 
+     plane formed by the convex hull. 
+  5) Finally, we extract the point cloud corresponding to these
+     indices, and display it. 
+
+"""
+
 import ecto, ecto_pcl
 
 plasm = ecto.Plasm()
@@ -38,7 +53,7 @@ plasm.connect(grabber[:] >> voxgrid[:],
               grabber[:] >> extract["input"],
               extract[:] >> viewer[:])
 
-# ecto.view_plasm(plasm)
+ecto.view_plasm(plasm)
 sched = ecto.schedulers.Threadpool(plasm)
 sched.execute()
 
