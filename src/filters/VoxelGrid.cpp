@@ -53,18 +53,21 @@ struct VoxelGrid
   template <typename Point>
   void configure(pcl::VoxelGrid<Point>& f)
   {
-    f.setLeafSize(leaf_size, leaf_size, leaf_size);
+    f.setLeafSize(*leaf_size, *leaf_size, *leaf_size);
   }
   void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    leaf_size = params.get<float> ("leaf_size");
+    leaf_size = params.at("leaf_size");
   }
 
   template <typename Point>
-  int process(pcl::VoxelGrid<Point>& f) { return 0; }
+  int process(pcl::VoxelGrid<Point>& f) {
+    f.setLeafSize(*leaf_size, *leaf_size, *leaf_size);
+    return ecto::OK;
+  }
   int process(const tendrils& inputs, tendrils& outputs){ return 0; }
 
-  double leaf_size;
+  ecto::spore<float> leaf_size;
 
 };
 

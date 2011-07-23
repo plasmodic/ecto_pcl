@@ -28,7 +28,11 @@ def do_ecto():
                   )
     
     sched = ecto.schedulers.Threadpool(plasm)
-    sched.execute()
+    sched.execute_async()
+
+    from IPython.Shell import IPShellEmbed
+    ipshell = IPShellEmbed()
+    ipshell()
 if __name__ == "__main__":
     ecto_ros.init(sys.argv,"image_node")
     do_ecto()
