@@ -32,65 +32,47 @@
 
 #include <pcl/io/pcd_io.h>
 
-struct PCDReader
+struct PCDWriter
 {
   static void declare_params(tendrils& params)
   {
-    params.declare<int> ("format", "Format of cloud found in PCD file.", FORMAT_XYZRGB);
     params.declare<std::string> ("filename", "Name of the pcd file", "");
   }
 
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    outputs.declare<PointCloud>("output", "A point cloud from the bag file.");
+    inputs.declare<PointCloud>("input", "A point cloud to put in the bag file.");
   }
 
   int configure(tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    output_ = outputs.at("output");
-    format_ = params.at("format");
+    input_ = inputs.at("input");
     filename_ = params.at("filename");
   }
 
+  struct write_dispatch : boost::static_visitor<void>
+  {
+    std::string file;
+    write_dispatch(std::string f) : file(f) {}
+
+    template <typename CloudType>
+    void operator()(CloudType& cloud) const
+    {
+      pcl::io::savePCDFileASCII(file, *cloud);
+    }
+  };
+
   int process(const tendrils& /*inputs*/, tendrils& outputs)
   { 
-    switch(*format_)
-    {
-      case FORMAT_XYZ:
-        {
-          std::cout << "opening " << *filename_ << std::endl;
-          pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
-          if (pcl::io::loadPCDFile<pcl::PointXYZ>(*filename_, *cloud) == -1)
-          {
-            throw std::runtime_error("PCDReader: failed to read PointXYZ cloud.");
-            return 1;
-          }
-          std::cout << "Made it this far" << std::endl;
-          PointCloud p( cloud );
-          *output_ = p;
-        } break;
-      case FORMAT_XYZRGB:
-        {
-          pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZRGB>);
-          if (pcl::io::loadPCDFile<pcl::PointXYZRGB> (*filename_, *cloud) == -1)
-          {
-            throw std::runtime_error("PCDReader: failed to read PointXYZRGB cloud.");
-            return 1;
-          }
-          PointCloud p( cloud );
-          *output_ = p;
-        } break;
-      default:
-        throw std::runtime_error("PCDReader: Unknown cloud type.");
-    }
+    xyz_cloud_variant_t cv = input_->make_variant();
+    boost::apply_visitor(write_dispatch(*filename_), cv);
     return 0;
   }
 
-  ecto::spore<PointCloud> output_;
-  ecto::spore<int> format_;
+  ecto::spore<PointCloud> input_;
   ecto::spore<std::string> filename_;
 
 };
 
-ECTO_CELL(ecto_pcl, PCDReader, "PCDReader", "Read a cloud from a PCD file");
+ECTO_CELL(ecto_pcl, PCDWriter, "PCDWriter", "Write a cloud to a PCD file");
 
