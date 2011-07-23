@@ -7,9 +7,9 @@ ectomodule(ecto_pcl
   filters/PassThrough.cpp
   filters/ProjectInliers.cpp
   filters/VoxelGrid.cpp
-  io/CloudViewer.cpp
-  io/KinectGrabber.cpp
-  io/PCDReader.cpp
+  #io/CloudViewer.cpp
+  #io/KinectGrabber.cpp
+  #io/PCDReader.cpp
   segmentation/ExtractPolygonalPrismData.cpp
   segmentation/EuclideanClusterExtraction.cpp
   segmentation/SACSegmentation.cpp
@@ -18,5 +18,9 @@ ectomodule(ecto_pcl
   surface/ConvexHull.cpp
   )
 
-link_ecto(ecto_pcl ${PCL_LIBRARIES})
+link_ecto(ecto_pcl
+    ${sensor_msgs_LIBRARIES}
+    ${pcl_LIBRARIES}
+    )
 install_ecto_module(ecto_pcl)
+add_subdirectory(ros)
