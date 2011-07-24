@@ -17,4 +17,4 @@ ectomodule(ecto_pcl
   )
 
 link_ecto(ecto_pcl ${PCL_LIBRARIES})
-install_ecto_module(ecto_pcl)
+# install_ecto_module(ecto_pcl)
