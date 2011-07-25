@@ -1,16 +1,21 @@
 cmake_minimum_required(VERSION 2.8)
 project(ecto_pcl)
 
+message(STATUS "--- ${PROJECT_NAME} ---")
+
 find_package(ecto REQUIRED)
 find_package(PCL REQUIRED)
 find_package(OpenCV 2.3.1 EXACT REQUIRED)
 
 if(NOT PCL_FOUND)
-return()
+  return()
 endif()
 
-set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
-ecto_python_env_gen(${CMAKE_BINARY_DIR})
+if (NOT ecto_kitchen_SOURCE_DIR)
+  set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
+  ecto_python_env_gen(${CMAKE_BINARY_DIR})
+endif()
+
 find_package(Boost COMPONENTS signals thread)
 
 message(STATUS "pcl includes :\n    ${PCL_INCLUDE_DIRS}")
