@@ -4,10 +4,16 @@ project(ecto_pcl)
 message(STATUS "--- ${PROJECT_NAME} ---")
 
 find_package(ecto REQUIRED)
-find_package(PCL REQUIRED)
-find_package(OpenCV 2.3.1 EXACT REQUIRED)
+find_package(PCL)
+find_package(OpenCV 2.3.1 EXACT)
 
 if(NOT PCL_FOUND)
+  message("**\n** Disabling build of ${PROJECT_NAME} due to missing dependency PCL\n**")
+  return()
+endif()
+
+if(NOT OpenCV_FOUND)
+  message("**\n** Disabling build of ${PROJECT_NAME} due to missing dependency OpenCV\n**")
   return()
 endif()
 
