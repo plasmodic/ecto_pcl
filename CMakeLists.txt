@@ -18,11 +18,11 @@ endif()
 
 find_package(Boost COMPONENTS signals thread)
 
-message(STATUS "pcl includes :\n    ${PCL_INCLUDE_DIRS}")
-message(STATUS "pcl library  :\n    ${PCL_LIBRARIES}")
+message(STATUS "pcl includes :\n    ${pcl_INCLUDES}")
+message(STATUS "pcl library  :\n    ${pcl_LIBRARIES}")
 
-include_directories(${pcl_INCLUDE_DIRS})
-include_directories(${sensor_msgs_INCLUDE_DIRS})
+include_directories(${pcl_INCLUDES})
+include_directories(${sensor_msgs_INCLUDES})
 
 include_directories(include)
 
