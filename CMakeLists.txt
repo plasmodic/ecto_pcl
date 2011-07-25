@@ -8,8 +8,11 @@ find_ros_package(pcl)
 find_ros_package(sensor_msgs)
 
 find_package(ecto REQUIRED)
-#find_package(PCL REQUIRED )
-find_package(OpenCV 2.3.1 EXACT REQUIRED)
+
+if(pcl_NOTFOUND)
+  message("**\n** Disabling build of ${PROJECT_NAME} due to missing dependency PCL\n**")
+  return()
+endif()
 
 if (NOT ecto_kitchen_SOURCE_DIR)
   set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
@@ -25,5 +28,4 @@ include_directories(${pcl_INCLUDES})
 include_directories(${sensor_msgs_INCLUDES})
 
 include_directories(include)
-
 add_subdirectory(src)
