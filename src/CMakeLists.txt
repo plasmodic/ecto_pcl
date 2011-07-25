@@ -10,6 +10,7 @@ ectomodule(ecto_pcl
   #io/CloudViewer.cpp
   #io/KinectGrabber.cpp
   #io/PCDReader.cpp
+  #io/PCDWriter.cpp
   segmentation/ExtractPolygonalPrismData.cpp
   segmentation/EuclideanClusterExtraction.cpp
   segmentation/SACSegmentation.cpp
