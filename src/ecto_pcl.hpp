@@ -86,8 +86,12 @@ struct PointCloud {
   {
     held.reset(new holder<T>(t_));
   }
+
   PointCloud() {}
   xyz_cloud_variant_t make_variant() { return held->make_variant(); }
+  
+  template<typename T>
+  typename T::ConstPtr cast() { return boost::get<typename T::ConstPtr>(held->make_variant());}
 };
 
 struct FeatureCloud {
