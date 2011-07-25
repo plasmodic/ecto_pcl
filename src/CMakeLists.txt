@@ -22,5 +22,5 @@ link_ecto(ecto_pcl
     ${sensor_msgs_LIBRARIES}
     ${pcl_LIBRARIES}
     )
-install_ecto_module(ecto_pcl)
+#install_ecto_module(ecto_pcl)
 add_subdirectory(ros)
