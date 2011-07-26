@@ -27,49 +27,52 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "ecto_pcl.hpp"
-#include <pcl/filters/voxel_grid.h>
+#include <ecto/ecto.hpp>
+#include <ecto_pcl.hpp>
 
-#define DECLAREVOXELGRID(r, data, i, ELEM)                            \
-  BOOST_PP_COMMA_IF(i) pcl::VoxelGrid< BOOST_PP_TUPLE_ELEM(2, 0, ELEM) >
+#include <pcl/io/pcd_io.h>
 
-typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLAREVOXELGRID, ~, ECTO_XYZ_POINT_TYPES) > filter_variant_t;
-
-#include "filters/Filter.hpp"
-
-struct VoxelGrid
+struct PCDWriter
 {
-  template <typename Point>
-  struct filter {
-    typedef typename ::pcl::VoxelGrid<Point> type;
+  static void declare_params(tendrils& params)
+  {
+    params.declare<std::string> ("filename", "Name of the pcd file", "");
+  }
+
+  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
+  {
+    inputs.declare<PointCloud>("input", "A point cloud to put in the bag file.");
+  }
+
+  int configure(tendrils& params, tendrils& inputs, tendrils& outputs)
+  {
+    input_ = inputs.at("input");
+    filename_ = params.at("filename");
+  }
+
+  struct write_dispatch : boost::static_visitor<void>
+  {
+    std::string file;
+    write_dispatch(std::string f) : file(f) {}
+
+    template <typename CloudType>
+    void operator()(CloudType& cloud) const
+    {
+      pcl::io::savePCDFileASCII(file, *cloud);
+    }
   };
 
-  static void declare_params(ecto::tendrils& params)
-  {
-    params.declare<float> ("leaf_size", "The size of the leaf(meters), smaller means more points...", 0.05);
-  }
-  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs) { }
-
-  template <typename Point>
-  void configure(pcl::VoxelGrid<Point>& f)
-  {
-    f.setLeafSize(*leaf_size, *leaf_size, *leaf_size);
-  }
-  void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
-  {
-    leaf_size = params.at("leaf_size");
+  int process(const tendrils& /*inputs*/, tendrils& outputs)
+  { 
+    xyz_cloud_variant_t cv = input_->make_variant();
+    boost::apply_visitor(write_dispatch(*filename_), cv);
+    return 0;
   }
 
-  template <typename Point>
-  int process(pcl::VoxelGrid<Point>& f) {
-    f.setLeafSize(*leaf_size, *leaf_size, *leaf_size);
-    return ecto::OK;
-  }
-  int process(const tendrils& inputs, tendrils& outputs){ return 0; }
-
-  ecto::spore<float> leaf_size;
+  ecto::spore<PointCloud> input_;
+  ecto::spore<std::string> filename_;
 
 };
 
-ECTO_CELL(ecto_pcl, ecto::pcl::FilterCell<VoxelGrid>, "VoxelGrid", "Voxel grid filter");
+ECTO_CELL(ecto_pcl, PCDWriter, "PCDWriter", "Write a cloud to a PCD file");
 

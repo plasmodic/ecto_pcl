@@ -1,33 +1,23 @@
 cmake_minimum_required(VERSION 2.8)
 project(ecto_pcl)
-
 message(STATUS "--- ${PROJECT_NAME} ---")
 
 find_package(ecto REQUIRED)
-find_package(PCL)
-find_package(OpenCV 2.3.1 EXACT)
-
-if(NOT PCL_FOUND)
+include(rosbuild_lite.cmake)
+find_ros_package(pcl)
+if(NOT pcl_FOUND)
   message("**\n** Disabling build of ${PROJECT_NAME} due to missing dependency PCL\n**")
   return()
 endif()
 
-if(NOT OpenCV_FOUND)
-  message("**\n** Disabling build of ${PROJECT_NAME} due to missing dependency OpenCV\n**")
-  return()
-endif()
-
-if (NOT ecto_kitchen_SOURCE_DIR)
-  set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
-  ecto_python_env_gen(${CMAKE_BINARY_DIR})
-endif()
+find_ros_package(sensor_msgs)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+ecto_python_env_gen(${CMAKE_BINARY_DIR}/lib)
 
 find_package(Boost COMPONENTS signals thread)
 
-message(STATUS "pcl includes :\n    ${PCL_INCLUDE_DIRS}")
-message(STATUS "pcl library  :\n    ${PCL_LIBRARIES}")
+include_directories(${pcl_INCLUDES})
+include_directories(${sensor_msgs_INCLUDES})
 
-include_directories(${PCL_INCLUDE_DIRS})
 include_directories(include)
-
 add_subdirectory(src)

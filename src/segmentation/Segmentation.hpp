@@ -109,7 +109,7 @@ namespace ecto {
         template <typename Segmentation, typename CloudType>
         void impl(Segmentation& s, CloudType& i, boost::false_type) const
         {
-          return impl2(s, i, pcl_takes_point_trait2<Segmentation, CloudType, typename SegmentationType::normals::type >());
+          return impl2(s, i, pcl_takes_point_trait2<Segmentation, CloudType,::pcl::Normal >());
         }
 
         template <typename Segmentation, typename CloudType>

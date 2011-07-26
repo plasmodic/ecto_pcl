@@ -32,6 +32,7 @@
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/stringize.hpp>
 #include <ecto/ecto.hpp>
+#include <ecto_pcl.hpp>
 
 /* enumerations and values to be wrapped */
 #include <pcl/sample_consensus/model_types.h>
@@ -60,6 +61,60 @@ namespace bp = boost::python;
   (PARALLEL_PLANE)                              \
   (NORMAL_PARALLEL_PLANE)
 
+
+struct PointCloud2PointCloudT
+{
+  static void
+  declare_params(tendrils& params)
+  {
+    params.declare<int>("format", "Format of cloud to grab.", FORMAT_XYZRGB);
+  }
+
+  static void
+  declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
+  {
+    inputs.declare<PointCloud>("input", "An variant based PointCloud.");
+    outputs.declare<ecto::tendril::none>("output", "An pcl::PointCloud<PointT> type.");
+  }
+
+  int
+  configure(tendrils& params, tendrils& inputs, tendrils& outputs)
+  {
+    format_ = params.at("format");
+    input_ = inputs.at("input");
+    output_ = outputs.at("output");
+  }
+
+  int
+  process(const tendrils& /*inputs*/, tendrils& outputs)
+  {
+    switch (*format_)
+    {
+      case FORMAT_XYZ:
+        output_ << input_->cast<pcl::PointCloud<pcl::PointXYZ> >();
+        break;
+      case FORMAT_XYZRGB:
+        output_ << input_->cast<pcl::PointCloud<pcl::PointXYZRGB> >();
+        break;
+      case FORMAT_XYZI:
+        output_ << input_->cast<pcl::PointCloud<pcl::PointXYZI> >();
+        break;
+      case FORMAT_XYZRGBA:
+        output_ << input_->cast<pcl::PointCloud<pcl::PointXYZRGBA> >();
+        break;
+      case FORMAT_NORMAL:
+        output_ << input_->cast<pcl::PointCloud<pcl::PointNormal> >();
+        break;
+      default:
+        throw std::runtime_error("Unsupported point cloud type.");
+    }
+    return ecto::OK;
+  }
+  ecto::spore<int> format_;
+  ecto::spore<PointCloud> input_;
+  ecto::tendril::ptr output_;
+};
+    
 ECTO_DEFINE_MODULE(ecto_pcl)
 { 
   bp::enum_<pcl::SacModel>("SacModel")
@@ -69,5 +124,15 @@ ECTO_DEFINE_MODULE(ecto_pcl)
 
   bp::scope().attr("KDTREE_FLANN") = pcl::KDTREE_FLANN;
   bp::scope().attr("KDTREE_ORGANIZED_INDEX") = pcl::KDTREE_ORGANIZED_INDEX;
+
+  bp::scope().attr("XYZ") = FORMAT_XYZ;
+  bp::scope().attr("XYZI") = FORMAT_XYZI;
+  bp::scope().attr("XYZRGB") = FORMAT_XYZRGB;
+  bp::scope().attr("XYZRGBA") = FORMAT_XYZRGBA;
+  bp::scope().attr("NORMAL") = FORMAT_NORMAL;
+  bp::scope().attr("PFHSIGNATURE") = FORMAT_PFHSIGNATURE;
+  bp::scope().attr("FPFHSIGNATURE") = FORMAT_FPFHSIGNATURE;
+  bp::scope().attr("VFHSIGNATURE") = FORMAT_VFHSIGNATURE;
 }
 
+ECTO_CELL(ecto_pcl,PointCloud2PointCloudT,"PointCloud2PointCloudT","Convert a generic variant based PointCloud to a strongly typed pcl::PointCloud<pcl::PointT>.")

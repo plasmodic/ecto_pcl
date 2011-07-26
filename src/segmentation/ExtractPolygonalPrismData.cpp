@@ -44,9 +44,6 @@ struct ExtractPolygonalPrismData
   struct segmentation {
     typedef typename ::pcl::ExtractPolygonalPrismData<Point> type;
   };
-  struct normals {
-    typedef ::pcl::Normal type;
-  };
 
   static void declare_params(ecto::tendrils& params)
   {

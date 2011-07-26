@@ -43,9 +43,6 @@ struct SACSegmentation
   struct segmentation {
     typedef typename ::pcl::SACSegmentation<Point> type;
   };
-  struct normals {
-    typedef ::pcl::Normal type;
-  };
 
   static void declare_params(ecto::tendrils& params)
   {
