@@ -27,7 +27,7 @@ namespace ecto
       typedef typename ::pcl::PointCloud<PointT> CloudT;
       typedef typename CloudT::Ptr PtrT;
       PtrT p(new CloudT);
-      pcl::fromROSMsg(*msg, *p);
+      ::pcl::fromROSMsg(*msg, *p);
       return p;
     }
 
@@ -39,7 +39,7 @@ namespace ecto
       operator()(CloudType& i) const
       {
         sensor_msgs::PointCloud2::Ptr msg(new sensor_msgs::PointCloud2);
-        pcl::toROSMsg(*i, *msg);
+        ::pcl::toROSMsg(*i, *msg);
         return msg;
       }
     };
@@ -49,7 +49,7 @@ namespace ecto
       static void
       declare_params(tendrils& params)
       {
-        params.declare<int>("format", "Format of cloud to grab. Choices are: XYZ, XYZRGB (default)", FORMAT_XYZRGB);
+        params.declare<int>("format", "Format of cloud to grab. Choices are: XYZ, XYZRGB (default)", ecto::pcl::FORMAT_XYZRGB);
       }
 
       static void
@@ -72,17 +72,17 @@ namespace ecto
       {
         switch (*format_)
         {
-          case FORMAT_XYZ:
-            *output_ = convert<pcl::PointXYZ>(*input_);
+          case ecto::pcl::FORMAT_XYZ:
+            *output_ = convert< ::pcl::PointXYZ >(*input_);
             break;
-          case FORMAT_XYZRGB:
-            *output_ = convert<pcl::PointXYZRGB>(*input_);
+          case ecto::pcl::FORMAT_XYZRGB:
+            *output_ = convert< ::pcl::PointXYZRGB >(*input_);
             break;
-          case FORMAT_XYZI:
-            *output_ = convert<pcl::PointXYZI>(*input_);
+          case ecto::pcl::FORMAT_XYZI:
+            *output_ = convert< ::pcl::PointXYZI >(*input_);
             break;
-          case FORMAT_XYZRGBA:
-            *output_ = convert<pcl::PointXYZRGBA>(*input_);
+          case ecto::pcl::FORMAT_XYZRGBA:
+            *output_ = convert< ::pcl::PointXYZRGBA >(*input_);
             break;
           default:
             throw std::runtime_error("Unsupported point cloud type.");
@@ -99,7 +99,7 @@ namespace ecto
       static void
       declare_params(tendrils& params)
       {
-        params.declare<int>("format", "Format of cloud to grab. Choices are: XYZ, XYZRGB (default)", FORMAT_XYZRGB);
+        params.declare<int>("format", "Format of cloud to grab. Choices are: XYZ, XYZRGB (default)", ecto::pcl::FORMAT_XYZRGB);
       }
 
       static void

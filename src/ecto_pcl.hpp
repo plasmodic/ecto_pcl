@@ -117,6 +117,22 @@ struct FeatureCloud {
   feature_cloud_variant_t make_variant() { return held->make_variant();  }
 };
 
+namespace ecto{
+  namespace pcl{
+    enum Formats
+    {
+      FORMAT_XYZ,
+      FORMAT_XYZI,
+      FORMAT_XYZRGB,
+      FORMAT_XYZRGBA,
+      FORMAT_NORMAL,
+      FORMAT_PFHSIGNATURE,
+      FORMAT_FPFHSIGNATURE,
+      FORMAT_VFHSIGNATURE
+    };
+  }
+} 
+
 // hacky pcl workaround for private PointCloud
 template <typename PclType, typename PointType>
 struct pcl_takes_point_trait : boost::false_type {};
@@ -132,14 +148,4 @@ typedef pcl::PointIndices indices_t;
 typedef pcl::ModelCoefficients model_t;
 
 using ecto::tendrils;
-
-// Names of cloud formats
-#define FORMAT_XYZ              0
-#define FORMAT_XYZI             1
-#define FORMAT_XYZRGB           2
-#define FORMAT_XYZRGBA          3
-#define FORMAT_NORMAL           4
-#define FORMAT_PFHSIGNATURE     5
-#define FORMAT_FPFHSIGNATURE    6
-#define FORMAT_VFHSIGNATURE     7
 

@@ -36,7 +36,7 @@ struct PCDReader
 {
   static void declare_params(tendrils& params)
   {
-    params.declare<int> ("format", "Format of cloud found in PCD file.", FORMAT_XYZRGB);
+    params.declare<int> ("format", "Format of cloud found in PCD file.", ecto::pcl::FORMAT_XYZRGB);
     params.declare<std::string> ("filename", "Name of the pcd file", "");
   }
 
@@ -56,7 +56,7 @@ struct PCDReader
   { 
     switch(*format_)
     {
-      case FORMAT_XYZ:
+      case ecto::pcl::FORMAT_XYZ:
         {
           std::cout << "opening " << *filename_ << std::endl;
           pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
@@ -69,7 +69,7 @@ struct PCDReader
           PointCloud p( cloud );
           *output_ = p;
         } break;
-      case FORMAT_XYZRGB:
+      case ecto::pcl::FORMAT_XYZRGB:
         {
           pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZRGB>);
           if (pcl::io::loadPCDFile<pcl::PointXYZRGB> (*filename_, *cloud) == -1)

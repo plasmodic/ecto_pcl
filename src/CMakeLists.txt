@@ -9,8 +9,8 @@ ectomodule(ecto_pcl
   filters/VoxelGrid.cpp
   #io/CloudViewer.cpp
   #io/KinectGrabber.cpp
-  #io/PCDReader.cpp
-  #io/PCDWriter.cpp
+  io/PCDReader.cpp
+  io/PCDWriter.cpp
   segmentation/ExtractPolygonalPrismData.cpp
   segmentation/EuclideanClusterExtraction.cpp
   segmentation/SACSegmentation.cpp

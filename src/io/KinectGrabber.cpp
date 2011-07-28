@@ -73,11 +73,11 @@ public:
     boost::scoped_ptr<pcl::Grabber> interface(new pcl::OpenNIGrabber);
     boost::signals2::connection c;
 
-    if(format == FORMAT_XYZRGB){
+    if(format == ecto::pcl::FORMAT_XYZRGB){
       boost::function<void(const pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr&)> point_cloud_cb =
           boost::bind(&SimpleKinectGrabber::cloud_xyzrgb_cb_, this, _1);
       c = interface->registerCallback(point_cloud_cb);
-    }else if(format == FORMAT_XYZ){
+    }else if(format == ecto::pcl::FORMAT_XYZ){
       boost::function<void(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr&)> point_cloud_cb =
           boost::bind(&SimpleKinectGrabber::cloud_xyz_cb_, this, _1);
       c = interface->registerCallback(point_cloud_cb);
@@ -148,7 +148,7 @@ struct KinectGrabber
 
   static void declare_params(tendrils& params)
   {
-    params.declare<int> ("format", "Format of cloud to grab. Choices are: XYZ, XYZRGB (default)", FORMAT_XYZRGB);
+    params.declare<int> ("format", "Format of cloud to grab. Choices are: XYZ, XYZRGB (default)", ecto::pcl::FORMAT_XYZRGB);
   }
 
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
@@ -164,10 +164,10 @@ struct KinectGrabber
 
   int process(const tendrils& /*inputs*/, tendrils& outputs)
   {
-    if(format == FORMAT_XYZRGB){
+    if(format == ecto::pcl::FORMAT_XYZRGB){
       PointCloud p( impl_->getLatestXYZRGBCloud() );
       outputs.get<PointCloud> ("output") = p;
-    }else if(format == FORMAT_XYZ){
+    }else if(format == ecto::pcl::FORMAT_XYZ){
       PointCloud p( impl_->getLatestXYZCloud() );
       outputs.get<PointCloud> ("output") = p;
     }else{
