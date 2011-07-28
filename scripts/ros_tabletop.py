@@ -16,8 +16,8 @@ This example shows how to extract points corresponding to objects on a table.
 """
 
 import ecto, ecto_pcl, ecto_pcl_ros
-PKG = 'ecto_ros' # this package name
-import roslib; roslib.load_manifest(PKG)
+#PKG = 'ecto_ros' # this package name
+#import roslib; roslib.load_manifest(PKG)
 import ecto_ros, ecto_sensor_msgs
 import sys
 PointCloudSub = ecto_sensor_msgs.Subscriber_PointCloud2
@@ -48,7 +48,6 @@ def do_ecto():
     
     pub = PointCloudPub("Cloud Publisher", topic_name='/ecto_pcl/tabletop')
     
-    #viewer = ecto_pcl.CloudViewer("Viewer", window_name="Clouds!")
     plasm.connect(  sub['output'] >> grabber[:],
                     grabber[:] >> voxgrid[:],
                     voxgrid[:] >> normals[:],
@@ -79,3 +78,4 @@ def do_ecto():
 if __name__ == "__main__":
     ecto_ros.init(sys.argv, "table_top_segmentation")
     do_ecto()
+

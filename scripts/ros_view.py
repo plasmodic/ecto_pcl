@@ -6,8 +6,8 @@ cloud and display it to a cloud viewer.
 """
 
 import ecto, ecto_pcl, ecto_pcl_ros
-PKG = 'ecto_ros' # this package name
-import roslib; roslib.load_manifest(PKG)
+#PKG = 'ecto_ros' # this package name
+#import roslib; roslib.load_manifest(PKG)
 import ecto_ros, ecto_sensor_msgs
 import sys
 PointCloudSub = ecto_sensor_msgs.Subscriber_PointCloud2
