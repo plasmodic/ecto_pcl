@@ -46,8 +46,8 @@ struct PCDWriter
 
   int configure(tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    input_ = inputs.at("input");
-    filename_ = params.at("filename");
+    input_ = inputs["input"];
+    filename_ = params["filename"];
   }
 
   struct write_dispatch : boost::static_visitor<void>

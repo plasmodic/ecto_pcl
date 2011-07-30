@@ -47,9 +47,9 @@ struct PCDReader
 
   int configure(tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    output_ = outputs.at("output");
-    format_ = params.at("format");
-    filename_ = params.at("filename");
+    output_ = outputs["output"];
+    format_ = params["format"];
+    filename_ = params["filename"];
   }
 
   int process(const tendrils& /*inputs*/, tendrils& outputs)

@@ -90,8 +90,8 @@ struct ConvexHull
   void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
   {
     // set in/out.
-    input_ = inputs.at("input");
-    output_ = outputs.at("output");
+    input_ = inputs["input"];
+    output_ = outputs["output"];
 
     xyz_cloud_variant_t cv = input_->make_variant();
     if(!configured_){

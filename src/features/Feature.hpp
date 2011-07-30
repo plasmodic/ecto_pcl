@@ -95,8 +95,8 @@ namespace ecto {
 
       void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
       {
-        input_ = inputs.at("input");
-        output_ = outputs.at("output");
+        input_ = inputs["input"];
+        output_ = outputs["output"];
 
         FeatureParams fp;
 

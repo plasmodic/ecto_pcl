@@ -63,7 +63,7 @@ struct ExtractIndices
   void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
   {
     negative = params.get<bool> ("negative");
-    indices_ = inputs.at("indices");
+    indices_ = inputs["indices"];
   }
 
   template <typename Point>

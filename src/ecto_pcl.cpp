@@ -79,9 +79,9 @@ struct PointCloud2PointCloudT
   int
   configure(tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    format_ = params.at("format");
-    input_ = inputs.at("input");
-    output_ = outputs.at("output");
+    format_ = params["format"];
+    input_ = inputs["input"];
+    output_ = outputs["output"];
   }
 
   int

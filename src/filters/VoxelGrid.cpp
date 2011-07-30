@@ -57,7 +57,7 @@ struct VoxelGrid
   }
   void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    leaf_size = params.at("leaf_size");
+    leaf_size = params["leaf_size"];
   }
 
   template <typename Point>

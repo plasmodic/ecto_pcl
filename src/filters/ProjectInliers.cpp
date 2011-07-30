@@ -65,7 +65,7 @@ struct ProjectInliers
   {
     model_type = params.get<int> ("model_type");
     copy_all = params.get<bool> ("copy_all_data");
-    model_ = inputs.at("model");
+    model_ = inputs["model"];
   }
 
   template <typename Point>

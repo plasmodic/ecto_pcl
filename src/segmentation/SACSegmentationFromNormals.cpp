@@ -81,9 +81,9 @@ struct SACSegmentationFromNormals
   }
   void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    normals_ = inputs.at("normals");
-    inliers_ = outputs.at("inliers");
-    model_ = outputs.at("model");
+    normals_ = inputs["normals"];
+    inliers_ = outputs["inliers"];
+    model_ = outputs["model"];
 
     model = params.get<int> ("model_type");
     method = params.get<int> ("method");

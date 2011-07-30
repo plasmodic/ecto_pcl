@@ -65,8 +65,8 @@ struct ExtractPolygonalPrismData
   }
   void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    hull_ = inputs.at("planar_hull");
-    inliers_ = outputs.at("inliers");
+    hull_ = inputs["planar_hull"];
+    inliers_ = outputs["inliers"];
 
     height_min = params.get<double> ("height_min");
     height_max = params.get<double> ("height_max");

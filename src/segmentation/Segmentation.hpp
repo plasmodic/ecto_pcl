@@ -74,7 +74,7 @@ namespace ecto {
 
       void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
       {
-        input_ = inputs.at("input");
+        input_ = inputs["input"];
     
         custom.configure(params, inputs, outputs);
 

@@ -69,7 +69,7 @@ struct EuclideanClusterExtraction
   }
   void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    output_ = outputs.at("output");
+    output_ = outputs["output"];
 
     cluster_tolerance = params.get<double> ("cluster_tolerance"); 
     min_cluster_size = params.get<int> ("min_cluster_size"); 

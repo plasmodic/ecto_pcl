@@ -78,8 +78,8 @@ struct SACSegmentation
   }
   void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    inliers_ = outputs.at("inliers");
-    model_ = outputs.at("model");
+    inliers_ = outputs["inliers"];
+    model_ = outputs["model"];
 
     model = params.get<int> ("model_type");
     method = params.get<int> ("method");
