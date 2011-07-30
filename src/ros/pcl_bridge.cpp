@@ -59,7 +59,7 @@ namespace ecto
         outputs.declare<PointCloud>("output", "An XYZ/XYZRGB point cloud from the kinect");
       }
 
-      int
+      void
       configure(tendrils& params, tendrils& inputs, tendrils& outputs)
       {
         format_ = params["format"];
@@ -109,7 +109,7 @@ namespace ecto
         outputs.declare<MsgT>("output", "An XYZ/XYZRGB point cloud from the kinect");
       }
 
-      int
+      void
       configure(tendrils& params, tendrils& inputs, tendrils& outputs)
       {
         format_ = params["format"];

@@ -76,7 +76,7 @@ struct PointCloud2PointCloudT
     outputs.declare<ecto::tendril::none>("output", "An pcl::PointCloud<PointT> type.");
   }
 
-  int
+  void
   configure(tendrils& params, tendrils& inputs, tendrils& outputs)
   {
     format_ = params["format"];
