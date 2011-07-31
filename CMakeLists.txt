@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
 project(ecto_pcl)
-message(STATUS "~~ ${PROJECT_NAME}")
-
 find_package(ecto REQUIRED)
 include(rosbuild_lite.cmake)
 find_ros_package(pcl)
