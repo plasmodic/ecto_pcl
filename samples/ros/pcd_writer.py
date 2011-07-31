@@ -7,6 +7,8 @@ a ROS openni_camera node and write it to a PCD file.
 
 import ecto, ecto_pcl, ecto_pcl_ros
 
+PointCloudSub = ecto_sensor_msgs.Subscriber_PointCloud2
+
 def do_ecto():
     plasm = ecto.Plasm()
 
