@@ -44,7 +44,7 @@ struct PCDWriter
     inputs.declare<PointCloud>("input", "A point cloud to put in the bag file.");
   }
 
-  int configure(tendrils& params, tendrils& inputs, tendrils& outputs)
+  void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
   {
     input_ = inputs["input"];
     filename_ = params["filename"];

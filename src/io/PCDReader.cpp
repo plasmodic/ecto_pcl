@@ -45,7 +45,7 @@ struct PCDReader
     outputs.declare<PointCloud>("output", "A point cloud from the bag file.");
   }
 
-  int configure(tendrils& params, tendrils& inputs, tendrils& outputs)
+  void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
   {
     output_ = outputs["output"];
     format_ = params["format"];
