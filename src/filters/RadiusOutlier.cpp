@@ -28,57 +28,54 @@
  */
 
 #include "ecto_pcl.hpp"
-#include <pcl/filters/extract_indices.h>
+#include <pcl/filters/radius_outlier_removal.h>
 
-#define DECLAREEXTRACTINDICES(r, data, i, ELEM)                            \
-  BOOST_PP_COMMA_IF(i) pcl::ExtractIndices< BOOST_PP_TUPLE_ELEM(2, 0, ELEM) >
+#define DECLARERADIUSOUTLIER(r, data, i, ELEM)                            \
+  BOOST_PP_COMMA_IF(i) pcl::RadiusOutlierRemoval< BOOST_PP_TUPLE_ELEM(2, 0, ELEM) >
 
-typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLAREEXTRACTINDICES, ~, ECTO_XYZ_POINT_TYPES) > filter_variant_t;
+typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLARERADIUSOUTLIER, ~, ECTO_XYZ_POINT_TYPES) > filter_variant_t;
 
 #include "filters/Filter.hpp"
 
-struct ExtractIndices
+struct RadiusOutlierRemoval
 {
   template <typename Point>
   struct filter {
-    typedef typename ::pcl::ExtractIndices<Point> type;
+    typedef typename ::pcl::RadiusOutlierRemoval<Point> type;
   };
 
   static void declare_params(ecto::tendrils& params)
   {
-    pcl::ExtractIndices<pcl::PointXYZ> default_;
-    params.declare<bool> ("negative", "Sets whether the indices should be returned, or all points _except_ the indices.", default_.getNegative());
+    pcl::RadiusOutlierRemoval<pcl::PointXYZ> default_;
+    params.declare<double> ("search_radius", "The number of points to use for mean distance estimation.", default_.getRadiusSearch());
+    params.declare<int> ("min_neighbors", "The minimum number of neighbors in the radius.", default_.getMinNeighborsInRadius());
   }
-  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs) {
-    inputs.declare<indices_t::ConstPtr> ("indices", "The indices to extract.");
-  }
-
-  ExtractIndices() {}
+  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs) { }
 
   template <typename Point>
-  void configure(pcl::ExtractIndices<Point>& f)
+  void configure(pcl::RadiusOutlierRemoval<Point>& f)
   {
-    f.setNegative(*negative_);
+    f.setRadiusSearch(*radius_);
+    f.setMinNeighborsInRadius(*min_);
   }
   void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    negative_ = params["negative"];
-    indices_ = inputs["indices"];
+    radius_ = params["search_radius"];
+    min_ = params["min_neighbors"];
   }
 
   template <typename Point>
-  int process(pcl::ExtractIndices<Point>& f)
-  {
-    f.setNegative(*negative_);
-    f.setIndices(*indices_);
-    return 0;
+  int process(pcl::RadiusOutlierRemoval<Point>& f) {
+    f.setRadiusSearch(*radius_);
+    f.setMinNeighborsInRadius(*min_);
+    return ecto::OK;
   }
   int process(const tendrils& inputs, tendrils& outputs){ return 0; }
 
-  ecto::spore<indices_t::ConstPtr> indices_;
-  ecto::spore<bool> negative_;
+  ecto::spore<double> radius_;
+  ecto::spore<int> min_;
 
 };
 
-ECTO_CELL(ecto_pcl, ecto::pcl::FilterCell<ExtractIndices>, "ExtractIndices", "...");
+ECTO_CELL(ecto_pcl, ecto::pcl::FilterCell<RadiusOutlierRemoval>, "RadiusOutlierRemoval", "Remove noisy measurements");
 
