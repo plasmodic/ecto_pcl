@@ -40,8 +40,6 @@ typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLARECLUSTERS, ~, ECTO_XYZ_POI
 
 struct EuclideanClusterExtraction
 {
-  typedef std::vector<indices_t> cluster_t;
-
   template <typename Point>
   struct segmentation {
     typedef typename ::pcl::EuclideanClusterExtraction<Point> type;
@@ -50,8 +48,8 @@ struct EuclideanClusterExtraction
   static void declare_params(ecto::tendrils& params)
   {
     pcl::EuclideanClusterExtraction<pcl::PointXYZ> default_;
-    params.declare<double> ("cluster_tolerance", "Spatial cluster tolerance as a measure in the L2 Euclidean space.", default_.getClusterTolerance());
-    params.declare<int> ("min_cluster_size", "Minimum number of points that a cluster needs to contain in order to be considered valid.", default_.getMinClusterSize());
+    params.declare<double> ("cluster_tolerance", "Spatial cluster tolerance as a measure in the L2 Euclidean space.", 0.05);
+    params.declare<int> ("min_cluster_size", "Minimum number of points that a cluster needs to contain in order to be considered valid.", 1);
     params.declare<int> ("max_cluster_size", "Maximum number of points that a cluster needs to contain in order to be considered valid.", default_.getMaxClusterSize());
     params.declare<int> ("spatial_locator", "The search method to use: FLANN(0), ORGANIZED(1).",0);
   }
@@ -78,7 +76,7 @@ struct EuclideanClusterExtraction
   }
 
   template <typename Point>
-  int process(pcl::EuclideanClusterExtraction<Point>& impl_) { 
+  int process(pcl::EuclideanClusterExtraction<Point>& impl_) {
     cluster_t clusters;
     impl_.extract (clusters);
     *output_ = clusters;

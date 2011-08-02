@@ -14,6 +14,7 @@ ectomodule(ecto_pcl
   io/PCDReader.cpp
   io/PCDWriter.cpp
   segmentation/ExtractPolygonalPrismData.cpp
+  segmentation/ExtractLargestCluster.cpp
   segmentation/EuclideanClusterExtraction.cpp
   segmentation/SACSegmentation.cpp
   segmentation/SACSegmentationFromNormals.cpp

@@ -35,48 +35,44 @@
 
 typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLAREEXTRACTINDICES, ~, ECTO_XYZ_POINT_TYPES) > filter_variant_t;
 
-#include "filters/Filter.hpp"
+#include <filters/Filter.hpp>
 
-struct ExtractIndices
+struct ExtractLargestCluster
 {
   template <typename Point>
   struct filter {
     typedef typename ::pcl::ExtractIndices<Point> type;
   };
 
-  static void declare_params(ecto::tendrils& params)
-  {
-    pcl::ExtractIndices<pcl::PointXYZ> default_;
-    params.declare<bool> ("negative", "Sets whether the indices should be returned, or all points _except_ the indices.", default_.getNegative());
-  }
+  static void declare_params(ecto::tendrils& params) { }
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs) {
-    inputs.declare<indices_t::ConstPtr> ("indices", "The indices to extract.");
+    inputs.declare<cluster_t> ("clusters", "Clusters indices.");
   }
 
   template <typename Point>
-  void configure(pcl::ExtractIndices<Point>& f)
-  {
-    f.setNegative(*negative_);
-  }
+  void configure(pcl::ExtractIndices<Point>& impl_) { }
   void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    negative_ = params["negative"];
-    indices_ = inputs["indices"];
+    clusters_ = inputs["clusters"];
   }
 
   template <typename Point>
-  int process(pcl::ExtractIndices<Point>& f)
-  {
-    f.setNegative(*negative_);
-    f.setIndices(*indices_);
+  int process(pcl::ExtractIndices<Point>& impl_) {
+    int largest = 0;
+    for (size_t i = 0; i < clusters_->size(); i++)
+    {
+        if( (*clusters_)[i].indices.size() > (*clusters_)[largest].indices.size() )
+        {
+          largest = i;
+        }
+    }
+    impl_.setIndices( pcl::PointIndicesPtr( new pcl::PointIndices ((*clusters_)[largest])) );
     return 0;
   }
-  int process(const tendrils& inputs, tendrils& outputs){ return 0; }
-
-  ecto::spore<indices_t::ConstPtr> indices_;
-  ecto::spore<bool> negative_;
-
+  int process(const tendrils& inputs, tendrils& outputs) { return 0; }
+  
+  ecto::spore< cluster_t > clusters_;
 };
 
-ECTO_CELL(ecto_pcl, ecto::pcl::FilterCell<ExtractIndices>, "ExtractIndices", "...");
+ECTO_CELL(ecto_pcl, ecto::pcl::FilterCell<ExtractLargestCluster>, "ExtractLargestCluster", "Extract a point cloud corresponding to the largest cluster.");
 

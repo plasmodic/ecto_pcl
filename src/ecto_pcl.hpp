@@ -146,6 +146,7 @@ struct pcl_takes_point_trait2<PclType<PointIn, PointOut>, boost::shared_ptr<cons
 
 typedef pcl::PointIndices indices_t;
 typedef pcl::ModelCoefficients model_t;
+typedef std::vector<indices_t> cluster_t;
 
 using ecto::tendrils;
 
