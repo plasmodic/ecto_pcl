@@ -27,9 +27,7 @@ def do_ecto():
     
     sub = PointCloudSub("Cloud Subscriber", topic_name='/camera/rgb/points')
     
-    grabber = ecto_pcl_ros.Message2PointCloud(format=ecto_pcl.XYZRGB)
-    
-    pcl2msg = ecto_pcl_ros.PointCloud2Message()
+    grabber = ecto_pcl_ros.Message2PointCloud("Message2Cloud", format=ecto_pcl.XYZRGB)
     
     voxgrid = ecto_pcl.VoxelGrid("VoxelGrid", leaf_size=0.01)
 
@@ -45,6 +43,8 @@ def do_ecto():
     
     extract = ecto_pcl.ExtractIndices("Extract", negative=False)
     
+    pcl2msg = ecto_pcl_ros.PointCloud2Message("Cloud2Message")
+
     pub = PointCloudPub("Cloud Publisher", topic_name='/ecto_pcl/tabletop')
     
     plasm.connect(  sub['output'] >> grabber[:],
