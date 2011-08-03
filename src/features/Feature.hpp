@@ -44,6 +44,7 @@ namespace ecto {
         double radius;
         int locator;
       };
+      FeatureParams fp;
 
       /* while output type is known, our input is a variant */
       template <template <class> class FeaturePolicy>
@@ -98,20 +99,11 @@ namespace ecto {
         input_ = inputs["input"];
         output_ = outputs["output"];
 
-        FeatureParams fp;
-
         fp.k = params.get<int> ("k_search");
         fp.radius = params.get<double> ("radius_search");
         fp.locator = params.get<int> ("spatial_locator");   
 
         custom.configure(params, inputs, outputs);
-
-        xyz_cloud_variant_t cv = input_->make_variant();
-        if(!configured_){
-          impl_ = boost::apply_visitor(make_feature_estimator_variant<FeatureEstimatorType::template feature_estimator>(), cv);
-          boost::apply_visitor(feature_configurator(fp, custom), impl_);
-          configured_ = true;
-        }
       }
 
       /* dispatch to handle process */
@@ -148,6 +140,11 @@ namespace ecto {
       int process(const tendrils& inputs, tendrils& outputs)
       {
         xyz_cloud_variant_t cvar = input_->make_variant();
+        if(!configured_){
+          impl_ = boost::apply_visitor(make_feature_estimator_variant<FeatureEstimatorType::template feature_estimator>(), cvar);
+          boost::apply_visitor(feature_configurator(fp, custom), impl_);
+          configured_ = true;
+        }
         *output_ = boost::apply_visitor(feature_dispatch(custom), impl_, cvar);
         custom.process(inputs, outputs);
         return 0;

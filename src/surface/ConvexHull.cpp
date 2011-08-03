@@ -92,17 +92,15 @@ struct ConvexHull
     // set in/out.
     input_ = inputs["input"];
     output_ = outputs["output"];
-
-    xyz_cloud_variant_t cv = input_->make_variant();
-    if(!configured_){
-      impl_ = boost::apply_visitor(make_surface_variant<pcl::ConvexHull>(), cv);
-      configured_ = true;
-    }
   }
 
   int process(const tendrils& inputs, tendrils& outputs)
   {
     xyz_cloud_variant_t cvar = input_->make_variant();
+    if(!configured_){
+      impl_ = boost::apply_visitor(make_surface_variant<pcl::ConvexHull>(), cvar);
+      configured_ = true;
+    }
     *output_ = boost::apply_visitor(surface_dispatch(), impl_, cvar);
     return 0;
   }
