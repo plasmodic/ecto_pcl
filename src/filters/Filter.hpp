@@ -43,6 +43,7 @@ namespace ecto {
         double filter_limit_max; 
         bool filter_limit_negative; 
       };
+      FilterParams fp;
 
       /* used to create a filter */
       template <template <class> class FilterPolicy>
@@ -95,21 +96,12 @@ namespace ecto {
         input_ = inputs["input"];
         output_ = outputs["output"];
 
-        FilterParams fp;
-
         fp.filter_field_name = params.get<std::string> ("filter_field_name");
         fp.filter_limit_min = params.get<double> ("filter_limit_min");
         fp.filter_limit_max = params.get<double> ("filter_limit_max");
         fp.filter_limit_negative = params.get<bool> ("filter_limit_negative");
 
         custom.configure(params, inputs, outputs);
-
-        xyz_cloud_variant_t cv = input_->make_variant();
-        if(!configured_){
-          impl_ = boost::apply_visitor(make_filter_variant<FilterType::template filter>(), cv);
-          boost::apply_visitor(filter_configurator(fp, custom), impl_);
-          configured_ = true;
-        }
       }
 
       /* dispatch to handle process */
@@ -145,6 +137,11 @@ namespace ecto {
       int process(const tendrils& inputs, tendrils& outputs)
       {
         xyz_cloud_variant_t cvar = input_->make_variant();
+        if(!configured_){
+          impl_ = boost::apply_visitor(make_filter_variant<FilterType::template filter>(), cvar);
+          boost::apply_visitor(filter_configurator(fp, custom), impl_);
+          configured_ = true;
+        }
         *output_ = boost::apply_visitor(filter_dispatch(custom), impl_, cvar);
         custom.process(inputs, outputs);
         return 0;

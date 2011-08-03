@@ -75,15 +75,7 @@ namespace ecto {
       void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
       {
         input_ = inputs["input"];
-    
         custom.configure(params, inputs, outputs);
-
-        xyz_cloud_variant_t cv = input_->make_variant();
-        if(!configured_){
-          impl_ = boost::apply_visitor(make_segmentation_variant<SegmentationType::template segmentation>(), cv);
-          boost::apply_visitor(segmentation_configurator(custom), impl_);
-          configured_ = true;
-        }
       }
 
       /* dispatch to handle process */
@@ -129,6 +121,11 @@ namespace ecto {
       int process(const tendrils& inputs, tendrils& outputs)
       {
         xyz_cloud_variant_t cvar = input_->make_variant();
+        if(!configured_){
+          impl_ = boost::apply_visitor(make_segmentation_variant<SegmentationType::template segmentation>(), cvar);
+          boost::apply_visitor(segmentation_configurator(custom), impl_);
+          configured_ = true;
+        }
         boost::apply_visitor(segmentation_dispatch(custom), impl_, cvar);
         return 0;
       }

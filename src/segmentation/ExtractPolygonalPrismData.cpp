@@ -76,9 +76,6 @@ struct ExtractPolygonalPrismData
   int process(pcl::ExtractPolygonalPrismData<Point>& impl_) { 
     indices_t::Ptr inliers ( new indices_t() );
 
-    // copy header
-    //inliers->header = (*input_)->header;
-
     try{
       xyz_cloud_variant_t cv = hull_->make_variant();
       typename pcl::PointCloud<Point>::ConstPtr hull = boost::get<typename pcl::PointCloud<Point>::ConstPtr>(cv);
