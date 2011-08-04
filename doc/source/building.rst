@@ -20,7 +20,9 @@ configuration looks something like this::
   -- Check for working C compiler: /home/troy/bin/gcc
     [etc]
   -- -~v/^\v~- pcl
-  -- Attempting to find PCL via ROS environment because ECTO_PCL_STANDALONE is OFF.
+  -- + Setting default value of ECTO_PCL_STANDALONE to OFF
+  -- + Because ROS_ROOT is set to /opt/ros/unstable/ros
+  -- + pcl found.
   -- Boost version: 1.40.0
   -- Found the following Boost libraries:
   --   signals
@@ -67,4 +69,26 @@ Source your ros environment *and* set ``ECTO_PCL_STANDALONE`` to ON::
   -- The C compiler identification is GNU
   ...
   
-The output is basically the same as the standalone case. 
+The output is basically the same as the standalone case.
+
+
+
+If neither are found you'll get the standardish cmake error message::
+
+  -- + Searching for standalone PCL because ECTO_PCL_STANDALONE is ON
+  CMake Warning at pcl/CMakeLists.txt:38 (find_package):
+    Could not find module FindPCL.cmake or a configuration file for package
+    PCL.
+  
+    Adjust CMAKE_MODULE_PATH to find FindPCL.cmake or set PCL_DIR to the
+    directory containing a CMake configuration file for PCL.  The file will
+    have one of the following names:
+  
+      PCLConfig.cmake
+      pcl-config.cmake
+  
+  
+  
+  **
+  ** Disabling build of ecto_pcl due to missing dependency PCL
+  **

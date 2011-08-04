@@ -4,7 +4,7 @@ find_package(ecto REQUIRED)
 include(rosbuild_lite.cmake)
 
 if (NOT ECTO_PCL_STANDALONE_OPTION) # first time only
-  if (NOT ENV{ROS_ROOT})
+  if ("$ENV{ROS_ROOT}" STREQUAL "")
     message(STATUS "+ Setting default value of ECTO_PCL_STANDALONE to ON")
     message(STATUS "+ Because ROS_ROOT is not set in your environment.")
     option(ECTO_PCL_STANDALONE "Use standalone PCL" ON)
@@ -27,6 +27,7 @@ if (NOT ECTO_PCL_STANDALONE)
     return()
   endif()
 
+  message(STATUS "+ pcl found.")
   include_directories(${pcl_INCLUDES})
 
   find_ros_package(sensor_msgs)
@@ -35,7 +36,7 @@ if (NOT ECTO_PCL_STANDALONE)
 else()
 
   message(STATUS "+ Searching for standalone PCL because ECTO_PCL_STANDALONE is ON")
-  find_package(PCL 1.1 REQUIRED)
+  find_package(PCL 1.1)
   if (PCL_FOUND)
     message(STATUS "+ Found PCL version ${PCL_VERSION}")
     message(STATUS "*** You will STILL BUILD AN ECTO_PCL_ROS LIBRARY")
