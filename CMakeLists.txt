@@ -3,6 +3,8 @@ project(ecto_pcl)
 find_package(ecto REQUIRED)
 include(rosbuild_lite.cmake)
 
+ecto_python_env_gen(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
+
 if (NOT ECTO_PCL_STANDALONE_OPTION) # first time only
   if ("$ENV{ROS_ROOT}" STREQUAL "")
     message(STATUS "+ Setting default value of ECTO_PCL_STANDALONE to ON")
