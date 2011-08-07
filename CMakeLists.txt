@@ -29,10 +29,10 @@ if (NOT ECTO_PCL_STANDALONE)
   endif()
 
   message(STATUS "+ pcl found.")
-  include_directories(${pcl_INCLUDES})
+  include_directories(${pcl_INCLUDE_DIRS})
 
   find_ros_package(sensor_msgs)
-  include_directories(${sensor_msgs_INCLUDES})
+  include_directories(${sensor_msgs_INCLUDE_DIRS})
 
 else()
 
