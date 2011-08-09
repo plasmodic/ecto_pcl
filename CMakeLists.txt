@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 project(ecto_pcl)
-find_package(ecto REQUIRED)
-include(rosbuild_lite.cmake)
+find_package(ecto REQUIRED) #brings in rosbuild_lite
+
+ecto_python_env_gen(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 
 if (NOT ECTO_PCL_STANDALONE_OPTION) # first time only
   if ("$ENV{ROS_ROOT}" STREQUAL "")
@@ -28,10 +29,10 @@ if (NOT ECTO_PCL_STANDALONE)
   endif()
 
   message(STATUS "+ pcl found.")
-  include_directories(${pcl_INCLUDES})
+  include_directories(${pcl_INCLUDE_DIRS})
 
   find_ros_package(sensor_msgs)
-  include_directories(${sensor_msgs_INCLUDES})
+  include_directories(${sensor_msgs_INCLUDE_DIRS})
 
 else()
 

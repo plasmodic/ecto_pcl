@@ -7,9 +7,5 @@ ecto pcl
    building
 
 
-
-
-
-
-
+.. ectocell:: ecto_pcl PointCloud2PointCloudT
 
