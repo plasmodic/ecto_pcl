@@ -63,7 +63,7 @@ struct EuclideanClusterExtraction
     impl_.setClusterTolerance (cluster_tolerance);
     impl_.setMinClusterSize (min_cluster_size);
     impl_.setMaxClusterSize (max_cluster_size);
-    impl_.setSpatialLocator (locator);
+    //impl_.setSpatialLocator (locator);
   }
   void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
   {
@@ -72,7 +72,7 @@ struct EuclideanClusterExtraction
     cluster_tolerance = params.get<double> ("cluster_tolerance"); 
     min_cluster_size = params.get<int> ("min_cluster_size"); 
     max_cluster_size = params.get<int> ("max_cluster_size"); 
-    locator = params.get<int> ("spatial_locator");    
+    //locator = params.get<int> ("spatial_locator");    
   }
 
   template <typename Point>
@@ -87,7 +87,7 @@ struct EuclideanClusterExtraction
   double cluster_tolerance;
   int min_cluster_size; 
   int max_cluster_size; 
-  int locator;    
+  //int locator;    
   
   ecto::spore< cluster_t > output_;
 
