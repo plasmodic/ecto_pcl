@@ -65,7 +65,7 @@ struct EuclideanClusterExtraction
     impl_.setMaxClusterSize (max_cluster_size);
     //impl_.setSpatialLocator (locator);
   }
-  void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
+  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
   {
     output_ = outputs["output"];
 
@@ -82,7 +82,7 @@ struct EuclideanClusterExtraction
     *output_ = clusters;
     return 0;
   }
-  int process(const tendrils& inputs, tendrils& outputs) { return 0; }
+  int process(const tendrils& inputs, const tendrils& outputs) { return 0; }
 
   double cluster_tolerance;
   int min_cluster_size; 

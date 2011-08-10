@@ -77,7 +77,7 @@ struct PointCloud2PointCloudT
   }
 
   void
-  configure(tendrils& params, tendrils& inputs, tendrils& outputs)
+  configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
   {
     format_ = params["format"];
     input_ = inputs["input"];
@@ -85,7 +85,7 @@ struct PointCloud2PointCloudT
   }
 
   int
-  process(const tendrils& /*inputs*/, tendrils& outputs)
+  process(const tendrils& /*inputs*/, const tendrils& outputs)
   {
     switch (*format_)
     {

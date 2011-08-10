@@ -153,13 +153,13 @@ struct KinectGrabber
     outputs.declare<PointCloud> ("output", "An XYZ/XYZRGB point cloud from the kinect");
   }
 
-  void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
+  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
   {
     format = params.get<int> ("format");
     impl_.reset(new SimpleKinectGrabber(format));
   }
 
-  int process(const tendrils& /*inputs*/, tendrils& outputs)
+  int process(const tendrils& /*inputs*/, const tendrils& outputs)
   {
     if(format == ecto::pcl::FORMAT_XYZRGB){
       PointCloud p( impl_->getLatestXYZRGBCloud() );

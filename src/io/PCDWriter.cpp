@@ -44,7 +44,7 @@ struct PCDWriter
     inputs.declare<PointCloud>("input", "A point cloud to put in the bag file.");
   }
 
-  void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
+  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
   {
     input_ = inputs["input"];
     filename_ = params["filename"];
@@ -62,7 +62,7 @@ struct PCDWriter
     }
   };
 
-  int process(const tendrils& /*inputs*/, tendrils& outputs)
+  int process(const tendrils& /*inputs*/, const tendrils& outputs)
   { 
     xyz_cloud_variant_t cv = input_->make_variant();
     boost::apply_visitor(write_dispatch(*filename_), cv);

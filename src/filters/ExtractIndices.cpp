@@ -58,7 +58,7 @@ struct ExtractIndices
   {
     f.setNegative(*negative_);
   }
-  void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
+  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
   {
     negative_ = params["negative"];
     indices_ = inputs["indices"];
@@ -71,7 +71,7 @@ struct ExtractIndices
     f.setIndices(*indices_);
     return 0;
   }
-  int process(const tendrils& inputs, tendrils& outputs){ return 0; }
+  int process(const tendrils& inputs, const tendrils& outputs){ return 0; }
 
   ecto::spore<indices_t::ConstPtr> indices_;
   ecto::spore<bool> negative_;
