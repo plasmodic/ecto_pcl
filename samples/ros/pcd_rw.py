@@ -5,7 +5,7 @@ This example shows how to capture a Point Cloud from
 a ROS openni_camera node and write it to a PCD file.
 """
 import ecto_ros
-import ecto_pcl_ros
+#import ecto_pcl_ros
 import ecto, ecto_pcl
 
 def do_ecto():
