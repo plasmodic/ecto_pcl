@@ -34,43 +34,65 @@
 
 struct PCDWriter
 {
+  PCDWriter():count_(0){}
+
   static void declare_params(tendrils& params)
   {
-    params.declare<std::string> ("filename", "Name of the pcd file", "");
+    params.declare<std::string> ("filename_format", "The format string for saving pcds, must succeed with a single integer argument.", "cloud_%04d.pcd");
+    params.declare<bool> ("binary", "Use binary encoding.", false);
   }
 
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
   {
     inputs.declare<PointCloud>("input", "A point cloud to put in the bag file.");
+    outputs.declare<sensor_msgs::PointCloud2ConstPtr>("cloud_message", "the cloud message used for writing.");
   }
 
   void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
   {
     input_ = inputs["input"];
-    filename_ = params["filename"];
+    filename_format_ = params["filename_format"];
+    binary_ = params["binary"];
+    cloud_message_ = outputs["cloud_message"];
   }
 
-  struct write_dispatch : boost::static_visitor<void>
+  struct write_dispatch : boost::static_visitor<sensor_msgs::PointCloud2ConstPtr>
   {
     std::string file;
-    write_dispatch(std::string f) : file(f) {}
+    bool binary;
+    write_dispatch(std::string f,bool binary = false) : file(f),binary(binary) {}
 
     template <typename CloudType>
-    void operator()(CloudType& cloud) const
+    result_type operator()(CloudType& cloud) const
     {
-      pcl::io::savePCDFileASCII(file, *cloud);
+      if(binary)
+        pcl::io::savePCDFileBinary(file, *cloud);
+      else
+      {
+        sensor_msgs::PointCloud2Ptr blob(new sensor_msgs::PointCloud2);
+        pcl::toROSMsg (*cloud, *blob);
+        pcl::PCDWriter writer;
+        writer.writeASCII(file,*blob,Eigen::Vector4f::Zero(), Eigen::Quaternionf::Identity(),8);
+        return blob;
+      }
+      return sensor_msgs::PointCloud2Ptr();
+
     }
   };
 
   int process(const tendrils& /*inputs*/, const tendrils& outputs)
   { 
+    std::string filename = boost::str(boost::format(*filename_format_)%count_++);
     xyz_cloud_variant_t cv = input_->make_variant();
-    boost::apply_visitor(write_dispatch(*filename_), cv);
+    *cloud_message_ = boost::apply_visitor(write_dispatch(filename,*binary_), cv);
     return 0;
   }
 
   ecto::spore<PointCloud> input_;
-  ecto::spore<std::string> filename_;
+  ecto::spore<std::string> filename_format_;
+  ecto::spore<bool> binary_;
+  ecto::spore<sensor_msgs::PointCloud2ConstPtr> cloud_message_;
+  unsigned count_;
 
 };
 
