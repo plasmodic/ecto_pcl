@@ -32,61 +32,51 @@
 namespace ecto {
   namespace pcl {
 
-    template <typename FilterType>
-    struct DualFilterCell
+    template <typename CellType>
+    struct PclCell
     {
       static void declare_params(ecto::tendrils& params)
       {
-        FilterType::declare_params(params);
+        CellType::declare_params(params);
       }
 
       static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
       {
-        inputs.declare<PointCloud> ("input1", "First cloud to merge");
-        inputs.declare<PointCloud> ("input2", "Second cloud to merge");
-        FilterType::declare_io(params, inputs, outputs);
+        inputs.declare<PointCloud> ("input", "The cloud to filter");
+        CellType::declare_io(params, inputs, outputs);
       }
 
       void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
       {
-        input1_ = inputs["input1"];
-        input2_ = inputs["input2"];
+        input_ = inputs["input"];
         impl_.configure(params, inputs, outputs);
       }
-
+    
       /* dispatch to handle process */
       struct filter_dispatch : boost::static_visitor<void>
       {
-        FilterType& ft;
+        CellType& ft;
         const tendrils& inputs;
         const tendrils& outputs;
 
-        filter_dispatch(FilterType& ft_, const tendrils& input_, const tendrils& output_) : ft(ft_), inputs(input_), outputs(output_) { }
+        filter_dispatch(CellType& ft_, const tendrils& input_, const tendrils& output_) : ft(ft_), inputs(input_), outputs(output_) { }
 
         template <typename Point>
-        void operator()(boost::shared_ptr<const ::pcl::PointCloud<Point> >& cloud1, boost::shared_ptr<const ::pcl::PointCloud<Point> >& cloud2) const
+        void operator()(boost::shared_ptr<const ::pcl::PointCloud<Point> >& cloud) const
         {   
-          ft.process(inputs, outputs, cloud1, cloud2);
-        }
-
-        template <typename Point, typename Point2>
-        void operator()(boost::shared_ptr<const ::pcl::PointCloud<Point> >& cloud1, boost::shared_ptr<const ::pcl::PointCloud<Point2> >& cloud2) const
-        {   
-          throw std::runtime_error("DualFilterCell: clouds are not the same type!");
+          ft.process(inputs, outputs, cloud);
         }
       };
 
       int process(const tendrils& inputs, const tendrils& outputs)
       {
-        xyz_cloud_variant_t cloud1 = input1_->make_variant();
-        xyz_cloud_variant_t cloud2 = input2_->make_variant();
-        boost::apply_visitor(filter_dispatch(impl_, inputs, outputs), cloud1, cloud2);
+        xyz_cloud_variant_t cloud = input_->make_variant();
+        boost::apply_visitor(filter_dispatch(impl_, inputs, outputs), cloud);
         return 0;
       }
 
-      ecto::spore<PointCloud> input1_;
-      ecto::spore<PointCloud> input2_;
-      FilterType impl_;
+      ecto::spore<PointCloud> input_;
+      CellType impl_;
     };
 
   }

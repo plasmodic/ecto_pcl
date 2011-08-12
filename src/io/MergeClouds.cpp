@@ -28,7 +28,7 @@
  */
 
 #include "ecto_pcl.hpp"
-#include "DualFilter.hpp"
+#include "pcl_dual_cell.hpp"
 
 struct MergeClouds
 {
@@ -57,5 +57,5 @@ struct MergeClouds
   ecto::spore<PointCloud> output_;
 };
 
-ECTO_CELL(ecto_pcl, ecto::pcl::DualFilterCell<MergeClouds>, "MergeClouds", "Merges two clouds of the same type.");
+ECTO_CELL(ecto_pcl, ecto::pcl::PclDualCell<MergeClouds>, "MergeClouds", "Merges two clouds of the same type.");
 

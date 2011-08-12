@@ -28,54 +28,69 @@
  */
 
 #include "ecto_pcl.hpp"
+#include "pcl_cell.hpp"
 #include <pcl/filters/radius_outlier_removal.h>
-
-#define DECLARERADIUSOUTLIER(r, data, i, ELEM)                            \
-  BOOST_PP_COMMA_IF(i) pcl::RadiusOutlierRemoval< BOOST_PP_TUPLE_ELEM(2, 0, ELEM) >
-
-typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLARERADIUSOUTLIER, ~, ECTO_XYZ_POINT_TYPES) > filter_variant_t;
-
-#include "filters/Filter.hpp"
 
 struct RadiusOutlierRemoval
 {
-  template <typename Point>
-  struct filter {
-    typedef typename ::pcl::RadiusOutlierRemoval<Point> type;
-  };
-
   static void declare_params(ecto::tendrils& params)
   {
     pcl::RadiusOutlierRemoval<pcl::PointXYZ> default_;
+    params.declare<std::string> ("filter_field_name", "The name of the field to use for filtering.", "");
+    double filter_limit_min, filter_limit_max;
+    default_.getFilterLimits(filter_limit_min, filter_limit_max);
+    params.declare<double> ("filter_limit_min", "Minimum value for the filter.", filter_limit_min);
+    params.declare<double> ("filter_limit_max", "Maximum value for the filter.", filter_limit_max);
+    params.declare<bool> ("filter_limit_negative", "To negate the limits or not.", default_.getFilterLimitsNegative());
     params.declare<double> ("search_radius", "The number of points to use for mean distance estimation.", default_.getRadiusSearch());
     params.declare<int> ("min_neighbors", "The minimum number of neighbors in the radius.", default_.getMinNeighborsInRadius());
   }
-  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs) { }
 
-  template <typename Point>
-  void configure(pcl::RadiusOutlierRemoval<Point>& f)
+  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    f.setRadiusSearch(*radius_);
-    f.setMinNeighborsInRadius(*min_);
+    outputs.declare<PointCloud> ("output", "Filtered Cloud.");
   }
+
   void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
   {
+    filter_field_name_ = params["filter_field_name"];
+    filter_limit_min_ = params["filter_limit_min"];
+    filter_limit_max_ = params["filter_limit_max"];
+    filter_limit_negative_ = params["filter_limit_negative"];
     radius_ = params["search_radius"];
     min_ = params["min_neighbors"];
-  }
 
+    output_ = outputs["output"];
+  }
+  
   template <typename Point>
-  int process(pcl::RadiusOutlierRemoval<Point>& f) {
-    f.setRadiusSearch(*radius_);
-    f.setMinNeighborsInRadius(*min_);
+  int process(const tendrils& inputs, const tendrils& outputs, 
+              boost::shared_ptr<const pcl::PointCloud<Point> >& input)
+  {
+    pcl::RadiusOutlierRemoval<Point> filter;
+    filter.setFilterFieldName(*filter_field_name_);
+    filter.setFilterLimits(*filter_limit_min_, *filter_limit_max_);
+    filter.setFilterLimitsNegative(*filter_limit_negative_);
+    filter.setRadiusSearch(*radius_);
+    filter.setMinNeighborsInRadius(*min_);
+    filter.setInputCloud(input);
+          
+    pcl::PointCloud<Point> cloud;
+    filter.filter(cloud);
+    *output_ = xyz_cloud_variant_t(cloud.makeShared());
+
     return ecto::OK;
   }
-  int process(const tendrils& inputs, const tendrils& outputs){ return 0; }
 
+  ecto::spore<std::string> filter_field_name_;
+  ecto::spore<double> filter_limit_min_;
+  ecto::spore<double> filter_limit_max_;
+  ecto::spore<bool> filter_limit_negative_;
   ecto::spore<double> radius_;
   ecto::spore<int> min_;
 
+  ecto::spore<PointCloud> output_;
 };
 
-ECTO_CELL(ecto_pcl, ecto::pcl::FilterCell<RadiusOutlierRemoval>, "RadiusOutlierRemoval", "Remove noisy measurements");
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<RadiusOutlierRemoval>, "RadiusOutlierRemoval", "Remove noisy measurements");
 

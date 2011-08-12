@@ -28,59 +28,72 @@
  */
 
 #include "ecto_pcl.hpp"
+#include "pcl_cell.hpp"
 #include <pcl/filters/statistical_outlier_removal.h>
-
-#define DECLARESTATISTICALOUTLIER(r, data, i, ELEM)                            \
-  BOOST_PP_COMMA_IF(i) pcl::StatisticalOutlierRemoval< BOOST_PP_TUPLE_ELEM(2, 0, ELEM) >
-
-typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLARESTATISTICALOUTLIER, ~, ECTO_XYZ_POINT_TYPES) > filter_variant_t;
-
-#include "filters/Filter.hpp"
 
 struct StatisticalOutlierRemoval
 {
-  template <typename Point>
-  struct filter {
-    typedef typename ::pcl::StatisticalOutlierRemoval<Point> type;
-  };
-
   static void declare_params(ecto::tendrils& params)
   {
     pcl::StatisticalOutlierRemoval<pcl::PointXYZ> default_;
+    params.declare<std::string> ("filter_field_name", "The name of the field to use for filtering.", "");
+    double filter_limit_min, filter_limit_max;
+    default_.getFilterLimits(filter_limit_min, filter_limit_max);
+    params.declare<double> ("filter_limit_min", "Minimum value for the filter.", filter_limit_min);
+    params.declare<double> ("filter_limit_max", "Maximum value for the filter.", filter_limit_max);
+    params.declare<bool> ("filter_limit_negative", "To negate the limits or not.", default_.getFilterLimitsNegative());
     params.declare<int> ("mean_k", "The number of points to use for mean distance estimation.", default_.getMeanK());
     params.declare<double> ("stddev", "The standard deviation multiplier threshold.", default_.getStddevMulThresh());
     params.declare<bool> ("negative", "Sets whether the indices should be returned, or all points _except_ the indices.", default_.getNegative());
   }
-  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs) { }
 
-  template <typename Point>
-  void configure(pcl::StatisticalOutlierRemoval<Point>& f)
+  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    f.setMeanK(*mean_k_);
-    f.setStddevMulThresh(*stddev_);
-    f.setNegative(*negative_);
+    outputs.declare<PointCloud> ("output", "Filtered Cloud.");
   }
+
   void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
   {
+    filter_field_name_ = params["filter_field_name"];
+    filter_limit_min_ = params["filter_limit_min"];
+    filter_limit_max_ = params["filter_limit_max"];
+    filter_limit_negative_ = params["filter_limit_negative"];
     negative_ = params["negative"];
     mean_k_ = params["mean_k"];
     stddev_ = params["stddev"];
-  }
 
+    output_ = outputs["output"];
+  }
+  
   template <typename Point>
-  int process(pcl::StatisticalOutlierRemoval<Point>& f) {
-    f.setMeanK(*mean_k_);
-    f.setStddevMulThresh(*stddev_);
-    f.setNegative(*negative_);
+  int process(const tendrils& inputs, const tendrils& outputs, 
+              boost::shared_ptr<const pcl::PointCloud<Point> >& input)
+  {
+    pcl::StatisticalOutlierRemoval<Point> filter;
+    filter.setFilterFieldName(*filter_field_name_);
+    filter.setFilterLimits(*filter_limit_min_, *filter_limit_max_);
+    filter.setFilterLimitsNegative(*filter_limit_negative_);
+    filter.setInputCloud(input);
+    filter.setMeanK(*mean_k_);
+    filter.setStddevMulThresh(*stddev_);
+    filter.setNegative(*negative_);
+          
+    pcl::PointCloud<Point> cloud;
+    filter.filter(cloud);
+    *output_ = xyz_cloud_variant_t(cloud.makeShared());
+
     return ecto::OK;
   }
-  int process(const tendrils& inputs, const tendrils& outputs){ return 0; }
 
+  ecto::spore<std::string> filter_field_name_;
+  ecto::spore<double> filter_limit_min_;
+  ecto::spore<double> filter_limit_max_;
+  ecto::spore<bool> filter_limit_negative_;
   ecto::spore<int> mean_k_;
   ecto::spore<double> stddev_;
   ecto::spore<bool> negative_;
-
+  ecto::spore<PointCloud> output_;
 };
 
-ECTO_CELL(ecto_pcl, ecto::pcl::FilterCell<StatisticalOutlierRemoval>, "StatisticalOutlierRemoval", "Remove noisy measurements");
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<StatisticalOutlierRemoval>, "StatisticalOutlierRemoval", "Remove noisy measurements");
 

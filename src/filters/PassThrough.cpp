@@ -28,40 +28,60 @@
  */
 
 #include "ecto_pcl.hpp"
+#include "pcl_cell.hpp"
 #include <pcl/filters/passthrough.h>
-
-#define DECLAREPASSTHROUGH(r, data, i, ELEM)                            \
-  BOOST_PP_COMMA_IF(i) pcl::PassThrough< BOOST_PP_TUPLE_ELEM(2, 0, ELEM) >
-
-typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLAREPASSTHROUGH, ~, ECTO_XYZ_POINT_TYPES) > filter_variant_t;
-
-#include "filters/Filter.hpp"
 
 struct PassThrough
 {
-  template <typename Point>
-  struct filter {
-    typedef typename pcl::PassThrough<Point> type;
-  };
+  static void declare_params(ecto::tendrils& params)
+  {
+    pcl::PassThrough<pcl::PointXYZ> default_;
+    params.declare<std::string> ("filter_field_name", "The name of the field to use for filtering.", "");
+    double filter_limit_min, filter_limit_max;
+    default_.getFilterLimits(filter_limit_min, filter_limit_max);
+    params.declare<double> ("filter_limit_min", "Minimum value for the filter.", filter_limit_min);
+    params.declare<double> ("filter_limit_max", "Maximum value for the filter.", filter_limit_max);
+    params.declare<bool> ("filter_limit_negative", "To negate the limits or not.", default_.getFilterLimitsNegative());
+  }
 
-  /* used to configure filter */
-  struct filter_params { };
+  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
+  {
+    outputs.declare<PointCloud> ("output", "Filtered Cloud.");
+  }
+
+  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
+  {
+    filter_field_name_ = params["filter_field_name"];
+    filter_limit_min_ = params["filter_limit_min"];
+    filter_limit_max_ = params["filter_limit_max"];
+    filter_limit_negative_ = params["filter_limit_negative"];
+
+    output_ = outputs["output"];
+  }
   
-  static void declare_params(ecto::tendrils& params) { }
-
-  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs) { }
-
-  PassThrough() { }
-
   template <typename Point>
-  void configure(pcl::PassThrough<Point>&) { }
-  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs) { }
+  int process(const tendrils& inputs, const tendrils& outputs, 
+              boost::shared_ptr<const pcl::PointCloud<Point> >& input)
+  {
+    pcl::PassThrough<Point> filter;
+    filter.setFilterFieldName(*filter_field_name_);
+    filter.setFilterLimits(*filter_limit_min_, *filter_limit_max_);
+    filter.setFilterLimitsNegative(*filter_limit_negative_);
+    filter.setInputCloud(input);
+          
+    pcl::PointCloud<Point> cloud;
+    filter.filter(cloud);
+    *output_ = xyz_cloud_variant_t(cloud.makeShared());
 
-  template <typename Point>
-  int process(pcl::PassThrough<Point>& f) { return 0; }
-  int process(const tendrils& inputs, const tendrils& outputs) { return 0; }
+    return ecto::OK;
+  }
 
+  ecto::spore<std::string> filter_field_name_;
+  ecto::spore<double> filter_limit_min_;
+  ecto::spore<double> filter_limit_max_;
+  ecto::spore<bool> filter_limit_negative_;
+  ecto::spore<PointCloud> output_;
 };
 
-ECTO_CELL(ecto_pcl, ecto::pcl::FilterCell<PassThrough>, "PassThrough", "PassThrough filter");
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<PassThrough>, "PassThrough", "PassThrough filter");
 

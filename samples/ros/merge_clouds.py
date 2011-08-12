@@ -32,7 +32,7 @@ def do_ecto():
                   grabber[:] >> p1[:],
                   grabber[:] >> p2[:],
                   p1[:] >> voxgrid[:],
-                  voxgrid[:] >> merge["input1"],
+                  voxgrid[:] >> merge["input"],
                   p2[:] >> merge["input2"],
                   merge[:] >> pcl2msg[:],
                   pcl2msg[:] >> pub[:])

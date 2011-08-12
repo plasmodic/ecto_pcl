@@ -19,7 +19,6 @@ ectomodule(ecto_pcl
   segmentation/EuclideanClusterExtraction.cpp
   segmentation/SACSegmentation.cpp
   segmentation/SACSegmentationFromNormals.cpp
-  #segmentation/SegmentDifferences.cpp
   surface/ConvexHull.cpp
   )
 

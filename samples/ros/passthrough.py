@@ -24,7 +24,7 @@ def do_ecto():
 
     pcl2msg = ecto_pcl_ros.PointCloud2Message("Cloud2Message", )
 
-    pub = PointCloudPub("Cloud Publisher", topic_name='/ecto_pcl/passthrough')    
+    pub = PointCloudPub("Cloud Publisher", topic_name='/ecto_pcl/sample_output')    
 
     plasm.connect(sub['output'] >> grabber[:],
                   grabber[:] >> passthru[:],
