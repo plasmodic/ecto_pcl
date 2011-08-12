@@ -97,9 +97,6 @@ struct SACSegmentation
     indices_t::Ptr inliers ( new indices_t() );
     model_t::Ptr model ( new model_t() );
 
-    // copy header
-    //inliers->header = model->header = (*input_)->header;
-
     impl_.segment (*inliers, *model);
 
     *model_ = model;
