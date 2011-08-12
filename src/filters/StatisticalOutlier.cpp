@@ -60,7 +60,7 @@ struct StatisticalOutlierRemoval
     f.setStddevMulThresh(*stddev_);
     f.setNegative(*negative_);
   }
-  void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
+  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
   {
     negative_ = params["negative"];
     mean_k_ = params["mean_k"];
@@ -74,7 +74,7 @@ struct StatisticalOutlierRemoval
     f.setNegative(*negative_);
     return ecto::OK;
   }
-  int process(const tendrils& inputs, tendrils& outputs){ return 0; }
+  int process(const tendrils& inputs, const tendrils& outputs){ return 0; }
 
   ecto::spore<int> mean_k_;
   ecto::spore<double> stddev_;

@@ -61,7 +61,7 @@ struct ProjectInliers
     f.setModelType(model_type);
     f.setCopyAllData(copy_all);
   }
-  void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
+  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
   {
     model_type = params.get<int> ("model_type");
     copy_all = params.get<bool> ("copy_all_data");
@@ -74,7 +74,7 @@ struct ProjectInliers
     f.setModelCoefficients(*model_);
     return 0;
   }
-  int process(const tendrils& inputs, tendrils& outputs){ return 0; }
+  int process(const tendrils& inputs, const tendrils& outputs){ return 0; }
 
   ecto::spore<model_t::ConstPtr> model_;
   int model_type;

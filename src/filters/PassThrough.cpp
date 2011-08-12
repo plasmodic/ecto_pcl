@@ -55,11 +55,11 @@ struct PassThrough
 
   template <typename Point>
   void configure(pcl::PassThrough<Point>&) { }
-  void configure(tendrils& params, tendrils& inputs, tendrils& outputs) { }
+  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs) { }
 
   template <typename Point>
   int process(pcl::PassThrough<Point>& f) { return 0; }
-  int process(const tendrils& inputs, tendrils& outputs) { return 0; }
+  int process(const tendrils& inputs, const tendrils& outputs) { return 0; }
 
 };
 

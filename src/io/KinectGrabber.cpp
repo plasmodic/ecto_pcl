@@ -41,9 +41,6 @@
 #include <pcl/point_types.h>
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/io/openni_grabber.h>
-#include <pcl/visualization/cloud_viewer.h>
-
-#include <opencv2/opencv.hpp>
 
 #include <iostream>
 
@@ -156,13 +153,13 @@ struct KinectGrabber
     outputs.declare<PointCloud> ("output", "An XYZ/XYZRGB point cloud from the kinect");
   }
 
-  int configure(tendrils& params, tendrils& inputs, tendrils& outputs)
+  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
   {
     format = params.get<int> ("format");
     impl_.reset(new SimpleKinectGrabber(format));
   }
 
-  int process(const tendrils& /*inputs*/, tendrils& outputs)
+  int process(const tendrils& /*inputs*/, const tendrils& outputs)
   {
     if(format == ecto::pcl::FORMAT_XYZRGB){
       PointCloud p( impl_->getLatestXYZRGBCloud() );

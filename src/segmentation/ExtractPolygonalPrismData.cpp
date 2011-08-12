@@ -63,7 +63,7 @@ struct ExtractPolygonalPrismData
   {
     impl_.setHeightLimits (height_min, height_max);
   }
-  void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
+  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
   {
     hull_ = inputs["planar_hull"];
     inliers_ = outputs["inliers"];
@@ -89,7 +89,7 @@ struct ExtractPolygonalPrismData
     *inliers_ = inliers;
     return 0;
   }
-  int process(const tendrils& inputs, tendrils& outputs) { return 0; }
+  int process(const tendrils& inputs, const tendrils& outputs) { return 0; }
 
   double height_min, height_max;
   ecto::spore< PointCloud > hull_;

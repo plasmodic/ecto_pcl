@@ -44,12 +44,12 @@ struct CloudViewer
     inputs.declare<PointCloud> ("input", "The cloud to view");
     outputs.declare<bool> ("stop", "True if stop requested", false);
   }
-  void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
+  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
   {
     viewer_.reset(new pcl::visualization::CloudViewer(params.get<std::string> ("window_name")));
   }
 
-  int process(const tendrils& inputs, tendrils& outputs)
+  int process(const tendrils& inputs, const tendrils& outputs)
   {
     if (!viewer_)
       return 1;

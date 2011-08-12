@@ -72,7 +72,7 @@ namespace ecto {
 
       SegmentationCell() : configured_(false) {}
 
-      void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
+      void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
       {
         input_ = inputs["input"];
         custom.configure(params, inputs, outputs);
@@ -118,7 +118,7 @@ namespace ecto {
         }
       };
 
-      int process(const tendrils& inputs, tendrils& outputs)
+      int process(const tendrils& inputs, const tendrils& outputs)
       {
         xyz_cloud_variant_t cvar = input_->make_variant();
         if(!configured_){

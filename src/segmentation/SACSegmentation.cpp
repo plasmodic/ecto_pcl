@@ -76,7 +76,7 @@ struct SACSegmentation
     impl_.setProbability(probability);
     impl_.setRadiusLimits(radius_min, radius_max);
   }
-  void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
+  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
   {
     inliers_ = outputs["inliers"];
     model_ = outputs["model"];
@@ -107,7 +107,7 @@ struct SACSegmentation
 
     return 0;
   }
-  int process(const tendrils& inputs, tendrils& outputs) { return 0; }
+  int process(const tendrils& inputs, const tendrils& outputs) { return 0; }
 
   int model;
   int method;

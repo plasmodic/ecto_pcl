@@ -51,7 +51,7 @@ struct ExtractLargestCluster
 
   template <typename Point>
   void configure(pcl::ExtractIndices<Point>& impl_) { }
-  void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
+  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
   {
     clusters_ = inputs["clusters"];
   }
@@ -69,7 +69,7 @@ struct ExtractLargestCluster
     impl_.setIndices( pcl::PointIndicesPtr( new pcl::PointIndices ((*clusters_)[largest])) );
     return 0;
   }
-  int process(const tendrils& inputs, tendrils& outputs) { return 0; }
+  int process(const tendrils& inputs, const tendrils& outputs) { return 0; }
   
   ecto::spore< cluster_t > clusters_;
 };
