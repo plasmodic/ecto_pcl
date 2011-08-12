@@ -28,60 +28,53 @@
  */
 
 #include "ecto_pcl.hpp"
+#include "pcl_cell.hpp"
 #include <pcl/filters/project_inliers.h>
-
-#define DECLAREPROJECTINLIERS(r, data, i, ELEM)                            \
-  BOOST_PP_COMMA_IF(i) pcl::ProjectInliers< BOOST_PP_TUPLE_ELEM(2, 0, ELEM) >
-
-typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLAREPROJECTINLIERS, ~, ECTO_XYZ_POINT_TYPES) > filter_variant_t;
-
-#include "filters/Filter.hpp"
 
 struct ProjectInliers
 {
-  template <typename Point>
-  struct filter {
-    typedef typename ::pcl::ProjectInliers<Point> type;
-  };
-
   static void declare_params(ecto::tendrils& params)
   {
     params.declare<int> ("model_type", "The type of model to use.", 0);
     params.declare<bool> ("copy_all_data", "Sets whether all data will be returned, or only the projected inliers.", false);
   }
-  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs) {
-    inputs.declare<model_t::ConstPtr> ("model", "Model to use for projection.");
-  }
 
-  ProjectInliers() {}
-
-  template <typename Point>
-  void configure(pcl::ProjectInliers<Point>& f)
+  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    f.setModelType(model_type);
-    f.setCopyAllData(copy_all);
+    inputs.declare<model_t::ConstPtr> ("model", "Model to use for projection.");
+    outputs.declare<PointCloud> ("output", "Filtered Cloud.");
   }
+
   void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
   {
-    model_type = params.get<int> ("model_type");
-    copy_all = params.get<bool> ("copy_all_data");
+    model_type_ = params["model_type"];
+    copy_all_ = params["copy_all_data"];
     model_ = inputs["model"];
+    output_ = outputs["output"];
   }
-
+  
   template <typename Point>
-  int process(pcl::ProjectInliers<Point>& f)
+  int process(const tendrils& inputs, const tendrils& outputs, 
+              boost::shared_ptr<const pcl::PointCloud<Point> >& input)
   {
-    f.setModelCoefficients(*model_);
+    pcl::ProjectInliers<Point> filter;
+    filter.setModelType(*model_type_);
+    filter.setCopyAllData(*copy_all_);
+    filter.setModelCoefficients(*model_);
+    filter.setInputCloud(input);
+          
+    pcl::PointCloud<Point> cloud;
+    filter.filter(cloud);
+    *output_ = xyz_cloud_variant_t(cloud.makeShared());
+
     return 0;
   }
-  int process(const tendrils& inputs, const tendrils& outputs){ return 0; }
 
+  ecto::spore<int> model_type_;
+  ecto::spore<bool> copy_all_;
   ecto::spore<model_t::ConstPtr> model_;
-  int model_type;
-  bool copy_all;
-
+  ecto::spore<PointCloud> output_;
 };
 
-ECTO_CELL(ecto_pcl, ecto::pcl::FilterCell<ProjectInliers>, "ProjectInliers", "...");
-
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ProjectInliers>, "ProjectInliers", "...");
 

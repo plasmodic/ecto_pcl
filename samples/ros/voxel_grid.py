@@ -10,11 +10,12 @@ import ecto_ros, ecto_sensor_msgs
 import sys
 
 PointCloudSub = ecto_sensor_msgs.Subscriber_PointCloud2
+PointCloudPub = ecto_sensor_msgs.Publisher_PointCloud2
 
 def do_ecto():
     plasm = ecto.Plasm()
 
-    sub = PointCloudSub("Subscriber", topic_name='/camera/depth_registered/points')
+    sub = PointCloudSub("Subscriber", topic_name='/camera/rgb/points')
     
     grabber = ecto_pcl_ros.Message2PointCloud("Message2Cloud", format=ecto_pcl.XYZRGB)
 
@@ -22,7 +23,7 @@ def do_ecto():
 
     pcl2msg = ecto_pcl_ros.PointCloud2Message("Cloud2Message")
 
-    pub = PointCloudPub("Cloud Publisher", topic_name='/ecto_pcl/voxel_grid')    
+    pub = PointCloudPub("Cloud Publisher", topic_name='/ecto_pcl/sample_output')    
 
     plasm.connect(sub['output'] >> grabber[:],
                   grabber[:] >> voxgrid[:],
