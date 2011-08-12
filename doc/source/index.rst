@@ -1,11 +1,12 @@
 ecto pcl
 ========
 
+This is where the Point Cloud Library intersects the ectosphere.
+
 .. toctree::
    :maxdepth: 2
 
    building
-
-
-.. ectocell:: ecto_pcl PointCloud2PointCloudT
+   examples/index
+   cells
 
