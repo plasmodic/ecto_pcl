@@ -32,7 +32,7 @@ def do_ecto():
     
     voxgrid = ecto_pcl.VoxelGrid("VoxelGrid", leaf_size=0.01)
 
-    normals = ecto_pcl.NormalEstimation("Normals", k_search=0, radius_search=0.02, spatial_locator=ecto_pcl.KDTREE_FLANN)
+    normals = ecto_pcl.NormalEstimation("Normals", k_search=0, radius_search=0.02)
     
     segment = ecto_pcl.SACSegmentationFromNormals("PlanarSegmentation", model_type=ecto_pcl.SACMODEL_NORMAL_PLANE, eps_angle=0.09, distance_threshold=0.1)
     
@@ -44,7 +44,7 @@ def do_ecto():
     
     extract = ecto_pcl.ExtractIndices("Extract", negative=False)
 
-    clusters = ecto_pcl.EuclideanClusterExtraction("Clusters", spatial_locator=ecto_pcl.KDTREE_FLANN, min_cluster_size=50, cluster_tolerance=0.01)
+    clusters = ecto_pcl.EuclideanClusterExtraction("Clusters", min_cluster_size=50, cluster_tolerance=0.01)
 
     largest = ecto_pcl.ExtractLargestCluster("Largest")
     

@@ -31,7 +31,7 @@ def do_ecto():
     
     voxgrid = ecto_pcl.VoxelGrid("VoxelGrid", leaf_size=0.01)
 
-    normals = ecto_pcl.NormalEstimation("Normals", k_search=0, radius_search=0.02, spatial_locator=ecto_pcl.KDTREE_FLANN)
+    normals = ecto_pcl.NormalEstimation("Normals", k_search=0, radius_search=0.02)
     
     segment = ecto_pcl.SACSegmentationFromNormals("PlanarSegmentation", model_type=ecto_pcl.SACMODEL_NORMAL_PLANE, eps_angle=0.09, distance_threshold=0.1)
     

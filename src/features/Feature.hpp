@@ -65,15 +65,13 @@ namespace ecto {
         FeatureEstimatorType& ft;
         feature_configurator(FeatureParams& fp_, FeatureEstimatorType& ft_) : fp(fp_), ft(ft_) {}
 
-//typename FilterPolicy<typename CloudType::element_type::PointType>::type()
-       // typename FilterType::template filter< ::pcl::PointXYZRGB>::type default_;
-        template <typename T> //Point>
-        //void operator()(typename FeatureEstimatorType::template feature_estimator<Point>::type& impl_) const 
+        template <typename T>
         void operator()(T& impl_) const 
         { 
           impl_.setKSearch(fp.k);
           impl_.setRadiusSearch(fp.radius);
           typename T::KdTreePtr tree_;
+
           typedef typename T::PointCloudIn CloudT;
           typedef typename CloudT::PointType PointT;
 
@@ -90,7 +88,6 @@ namespace ecto {
                 break;
               }
           }
-          //initTree (fp.locator, tree_, fp.k);
           impl_.setSearchMethod (tree_);
           ft.configure(impl_);
         } 
