@@ -45,7 +45,8 @@ struct MergeClouds
   
   template <typename Point>
   int process(const tendrils& inputs, const tendrils& outputs, 
-              boost::shared_ptr<const pcl::PointCloud<Point> >& input1, boost::shared_ptr<const pcl::PointCloud<Point> >& input2)
+              boost::shared_ptr<const pcl::PointCloud<Point> >& input1,
+              boost::shared_ptr<const pcl::PointCloud<Point> >& input2)
   {
     pcl::PointCloud<Point> cloud;
     cloud = *input1;
