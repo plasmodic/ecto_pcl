@@ -36,7 +36,7 @@
 
 /* enumerations and values to be wrapped */
 #include <pcl/sample_consensus/model_types.h>
-#include <pcl/kdtree/tree_types.h>
+//#include <pcl/kdtree/tree_types.h>
 
 namespace bp = boost::python;
 
@@ -77,7 +77,7 @@ struct PointCloud2PointCloudT
   }
 
   void
-  configure(tendrils& params, tendrils& inputs, tendrils& outputs)
+  configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
   {
     format_ = params["format"];
     input_ = inputs["input"];
@@ -85,7 +85,7 @@ struct PointCloud2PointCloudT
   }
 
   int
-  process(const tendrils& /*inputs*/, tendrils& outputs)
+  process(const tendrils& /*inputs*/, const tendrils& outputs)
   {
     switch (*format_)
     {
@@ -133,8 +133,8 @@ ECTO_DEFINE_MODULE(ecto_pcl)
     .export_values()
     ;
 
-  bp::scope().attr("KDTREE_FLANN") = pcl::KDTREE_FLANN;
-  bp::scope().attr("KDTREE_ORGANIZED_INDEX") = pcl::KDTREE_ORGANIZED_INDEX;
+  //bp::scope().attr("KDTREE_FLANN") = 0;
+  //bp::scope().attr("KDTREE_ORGANIZED_INDEX") = 1;
 }
 
 ECTO_CELL(ecto_pcl,PointCloud2PointCloudT,"PointCloud2PointCloudT","Convert a generic variant based PointCloud to a strongly typed pcl::PointCloud<pcl::PointT>.")

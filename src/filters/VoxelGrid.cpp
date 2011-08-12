@@ -55,7 +55,7 @@ struct VoxelGrid
   {
     f.setLeafSize(*leaf_size, *leaf_size, *leaf_size);
   }
-  void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
+  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
   {
     leaf_size = params["leaf_size"];
   }
@@ -65,7 +65,7 @@ struct VoxelGrid
     f.setLeafSize(*leaf_size, *leaf_size, *leaf_size);
     return ecto::OK;
   }
-  int process(const tendrils& inputs, tendrils& outputs){ return 0; }
+  int process(const tendrils& inputs, const tendrils& outputs){ return 0; }
 
   ecto::spore<float> leaf_size;
 

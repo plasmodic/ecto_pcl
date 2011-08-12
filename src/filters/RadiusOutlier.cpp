@@ -58,7 +58,7 @@ struct RadiusOutlierRemoval
     f.setRadiusSearch(*radius_);
     f.setMinNeighborsInRadius(*min_);
   }
-  void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
+  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
   {
     radius_ = params["search_radius"];
     min_ = params["min_neighbors"];
@@ -70,7 +70,7 @@ struct RadiusOutlierRemoval
     f.setMinNeighborsInRadius(*min_);
     return ecto::OK;
   }
-  int process(const tendrils& inputs, tendrils& outputs){ return 0; }
+  int process(const tendrils& inputs, const tendrils& outputs){ return 0; }
 
   ecto::spore<double> radius_;
   ecto::spore<int> min_;

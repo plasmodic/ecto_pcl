@@ -54,11 +54,11 @@ struct NormalEstimation
 
   template <typename Point>
   void configure(pcl::NormalEstimation<Point, pcl::Normal>& f) {}
-  void configure(tendrils& params, tendrils& inputs, tendrils& outputs) { }
+  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs) { }
 
   template <typename Point>
   int process(pcl::NormalEstimation<Point,pcl::Normal>& f) { return 0; }
-  int process(const tendrils& inputs, tendrils& outputs){ return 0; }
+  int process(const tendrils& inputs, const tendrils& outputs){ return 0; }
 
 };
 

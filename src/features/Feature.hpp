@@ -30,6 +30,8 @@
 #pragma once
 
 #include <pcl/kdtree/kdtree.h>
+#include <pcl/kdtree/kdtree_flann.h>
+#include <pcl/kdtree/organized_data.h>
 
 namespace ecto {
   namespace pcl {
@@ -72,7 +74,23 @@ namespace ecto {
           impl_.setKSearch(fp.k);
           impl_.setRadiusSearch(fp.radius);
           typename T::KdTreePtr tree_;
-          initTree (fp.locator, tree_, fp.k);
+          typedef typename T::PointCloudIn CloudT;
+          typedef typename CloudT::PointType PointT;
+
+          switch (fp.locator)
+          {
+            case 0:
+              {
+                tree_.reset (new ::pcl::KdTreeFLANN<PointT>);
+                break;
+              }
+            case 1:
+              {
+                tree_.reset (new ::pcl::OrganizedDataIndex<PointT>);
+                break;
+              }
+          }
+          //initTree (fp.locator, tree_, fp.k);
           impl_.setSearchMethod (tree_);
           ft.configure(impl_);
         } 
@@ -94,7 +112,7 @@ namespace ecto {
         FeatureEstimatorType::declare_io(params, inputs, outputs);
       }
 
-      void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
+      void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
       {
         input_ = inputs["input"];
         output_ = outputs["output"];
@@ -137,7 +155,7 @@ namespace ecto {
       };
 
 
-      int process(const tendrils& inputs, tendrils& outputs)
+      int process(const tendrils& inputs, const tendrils& outputs)
       {
         xyz_cloud_variant_t cvar = input_->make_variant();
         if(!configured_){

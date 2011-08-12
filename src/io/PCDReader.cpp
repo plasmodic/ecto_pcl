@@ -45,14 +45,14 @@ struct PCDReader
     outputs.declare<PointCloud>("output", "A point cloud from the bag file.");
   }
 
-  void configure(tendrils& params, tendrils& inputs, tendrils& outputs)
+  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
   {
     output_ = outputs["output"];
     format_ = params["format"];
     filename_ = params["filename"];
   }
 
-  int process(const tendrils& /*inputs*/, tendrils& outputs)
+  int process(const tendrils& /*inputs*/, const tendrils& outputs)
   { 
     switch(*format_)
     {

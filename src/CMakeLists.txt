@@ -23,7 +23,6 @@ ectomodule(ecto_pcl
   )
 
 link_ecto(ecto_pcl
-    ${sensor_msgs_LIBRARIES}
     ${pcl_LIBRARIES}
     )
 #install_ecto_module(ecto_pcl)

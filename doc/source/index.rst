@@ -1,9 +1,11 @@
-ecto pcl stuffs
-===============
+ecto pcl
+========
 
-here they are, they are so cloudy
+.. toctree::
+   :maxdepth: 2
+
+   building
 
 
-
-
+.. ectocell:: ecto_pcl PointCloud2PointCloudT
 

@@ -10,7 +10,9 @@
 
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
+
 #include <pcl/ros/conversions.h>
+
 #include <iostream>
 
 #include <sensor_msgs/PointCloud2.h>
@@ -60,7 +62,7 @@ namespace ecto
       }
 
       void
-      configure(tendrils& params, tendrils& inputs, tendrils& outputs)
+      configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
       {
         format_ = params["format"];
         input_ = inputs["input"];
@@ -68,7 +70,7 @@ namespace ecto
       }
 
       int
-      process(const tendrils& /*inputs*/, tendrils& outputs)
+      process(const tendrils& /*inputs*/, const tendrils& outputs)
       {
         switch (*format_)
         {
@@ -110,7 +112,7 @@ namespace ecto
       }
 
       void
-      configure(tendrils& params, tendrils& inputs, tendrils& outputs)
+      configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
       {
         format_ = params["format"];
         input_ = inputs["input"];
@@ -118,7 +120,7 @@ namespace ecto
       }
 
       int
-      process(const tendrils& /*inputs*/, tendrils& outputs)
+      process(const tendrils& /*inputs*/, const tendrils& outputs)
       {
         xyz_cloud_variant_t v = input_->make_variant();
         *output_ = boost::apply_visitor(to_message(),v);
