@@ -26,7 +26,7 @@ PointCloudPub = ecto_sensor_msgs.Publisher_PointCloud2
 def do_ecto():
     plasm = ecto.Plasm()
     
-    sub = PointCloudSub("Cloud Subscriber", topic_name='/camera/rgb/points')
+    sub = PointCloudSub("Cloud Subscriber", topic_name='/camera/depth_registered/points')
     
     grabber = ecto_pcl_ros.Message2PointCloud("Message2Cloud", format=ecto_pcl.XYZRGB)
     
