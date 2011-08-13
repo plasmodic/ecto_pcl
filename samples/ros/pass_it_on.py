@@ -10,7 +10,7 @@ grabber = ecto_pcl_ros.Message2PointCloud(format=ecto_pcl.XYZRGB)
 
 pcl2msg = ecto_pcl_ros.PointCloud2Message()
 
-pub = ecto_sensor_msgs.Publisher_PointCloud2(topic_name='/ecto_pcl/pass_it_on')
+pub = ecto_sensor_msgs.Publisher_PointCloud2(topic_name='/ecto_pcl/sample_output')
 
 plasm.connect(sub['output'] >> grabber[:],
                   grabber[:] >> pcl2msg[:],

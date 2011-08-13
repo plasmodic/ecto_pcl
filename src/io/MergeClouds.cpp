@@ -27,11 +27,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <string>
 #include "ecto_pcl.hpp"
-#include "pcl_dual_cell.hpp"
+#include "pcl_cell_dual_inputs.hpp"
 
 struct MergeClouds
 {
+  static const std::string SecondInputName;
+  static const std::string SecondInputDescription;
+
   static void declare_params(ecto::tendrils& params) { }
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
   {
@@ -58,5 +62,8 @@ struct MergeClouds
   ecto::spore<PointCloud> output_;
 };
 
-ECTO_CELL(ecto_pcl, ecto::pcl::PclDualCell<MergeClouds>, "MergeClouds", "Merges two clouds of the same type.");
+const std::string MergeClouds::SecondInputName = "input2";
+const std::string MergeClouds::SecondInputDescription = "Second cloud to merge";
+
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCellDualInputs<MergeClouds>, "MergeClouds", "Merges two clouds of the same type.");
 

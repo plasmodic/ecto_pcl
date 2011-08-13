@@ -28,74 +28,57 @@
  */
 
 #include "ecto_pcl.hpp"
+#include "pcl_cell_dual_inputs.hpp"
 #include <pcl/segmentation/extract_polygonal_prism_data.h>
-
-#define DECLAREEXTRACT(r, data, i, ELEM)                            \
-  BOOST_PP_COMMA_IF(i) pcl::ExtractPolygonalPrismData< BOOST_PP_TUPLE_ELEM(2, 0, ELEM) >
-
-typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLAREEXTRACT, ~, ECTO_XYZ_POINT_TYPES) > segmentation_variant_t;
-
-#include <segmentation/Segmentation.hpp>
-#include <boost/variant/get.hpp>
 
 struct ExtractPolygonalPrismData
 {
-  template <typename Point>
-  struct segmentation {
-    typedef typename ::pcl::ExtractPolygonalPrismData<Point> type;
-  };
+  static const std::string SecondInputName;
+  static const std::string SecondInputDescription;
 
   static void declare_params(ecto::tendrils& params)
   {
-    pcl::ExtractPolygonalPrismData<pcl::PointXYZ> default_;
-    double h_min, h_max;
-    default_.getHeightLimits (h_min, h_max);
-    params.declare<double> ("height_min", "Minimum allowable height limits for the model.", h_min);
-    params.declare<double> ("height_max", "Maximum allowable height limits for the model.", h_max);
+    params.declare<double> ("height_min", "Minimum allowable height limits for the model.", 0.0);
+    params.declare<double> ("height_max", "Maximum allowable height limits for the model.", 1.0);
   }
-  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs) {
-    inputs.declare<PointCloud> ("planar_hull", "Planar hull to use.");
+
+  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
+  {
     outputs.declare<indices_t::ConstPtr> ("inliers", "Inliers of the model.");
   }
 
-  template <typename Point>
-  void configure(pcl::ExtractPolygonalPrismData<Point>& impl_)
-  {
-    impl_.setHeightLimits (height_min, height_max);
-  }
   void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
   {
-    hull_ = inputs["planar_hull"];
+    height_min_ = params["height_min"];
+    height_max_ = params["height_max"];
     inliers_ = outputs["inliers"];
-
-    height_min = params.get<double> ("height_min");
-    height_max = params.get<double> ("height_max");
   }
 
   template <typename Point>
-  int process(pcl::ExtractPolygonalPrismData<Point>& impl_) { 
+  int process(const tendrils& inputs, const tendrils& outputs, 
+              boost::shared_ptr<const pcl::PointCloud<Point> >& input1,
+              boost::shared_ptr<const pcl::PointCloud<Point> >& input2)
+  {
+    pcl::ExtractPolygonalPrismData<Point> impl;    
     indices_t::Ptr inliers ( new indices_t() );
 
-    try{
-      xyz_cloud_variant_t cv = hull_->make_variant();
-      typename pcl::PointCloud<Point>::ConstPtr hull = boost::get<typename pcl::PointCloud<Point>::ConstPtr>(cv);
-      if(hull)
-        impl_.setInputPlanarHull (hull);
-    }catch(boost::bad_get){
-      throw std::runtime_error("Failure to set hull input.");
-    }
-    impl_.segment (*inliers);
+    impl.setHeightLimits (*height_min_, *height_max_);
+    impl.setInputPlanarHull(input2);
+    impl.setInputCloud(input1);
+    impl.segment(*inliers);
 
     *inliers_ = inliers;
-    return 0;
+    return ecto::OK;
   }
   int process(const tendrils& inputs, const tendrils& outputs) { return 0; }
 
-  double height_min, height_max;
-  ecto::spore< PointCloud > hull_;
-  ecto::spore< indices_t::ConstPtr > inliers_;
-
+  ecto::spore<double> height_min_;
+  ecto::spore<double> height_max_;
+  ecto::spore<indices_t::ConstPtr> inliers_;
 };
 
-ECTO_CELL(ecto_pcl, ecto::pcl::SegmentationCell<ExtractPolygonalPrismData>, "ExtractPolygonalPrismData", "Uses a set of point indices that respresent a planar model, and together with a given height, generates a 3D polygonal prism.");
+const std::string ExtractPolygonalPrismData::SecondInputName = "planar_hull";
+const std::string ExtractPolygonalPrismData::SecondInputDescription = "Planar hull to use.";
+
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCellDualInputs<ExtractPolygonalPrismData>, "ExtractPolygonalPrismData", "Uses a set of point indices that respresent a planar model, and together with a given height, generates a 3D polygonal prism.");
 
