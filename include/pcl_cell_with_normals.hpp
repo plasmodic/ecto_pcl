@@ -33,7 +33,7 @@ namespace ecto {
   namespace pcl {
 
     template <typename CellType>
-    struct PclDualCell
+    struct PclCellWithNormals
     {
       static void declare_params(ecto::tendrils& params)
       {
@@ -42,15 +42,15 @@ namespace ecto {
 
       static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
       {
-        inputs.declare<PointCloud> ("input", "First cloud to merge");
-        inputs.declare<PointCloud> ("input2", "Second cloud to merge");
+        inputs.declare<PointCloud> ("input", "Input cloud.");
+        inputs.declare<FeatureCloud> ("normals", "Normals to use.");
         CellType::declare_io(params, inputs, outputs);
       }
 
       void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
       {
-        input1_ = inputs["input"];
-        input2_ = inputs["input2"];
+        input_ = inputs["input"];
+        normals_ = inputs["normals"];
         impl_.configure(params, inputs, outputs);
       }
 
@@ -64,28 +64,30 @@ namespace ecto {
         filter_dispatch(CellType& ft_, const tendrils& input_, const tendrils& output_) : ft(ft_), inputs(input_), outputs(output_) { }
 
         template <typename Point>
-        void operator()(boost::shared_ptr<const ::pcl::PointCloud<Point> >& cloud1, boost::shared_ptr<const ::pcl::PointCloud<Point> >& cloud2) const
+        void operator()(boost::shared_ptr<const ::pcl::PointCloud<Point> >& input, 
+                        boost::shared_ptr<const ::pcl::PointCloud< ::pcl::Normal> >& normals) const
         {   
-          ft.process(inputs, outputs, cloud1, cloud2);
+          ft.process(inputs, outputs, input, normals);
         }
 
-        template <typename Point, typename Point2>
-        void operator()(boost::shared_ptr<const ::pcl::PointCloud<Point> >& cloud1, boost::shared_ptr<const ::pcl::PointCloud<Point2> >& cloud2) const
+        template <typename Point, typename Normal>
+        void operator()(boost::shared_ptr<const ::pcl::PointCloud<Point> >& input,
+                        boost::shared_ptr<const ::pcl::PointCloud<Normal> >& normals) const
         {   
-          throw std::runtime_error("PclDualCell: clouds are not the same type!");
+          throw std::runtime_error("PclCellWithNormals: normals must be of type pcl::Normal!");
         }
       };
 
       int process(const tendrils& inputs, const tendrils& outputs)
       {
-        xyz_cloud_variant_t cloud1 = input1_->make_variant();
-        xyz_cloud_variant_t cloud2 = input2_->make_variant();
-        boost::apply_visitor(filter_dispatch(impl_, inputs, outputs), cloud1, cloud2);
+        xyz_cloud_variant_t input = input_->make_variant();
+        feature_cloud_variant_t normals = normals_->make_variant();
+        boost::apply_visitor(filter_dispatch(impl_, inputs, outputs), input, normals);
         return 0;
       }
 
-      ecto::spore<PointCloud> input1_;
-      ecto::spore<PointCloud> input2_;
+      ecto::spore<PointCloud> input_;
+      ecto::spore<FeatureCloud> normals_;
       CellType impl_;
     };
 

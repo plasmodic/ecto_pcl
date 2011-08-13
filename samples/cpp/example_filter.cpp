@@ -19,7 +19,7 @@ struct MyCell
   {
     /* 
      * A single "ecto::pcl::PointCloud" input is already defined... any others should be here
-     * If you need 2 input PointClouds, use the PclDualCell
+     * If you need 2 input PointClouds, use the PclCellDualInputs
      */
 
     // Most cells will output a PointCloud
