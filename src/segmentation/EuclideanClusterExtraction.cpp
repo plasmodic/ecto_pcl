@@ -28,70 +28,54 @@
  */
 
 #include "ecto_pcl.hpp"
+#include "pcl_cell.hpp"
 #include <pcl/segmentation/extract_clusters.h>
-
-#define DECLARECLUSTERS(r, data, i, ELEM)                            \
-  BOOST_PP_COMMA_IF(i) pcl::EuclideanClusterExtraction< BOOST_PP_TUPLE_ELEM(2, 0, ELEM) >
-
-typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLARECLUSTERS, ~, ECTO_XYZ_POINT_TYPES) > segmentation_variant_t;
-
-#include <segmentation/Segmentation.hpp>
-#include <boost/variant/get.hpp>
 
 struct EuclideanClusterExtraction
 {
-  template <typename Point>
-  struct segmentation {
-    typedef typename ::pcl::EuclideanClusterExtraction<Point> type;
-  };
-
   static void declare_params(ecto::tendrils& params)
   {
     pcl::EuclideanClusterExtraction<pcl::PointXYZ> default_;
     params.declare<double> ("cluster_tolerance", "Spatial cluster tolerance as a measure in the L2 Euclidean space.", 0.05);
     params.declare<int> ("min_cluster_size", "Minimum number of points that a cluster needs to contain in order to be considered valid.", 1);
     params.declare<int> ("max_cluster_size", "Maximum number of points that a cluster needs to contain in order to be considered valid.", default_.getMaxClusterSize());
-    params.declare<int> ("spatial_locator", "The search method to use: FLANN(0), ORGANIZED(1).",0);
   }
+
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs) {
     outputs.declare<cluster_t> ("output", "Clusters.");
   }
 
-  template <typename Point>
-  void configure(pcl::EuclideanClusterExtraction<Point>& impl_)
-  {
-    impl_.setClusterTolerance (cluster_tolerance);
-    impl_.setMinClusterSize (min_cluster_size);
-    impl_.setMaxClusterSize (max_cluster_size);
-    //impl_.setSpatialLocator (locator);
-  }
   void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
   {
-    output_ = outputs["output"];
+    cluster_tolerance_ = params["cluster_tolerance"]; 
+    min_cluster_size_ = params["min_cluster_size"]; 
+    max_cluster_size_ = params["max_cluster_size"];
 
-    cluster_tolerance = params.get<double> ("cluster_tolerance"); 
-    min_cluster_size = params.get<int> ("min_cluster_size"); 
-    max_cluster_size = params.get<int> ("max_cluster_size"); 
-    //locator = params.get<int> ("spatial_locator");    
+    output_ = outputs["output"];
   }
 
   template <typename Point>
-  int process(pcl::EuclideanClusterExtraction<Point>& impl_) {
+  int process(const tendrils& inputs, const tendrils& outputs, 
+              boost::shared_ptr<const pcl::PointCloud<Point> >& input)
+  {
     cluster_t clusters;
-    impl_.extract (clusters);
+
+    pcl::EuclideanClusterExtraction<Point> impl;
+    impl.setClusterTolerance (*cluster_tolerance_);
+    impl.setMinClusterSize (*min_cluster_size_);
+    impl.setMaxClusterSize (*max_cluster_size_);
+    impl.setInputCloud(input);
+    impl.extract (clusters);
+
     *output_ = clusters;
-    return 0;
+    return ecto::OK;
   }
-  int process(const tendrils& inputs, const tendrils& outputs) { return 0; }
 
-  double cluster_tolerance;
-  int min_cluster_size; 
-  int max_cluster_size; 
-  //int locator;    
-  
+  ecto::spore<double> cluster_tolerance_;
+  ecto::spore<int> min_cluster_size_;
+  ecto::spore<int> max_cluster_size_;  
   ecto::spore< cluster_t > output_;
-
 };
 
-ECTO_CELL(ecto_pcl, ecto::pcl::SegmentationCell<EuclideanClusterExtraction>, "EuclideanClusterExtraction", "Segmentation for cluster extraction in a Euclidean sense.");
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<EuclideanClusterExtraction>, "EuclideanClusterExtraction", "Segmentation for cluster extraction in a Euclidean sense.");
 
