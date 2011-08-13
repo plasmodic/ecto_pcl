@@ -12,6 +12,7 @@ ectomodule(ecto_pcl
   #io/CloudViewer.cpp
   #io/KinectGrabber.cpp
   io/MergeClouds.cpp
+  io/ModelCoefficients.cpp
   io/PCDReader.cpp
   io/PCDWriter.cpp
   segmentation/ExtractPolygonalPrismData.cpp
