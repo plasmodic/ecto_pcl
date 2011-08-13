@@ -28,23 +28,11 @@
  */
 
 #include "ecto_pcl.hpp"
+#include "pcl_cell_with_normals.hpp"
 #include <pcl/segmentation/sac_segmentation.h>
-
-#define DECLARESACSEGMENTATIONFROMNORMALS(r, data, i, ELEM)                            \
-  BOOST_PP_COMMA_IF(i) pcl::SACSegmentationFromNormals< BOOST_PP_TUPLE_ELEM(2, 0, ELEM), pcl::Normal >
-
-typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLARESACSEGMENTATIONFROMNORMALS, ~, ECTO_XYZ_POINT_TYPES) > segmentation_variant_t;
-
-#include <segmentation/Segmentation.hpp>
-#include <boost/variant/get.hpp>
 
 struct SACSegmentationFromNormals
 {
-  template <typename Point>
-  struct segmentation {
-    typedef typename ::pcl::SACSegmentationFromNormals<Point, ::pcl::Normal> type;
-  };
-
   static void declare_params(ecto::tendrils& params)
   {
     pcl::SACSegmentationFromNormals<pcl::PointXYZ, pcl::Normal> default_;
@@ -61,84 +49,70 @@ struct SACSegmentationFromNormals
     params.declare<double> ("radius_max", "Maximum allowable radius limits for the model.", t_max);    
     params.declare<double> ("normal_distance_weight", "Relative weight (between 0 and 1) to give to the angular distance (0 to pi/2) betwen point normals and the plane normal.", default_.getNormalDistanceWeight());
   }
+
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs) {
-    inputs.declare<FeatureCloud> ("normals", "The input normals.");
     outputs.declare<indices_t::ConstPtr> ("inliers", "Inliers of the model.");
     outputs.declare<model_t::ConstPtr> ("model", "Model found during segmentation.");
   }
 
-  template <typename Point>
-  void configure(pcl::SACSegmentation<Point>& impl_)
-  {
-    impl_.setModelType(model);
-    impl_.setMethodType(method);
-    impl_.setEpsAngle(eps_angle);
-    impl_.setDistanceThreshold(distance_threshold);
-    impl_.setMaxIterations(max_iterations);
-    impl_.setOptimizeCoefficients(optimize_coefficients);
-    impl_.setProbability(probability);
-    impl_.setRadiusLimits(radius_min, radius_max);
-  }
   void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
   {
-    normals_ = inputs["normals"];
+    model_type_ = params["model_type"];
+    method_ = params["method"];
+    eps_angle_ = params["eps_angle"];
+    distance_threshold_ = params["distance_threshold"];
+    max_iterations_ = params["max_iterations"];
+    optimize_coefficients_ = params["optimize_coefficients"];
+    probability_ = params["probability"];
+    radius_min_ = params["radius_min"];
+    radius_max_ = params["radius_max"];
+    normal_distance_weight_ = params["normal_distance_weight"];
+
     inliers_ = outputs["inliers"];
     model_ = outputs["model"];
-
-    model = params.get<int> ("model_type");
-    method = params.get<int> ("method");
-    eps_angle = params.get<double> ("eps_angle");
-    distance_threshold = params.get<double> ("distance_threshold");
-    max_iterations = params.get<int> ("max_iterations");
-    optimize_coefficients = params.get<bool> ("optimize_coefficients");
-    probability = params.get<double> ("probability");
-    radius_min = params.get<double> ("radius_min");
-    radius_max = params.get<double> ("radius_max");
-    normal_distance_weight = params.get<double> ("normal_distance_weight");
   }
 
   template <typename Point>
-  int process(pcl::SACSegmentationFromNormals<Point, ::pcl::Normal>& impl_) {
+  int process(const tendrils& inputs, const tendrils& outputs, 
+              boost::shared_ptr<const pcl::PointCloud<Point> >& input,
+              boost::shared_ptr<const pcl::PointCloud<pcl::Normal> >& normals)
+  {
+    pcl::SACSegmentationFromNormals<Point,pcl::Normal> impl;
     indices_t::Ptr inliers ( new indices_t() );
     model_t::Ptr model ( new model_t() );
 
-    // copy header
-    //inliers->header = model->header = (*input_)->header;
+    impl.setModelType(*model_type_);
+    impl.setMethodType(*method_);
+    impl.setEpsAngle(*eps_angle_);
+    impl.setDistanceThreshold(*distance_threshold_);
+    impl.setMaxIterations(*max_iterations_);
+    impl.setOptimizeCoefficients(*optimize_coefficients_);
+    impl.setProbability(*probability_);
+    impl.setRadiusLimits(*radius_min_, *radius_max_);
 
-    feature_cloud_variant_t cv = normals_->make_variant();
-    try{
-      CloudNORMAL::ConstPtr c = boost::get<CloudNORMAL::ConstPtr>(cv);
-      if(c)
-        impl_.setInputNormals (c);
-    }catch(boost::bad_get){
-      throw std::runtime_error("SACSegmentation works only with pcl::Normal feature clouds!");
-    }
-    
-    impl_.segment (*inliers, *model);
+    impl.setInputNormals(normals);
+    impl.setInputCloud(input);
+    impl.segment(*inliers, *model);
 
     *model_ = model;
     *inliers_ = inliers;
-
-    return 0;
+    return ecto::OK;
   }
-  int process(const tendrils& inputs, const tendrils& outputs) { return 0; }
 
-  int model;
-  int method;
-  double eps_angle;
-  double distance_threshold;
-  int max_iterations;
-  bool optimize_coefficients;
-  double probability;
-  double radius_min;
-  double radius_max;
-  double normal_distance_weight;
+  ecto::spore<int> model_type_;
+  ecto::spore<int> method_;
+  ecto::spore<double> eps_angle_;
+  ecto::spore<double> distance_threshold_;
+  ecto::spore<int> max_iterations_;
+  ecto::spore<bool> optimize_coefficients_;
+  ecto::spore<double> probability_;
+  ecto::spore<double> radius_min_;
+  ecto::spore<double> radius_max_;
+  ecto::spore<double> normal_distance_weight_;
 
-  ecto::spore< FeatureCloud > normals_;
   ecto::spore< indices_t::ConstPtr > inliers_;
   ecto::spore< model_t::ConstPtr > model_;
-
 };
 
-ECTO_CELL(ecto_pcl, ecto::pcl::SegmentationCell<SACSegmentationFromNormals>, "SACSegmentationFromNormals", "Segmentation using Sample Consensus from Normals.");
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCellWithNormals<SACSegmentationFromNormals>, "SACSegmentationFromNormals", "Segmentation using Sample Consensus from Normals.");
 
