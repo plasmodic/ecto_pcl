@@ -3,6 +3,9 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 ectomodule(ecto_pcl 
   ecto_pcl.cpp
   features/NormalEstimation.cpp
+  features/FPFHEstimation.cpp
+  features/PFHEstimation.cpp
+  features/VFHEstimation.cpp
   filters/ExtractIndices.cpp
   filters/PassThrough.cpp
   filters/ProjectInliers.cpp
