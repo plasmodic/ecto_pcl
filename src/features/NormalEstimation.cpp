@@ -85,6 +85,7 @@ struct NormalEstimation
     impl.setInputCloud(input);
           
     impl.compute(normals);
+    normals.header = input->header;
     *output_ = feature_cloud_variant_t(normals.makeShared());
     return ecto::OK;
   }

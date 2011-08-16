@@ -65,9 +65,10 @@ struct ProjectInliers
           
     pcl::PointCloud<Point> cloud;
     filter.filter(cloud);
+    cloud.header = input->header;
     *output_ = xyz_cloud_variant_t(cloud.makeShared());
 
-    return 0;
+    return ecto::OK;
   }
 
   ecto::spore<int> model_type_;
@@ -76,5 +77,6 @@ struct ProjectInliers
   ecto::spore<PointCloud> output_;
 };
 
-ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ProjectInliers>, "ProjectInliers", "...");
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ProjectInliers>, "ProjectInliers", "Project points of a cloud onto a model that they are inliers of.");
+
 

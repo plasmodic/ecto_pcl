@@ -37,11 +37,6 @@ struct StatisticalOutlierRemoval
   {
     pcl::StatisticalOutlierRemoval<pcl::PointXYZ> default_;
     params.declare<std::string> ("filter_field_name", "The name of the field to use for filtering.", "");
-    double filter_limit_min, filter_limit_max;
-    default_.getFilterLimits(filter_limit_min, filter_limit_max);
-    params.declare<double> ("filter_limit_min", "Minimum value for the filter.", filter_limit_min);
-    params.declare<double> ("filter_limit_max", "Maximum value for the filter.", filter_limit_max);
-    params.declare<bool> ("filter_limit_negative", "To negate the limits or not.", default_.getFilterLimitsNegative());
     params.declare<int> ("mean_k", "The number of points to use for mean distance estimation.", default_.getMeanK());
     params.declare<double> ("stddev", "The standard deviation multiplier threshold.", default_.getStddevMulThresh());
     params.declare<bool> ("negative", "Sets whether the indices should be returned, or all points _except_ the indices.", default_.getNegative());
@@ -54,10 +49,6 @@ struct StatisticalOutlierRemoval
 
   void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
   {
-    filter_field_name_ = params["filter_field_name"];
-    filter_limit_min_ = params["filter_limit_min"];
-    filter_limit_max_ = params["filter_limit_max"];
-    filter_limit_negative_ = params["filter_limit_negative"];
     negative_ = params["negative"];
     mean_k_ = params["mean_k"];
     stddev_ = params["stddev"];
@@ -70,9 +61,6 @@ struct StatisticalOutlierRemoval
               boost::shared_ptr<const pcl::PointCloud<Point> >& input)
   {
     pcl::StatisticalOutlierRemoval<Point> filter;
-    filter.setFilterFieldName(*filter_field_name_);
-    filter.setFilterLimits(*filter_limit_min_, *filter_limit_max_);
-    filter.setFilterLimitsNegative(*filter_limit_negative_);
     filter.setInputCloud(input);
     filter.setMeanK(*mean_k_);
     filter.setStddevMulThresh(*stddev_);
@@ -80,20 +68,17 @@ struct StatisticalOutlierRemoval
           
     pcl::PointCloud<Point> cloud;
     filter.filter(cloud);
+    cloud.header = input->header;
     *output_ = xyz_cloud_variant_t(cloud.makeShared());
 
     return ecto::OK;
   }
 
-  ecto::spore<std::string> filter_field_name_;
-  ecto::spore<double> filter_limit_min_;
-  ecto::spore<double> filter_limit_max_;
-  ecto::spore<bool> filter_limit_negative_;
   ecto::spore<int> mean_k_;
   ecto::spore<double> stddev_;
   ecto::spore<bool> negative_;
   ecto::spore<PointCloud> output_;
 };
 
-ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<StatisticalOutlierRemoval>, "StatisticalOutlierRemoval", "Remove noisy measurements");
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<StatisticalOutlierRemoval>, "StatisticalOutlierRemoval", "Remove noisy measurements.");
 
