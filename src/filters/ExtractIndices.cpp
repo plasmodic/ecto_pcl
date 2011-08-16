@@ -62,9 +62,10 @@ struct ExtractIndices
           
     pcl::PointCloud<Point> cloud;
     filter.filter(cloud);
+    cloud.header = input->header;
     *output_ = xyz_cloud_variant_t(cloud.makeShared());
 
-    return 0;
+    return ecto::OK;
   }
 
   ecto::spore<bool> negative_;
@@ -72,5 +73,5 @@ struct ExtractIndices
   ecto::spore<PointCloud> output_;
 };
 
-ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ExtractIndices>, "ExtractIndices", "...");
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ExtractIndices>, "ExtractIndices", "Extract a new cloud given an existing cloud and a set of indices to extract.");
 

@@ -71,6 +71,7 @@ struct PassThrough
           
     pcl::PointCloud<Point> cloud;
     filter.filter(cloud);
+    cloud.header = input->header;
     *output_ = xyz_cloud_variant_t(cloud.makeShared());
 
     return ecto::OK;

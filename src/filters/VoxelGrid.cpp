@@ -74,9 +74,10 @@ struct VoxelGrid
           
     pcl::PointCloud<Point> cloud;
     filter.filter(cloud);
+    cloud.header = input->header;
     *output_ = xyz_cloud_variant_t(cloud.makeShared());
 
-    return 0;
+    return ecto::OK;
   }
 
   ecto::spore<std::string> filter_field_name_;

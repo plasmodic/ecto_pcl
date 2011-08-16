@@ -35,3 +35,4 @@
 typedef Estimation<pcl::FPFHSignature33, pcl::FPFHEstimation> FPFHEstimation;
 
 ECTO_CELL(ecto_pcl, ecto::pcl::PclCellWithNormals<FPFHEstimation>, "FPFHEstimation", "This cell provides Fast Point Feature Histogram estimation.");
+
