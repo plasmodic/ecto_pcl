@@ -28,39 +28,72 @@
  */
 
 #include "ecto_pcl.hpp"
+#include "pcl_cell.hpp"
 #include <pcl/features/normal_3d.h>
 
-#define DECLARENORMALESTIMATION(r, data, i, ELEM)                            \
-  BOOST_PP_COMMA_IF(i) pcl::NormalEstimation< BOOST_PP_TUPLE_ELEM(2, 0, ELEM), pcl::Normal >
-
-typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLARENORMALESTIMATION, ~, ECTO_XYZ_POINT_TYPES) > feature_estimator_variant_t;
-
-#include "features/Feature.hpp"
+#include <pcl/kdtree/kdtree.h>
+#include <pcl/kdtree/kdtree_flann.h>
+#include <pcl/kdtree/organized_data.h>
 
 struct NormalEstimation
 { 
+  static void declare_params(ecto::tendrils& params)
+  {
+    params.declare<int> ("k_search", "The number of k nearest neighbors to use for feature estimation.", 0);
+    params.declare<double> ("radius_search", "The sphere radius to use for determining the nearest neighbors used for feature estimation.", 0);
+    params.declare<int> ("spatial_locator", "The search method to use: FLANN(0), ORGANIZED(1).",0);
+  }
+
+  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
+  { 
+    outputs.declare<FeatureCloud> ("output", "Cloud of features.");
+  }
+
+  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
+  {
+    k_ = params["k_search"];
+    radius_ = params["radius_search"];
+    locator_ = params["spatial_locator"];   
+
+    output_ = outputs["output"];
+  }
+
   template <typename Point>
-  struct feature_estimator {
-    typedef typename ::pcl::NormalEstimation<Point, ::pcl::Normal> type;
-  };
-  struct feature {
-    typedef ::pcl::Normal type;
-  };
+  int process(const tendrils& inputs, const tendrils& outputs, 
+              boost::shared_ptr<const pcl::PointCloud<Point> >& input)
+  {
+    pcl::NormalEstimation<Point, pcl::Normal> impl;
+    pcl::PointCloud<pcl::Normal> normals;
 
-  static void declare_params(ecto::tendrils& params) { }
-  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs){ }
+    impl.setKSearch(*k_);
+    impl.setRadiusSearch(*radius_);
+    typename pcl::KdTree<Point>::Ptr tree_;
+    switch (*locator_)
+    {
+      case 0:
+      {
+        tree_.reset (new pcl::KdTreeFLANN<Point>);
+        break;
+      }
+      case 1:
+      {
+        tree_.reset (new pcl::OrganizedDataIndex<Point>);
+        break;
+      }
+    }
+    impl.setSearchMethod(tree_);
+    impl.setInputCloud(input);
+          
+    impl.compute(normals);
+    *output_ = feature_cloud_variant_t(normals.makeShared());
+    return ecto::OK;
+  }
 
-  NormalEstimation() {}
-
-  template <typename Point>
-  void configure(pcl::NormalEstimation<Point, pcl::Normal>& f) {}
-  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs) { }
-
-  template <typename Point>
-  int process(pcl::NormalEstimation<Point,pcl::Normal>& f) { return 0; }
-  int process(const tendrils& inputs, const tendrils& outputs){ return 0; }
-
+  ecto::spore<int> k_;
+  ecto::spore<double> radius_;
+  ecto::spore<int> locator_;
+  ecto::spore<FeatureCloud> output_;
 };
 
-ECTO_CELL(ecto_pcl, ecto::pcl::FeatureCell<NormalEstimation>, "NormalEstimation", "Normal estimation");
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<NormalEstimation>, "NormalEstimation", "Normal estimation");
 
