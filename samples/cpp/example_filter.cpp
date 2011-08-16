@@ -1,13 +1,12 @@
 /* 
- * Example of how to use ecto_pcl with custom code.
+ * Example of how to create a cell with PclCell
  */
 
 #include "ecto_pcl.hpp"
 #include "pcl_cell.hpp"
-
 // other pcl includes!
 
-struct MyCell
+struct ExampleFilter
 {
   static void declare_params(ecto::tendrils& params)
   {
@@ -45,7 +44,7 @@ struct MyCell
     // do something with our params/clouds
     cloud = input;
 
-    // Need to a PointCloud
+    // Need to a PointCloud - we have to use this variant to create an ecto::pcl::PointCloud
     *output_ = xyz_cloud_variant_t(cloud.makeShared());
     return ecto::OK;
   }
@@ -55,5 +54,5 @@ struct MyCell
   ecto::spore<PointCloud> output_;
 };
 
-ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<MyCell>, "MyCell", "Useless Example");
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ExampleFilter>, "ExampleFilter", "Example of creating a custom filter.");
 
