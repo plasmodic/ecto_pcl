@@ -51,8 +51,8 @@ struct SACSegmentationFromNormals
   }
 
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs) {
-    outputs.declare<indices_t::ConstPtr> ("inliers", "Inliers of the model.");
-    outputs.declare<model_t::ConstPtr> ("model", "Model found during segmentation.");
+    outputs.declare<ecto::pcl::Indices::ConstPtr> ("inliers", "Inliers of the model.");
+    outputs.declare<ecto::pcl::ModelCoefficients::ConstPtr> ("model", "Model found during segmentation.");
   }
 
   void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
@@ -78,8 +78,8 @@ struct SACSegmentationFromNormals
               boost::shared_ptr<const pcl::PointCloud<pcl::Normal> >& normals)
   {
     pcl::SACSegmentationFromNormals<Point,pcl::Normal> impl;
-    indices_t::Ptr inliers ( new indices_t() );
-    model_t::Ptr model ( new model_t() );
+    ecto::pcl::Indices::Ptr inliers ( new ecto::pcl::Indices() );
+    ecto::pcl::ModelCoefficients::Ptr model ( new ecto::pcl::ModelCoefficients() );
 
     impl.setModelType(*model_type_);
     impl.setMethodType(*method_);
@@ -110,8 +110,8 @@ struct SACSegmentationFromNormals
   ecto::spore<double> radius_max_;
   ecto::spore<double> normal_distance_weight_;
 
-  ecto::spore< indices_t::ConstPtr > inliers_;
-  ecto::spore< model_t::ConstPtr > model_;
+  ecto::spore<ecto::pcl::Indices::ConstPtr> inliers_;
+  ecto::spore<ecto::pcl::ModelCoefficients::ConstPtr > model_;
 };
 
 ECTO_CELL(ecto_pcl, ecto::pcl::PclCellWithNormals<SACSegmentationFromNormals>, "SACSegmentationFromNormals", "Segmentation using Sample Consensus from Normals.");

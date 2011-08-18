@@ -29,7 +29,7 @@
 
 #pragma once
 
-namespace ecto {
+namespace ecto{
   namespace pcl {
 
     template <typename CellType>

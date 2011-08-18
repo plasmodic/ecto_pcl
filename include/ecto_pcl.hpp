@@ -64,61 +64,67 @@ BOOST_PP_SEQ_FOR_EACH(DECLARECLOUD, ~, ECTO_FEATURE_POINT_TYPES);
 
 #define DECLARECLOUDVARIANT(r, data, i, ELEM) \
   BOOST_PP_COMMA_IF(i) BOOST_PP_CAT(Cloud, BOOST_PP_TUPLE_ELEM(2, 1, ELEM))::ConstPtr
-typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLARECLOUDVARIANT, ~, ECTO_XYZ_POINT_TYPES) > xyz_cloud_variant_t;
-typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLARECLOUDVARIANT, ~, ECTO_FEATURE_POINT_TYPES) > feature_cloud_variant_t;
-
-struct PointCloud {
-  struct holder_base { virtual xyz_cloud_variant_t make_variant() = 0; };
-
-  template <typename T>
-  struct holder : holder_base
-  {
-    T t;
-    holder(T t_) : t(t_) { }
-
-    xyz_cloud_variant_t make_variant() { return xyz_cloud_variant_t(t); }
-  };
-
-  boost::shared_ptr<holder_base> held;
-
-  template <typename T>
-  PointCloud(T t_)
-  {
-    held.reset(new holder<T>(t_));
-  }
-
-  PointCloud() {}
-  xyz_cloud_variant_t make_variant() { return held->make_variant(); }
-  
-  template<typename T>
-  typename T::ConstPtr cast() { return boost::get<typename T::ConstPtr>(held->make_variant());}
-};
-
-struct FeatureCloud {
-  struct holder_base { virtual feature_cloud_variant_t make_variant() = 0; };
-
-  template <typename T>
-  struct holder : holder_base
-  {
-    T t;
-    holder(T t_) : t(t_) { }
-
-    feature_cloud_variant_t make_variant() { return feature_cloud_variant_t(t); }
-  };
-
-  boost::shared_ptr<holder_base> held;
-
-  template <typename T>
-  FeatureCloud(T t_)
-  {
-    held.reset(new holder<T>(t_));
-  }
-  FeatureCloud() {}
-  feature_cloud_variant_t make_variant() { return held->make_variant();  }
-};
 
 namespace ecto{
-  namespace pcl{
+  namespace pcl {
+
+    typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLARECLOUDVARIANT, ~, ECTO_XYZ_POINT_TYPES) > xyz_cloud_variant_t;
+    typedef boost::variant< BOOST_PP_SEQ_FOR_EACH_I(DECLARECLOUDVARIANT, ~, ECTO_FEATURE_POINT_TYPES) > feature_cloud_variant_t;
+
+    struct PointCloud {
+      struct holder_base { virtual xyz_cloud_variant_t make_variant() = 0; };
+
+      template <typename T>
+      struct holder : holder_base
+      {
+        T t;
+        holder(T t_) : t(t_) { }
+
+        xyz_cloud_variant_t make_variant() { return xyz_cloud_variant_t(t); }
+      };
+
+      boost::shared_ptr<holder_base> held;
+
+      template <typename T>
+      PointCloud(T t_)
+      {
+        held.reset(new holder<T>(t_));
+      }
+
+      PointCloud() {}
+      xyz_cloud_variant_t make_variant() { return held->make_variant(); }
+  
+      template<typename T>
+      typename T::ConstPtr cast() { return boost::get<typename T::ConstPtr>(held->make_variant());}
+    };
+
+    struct FeatureCloud {
+      struct holder_base { virtual feature_cloud_variant_t make_variant() = 0; };
+
+      template <typename T>
+      struct holder : holder_base
+      {
+        T t;
+        holder(T t_) : t(t_) { }
+
+        feature_cloud_variant_t make_variant() { return feature_cloud_variant_t(t); }
+      };
+
+      boost::shared_ptr<holder_base> held;
+
+      template <typename T>
+      FeatureCloud(T t_)
+      {
+        held.reset(new holder<T>(t_));
+      }
+      FeatureCloud() {}
+      feature_cloud_variant_t make_variant() { return held->make_variant();  }
+    };
+
+    typedef ::pcl::PointIndices Indices;
+    typedef ::pcl::ModelCoefficients ModelCoefficients;
+    typedef std::vector< ::pcl::PointIndices > Clusters;
+
     enum Formats
     {
       FORMAT_XYZ,
@@ -130,6 +136,7 @@ namespace ecto{
       FORMAT_FPFHSIGNATURE,
       FORMAT_VFHSIGNATURE
     };
+  
   }
 } 
 
@@ -143,10 +150,6 @@ template <typename PclType, typename PointIn, typename PointOut>
 struct pcl_takes_point_trait2 : boost::false_type {};
 template <template <class, class> class PclType, typename PointIn, typename PointOut>
 struct pcl_takes_point_trait2<PclType<PointIn, PointOut>, boost::shared_ptr<const pcl::PointCloud<PointIn> >, PointOut > : boost::true_type {};
-
-typedef pcl::PointIndices indices_t;
-typedef pcl::ModelCoefficients model_t;
-typedef std::vector<indices_t> cluster_t;
 
 using ecto::tendrils;
 

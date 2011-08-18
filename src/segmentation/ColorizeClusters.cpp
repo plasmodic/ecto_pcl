@@ -43,8 +43,8 @@ struct ColorizeClusters
   }
 
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs) {
-    inputs.declare<cluster_t> ("clusters", "Indices of clusters.");
-    outputs.declare<PointCloud> ("output", "Colorized clusters as a single cloud.");
+    inputs.declare<ecto::pcl::Clusters> ("clusters", "Indices of clusters.");
+    outputs.declare<ecto::pcl::PointCloud> ("output", "Colorized clusters as a single cloud.");
   }
 
   void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
@@ -115,13 +115,13 @@ struct ColorizeClusters
     }
     ROS_INFO_STREAM("Colorize Clusters: clusters = " << clusters_->size());
 
-    *output_ = xyz_cloud_variant_t(output.makeShared());
+    *output_ = ecto::pcl::xyz_cloud_variant_t(output.makeShared());
     return ecto::OK;
   }
 
   ecto::spore<int> max_clusters_;  
-  ecto::spore<cluster_t> clusters_;
-  ecto::spore<PointCloud> output_;
+  ecto::spore<ecto::pcl::Clusters> clusters_;
+  ecto::spore<ecto::pcl::PointCloud> output_;
 };
 
 ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ColorizeClusters>, "ColorizeClusters", "Concatenate clusters and colr each cluster differently.");

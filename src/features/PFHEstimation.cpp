@@ -32,7 +32,11 @@
 
 #include "FeatureEstimator.hpp"
 
-typedef Estimation<pcl::PFHSignature125, pcl::PFHEstimation> PFHEstimation;
+namespace ecto {
+  namespace pcl {
+    typedef Estimation< ::pcl::PFHSignature125, ::pcl::PFHEstimation > PFHEstimation;
+  }
+}
 
-ECTO_CELL(ecto_pcl, ecto::pcl::PclCellWithNormals<PFHEstimation>, "PFHEstimation", "This cell provides Point Feature Histogram estimation.");
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCellWithNormals<ecto::pcl::PFHEstimation>, "PFHEstimation", "This cell provides Point Feature Histogram estimation.");
 

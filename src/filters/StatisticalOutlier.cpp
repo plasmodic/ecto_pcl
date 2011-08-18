@@ -31,54 +31,60 @@
 #include "pcl_cell.hpp"
 #include <pcl/filters/statistical_outlier_removal.h>
 
-struct StatisticalOutlierRemoval
-{
-  static void declare_params(ecto::tendrils& params)
-  {
-    pcl::StatisticalOutlierRemoval<pcl::PointXYZ> default_;
-    params.declare<std::string> ("filter_field_name", "The name of the field to use for filtering.", "");
-    params.declare<int> ("mean_k", "The number of points to use for mean distance estimation.", default_.getMeanK());
-    params.declare<double> ("stddev", "The standard deviation multiplier threshold.", default_.getStddevMulThresh());
-    params.declare<bool> ("negative", "Sets whether the indices should be returned, or all points _except_ the indices.", default_.getNegative());
+namespace ecto {
+  namespace pcl {
+
+    struct StatisticalOutlierRemoval
+    {
+      static void declare_params(tendrils& params)
+      {
+        ::pcl::StatisticalOutlierRemoval< ::pcl::PointXYZ > default_;
+        params.declare<std::string> ("filter_field_name", "The name of the field to use for filtering.", "");
+        params.declare<int> ("mean_k", "The number of points to use for mean distance estimation.", default_.getMeanK());
+        params.declare<double> ("stddev", "The standard deviation multiplier threshold.", default_.getStddevMulThresh());
+        params.declare<bool> ("negative", "Sets whether the indices should be returned, or all points _except_ the indices.", default_.getNegative());
+      }
+
+      static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
+      {
+        outputs.declare<PointCloud> ("output", "Filtered Cloud.");
+      }
+
+      void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
+      {
+        negative_ = params["negative"];
+        mean_k_ = params["mean_k"];
+        stddev_ = params["stddev"];
+
+        output_ = outputs["output"];
+      }
+      
+      template <typename Point>
+      int process(const tendrils& inputs, const tendrils& outputs, 
+                  boost::shared_ptr<const ::pcl::PointCloud<Point> >& input)
+      {
+        ::pcl::StatisticalOutlierRemoval<Point> filter;
+        filter.setInputCloud(input);
+        filter.setMeanK(*mean_k_);
+        filter.setStddevMulThresh(*stddev_);
+        filter.setNegative(*negative_);
+              
+        ::pcl::PointCloud<Point> cloud;
+        filter.filter(cloud);
+        cloud.header = input->header;
+        *output_ = xyz_cloud_variant_t(cloud.makeShared());
+
+        return OK;
+      }
+
+      spore<int> mean_k_;
+      spore<double> stddev_;
+      spore<bool> negative_;
+      spore<PointCloud> output_;
+    };
+
   }
+}
 
-  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
-  {
-    outputs.declare<PointCloud> ("output", "Filtered Cloud.");
-  }
-
-  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
-  {
-    negative_ = params["negative"];
-    mean_k_ = params["mean_k"];
-    stddev_ = params["stddev"];
-
-    output_ = outputs["output"];
-  }
-  
-  template <typename Point>
-  int process(const tendrils& inputs, const tendrils& outputs, 
-              boost::shared_ptr<const pcl::PointCloud<Point> >& input)
-  {
-    pcl::StatisticalOutlierRemoval<Point> filter;
-    filter.setInputCloud(input);
-    filter.setMeanK(*mean_k_);
-    filter.setStddevMulThresh(*stddev_);
-    filter.setNegative(*negative_);
-          
-    pcl::PointCloud<Point> cloud;
-    filter.filter(cloud);
-    cloud.header = input->header;
-    *output_ = xyz_cloud_variant_t(cloud.makeShared());
-
-    return ecto::OK;
-  }
-
-  ecto::spore<int> mean_k_;
-  ecto::spore<double> stddev_;
-  ecto::spore<bool> negative_;
-  ecto::spore<PointCloud> output_;
-};
-
-ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<StatisticalOutlierRemoval>, "StatisticalOutlierRemoval", "Remove noisy measurements.");
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ecto::pcl::StatisticalOutlierRemoval>, "StatisticalOutlierRemoval", "Remove noisy measurements.");
 

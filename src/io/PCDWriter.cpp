@@ -44,7 +44,7 @@ struct PCDWriter
 
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    inputs.declare<PointCloud>("input", "A point cloud to put in the bag file.");
+    inputs.declare<ecto::pcl::PointCloud>("input", "A point cloud to put in the bag file.");
     outputs.declare<sensor_msgs::PointCloud2ConstPtr>("cloud_message", "the cloud message used for writing.");
   }
 
@@ -83,12 +83,12 @@ struct PCDWriter
   int process(const tendrils& /*inputs*/, const tendrils& outputs)
   { 
     std::string filename = boost::str(boost::format(*filename_format_)%count_++);
-    xyz_cloud_variant_t cv = input_->make_variant();
+    ecto::pcl::xyz_cloud_variant_t cv = input_->make_variant();
     *cloud_message_ = boost::apply_visitor(write_dispatch(filename,*binary_), cv);
     return 0;
   }
 
-  ecto::spore<PointCloud> input_;
+  ecto::spore<ecto::pcl::PointCloud> input_;
   ecto::spore<std::string> filename_format_;
   ecto::spore<bool> binary_;
   ecto::spore<sensor_msgs::PointCloud2ConstPtr> cloud_message_;

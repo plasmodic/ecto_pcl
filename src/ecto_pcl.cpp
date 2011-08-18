@@ -71,7 +71,7 @@ struct PointCloud2PointCloudT
   static void
   declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    inputs.declare<PointCloud>("input", "An variant based PointCloud.");
+    inputs.declare<ecto::pcl::PointCloud>("input", "An variant based PointCloud.");
     outputs.declare<ecto::tendril::none>("output", "An pcl::PointCloud<PointT> type.");
   }
 
@@ -109,7 +109,7 @@ struct PointCloud2PointCloudT
     return ecto::OK;
   }
   ecto::spore<int> format_;
-  ecto::spore<PointCloud> input_;
+  ecto::spore<ecto::pcl::PointCloud> input_;
   ecto::tendril::ptr output_;
 };
     
@@ -137,3 +137,4 @@ ECTO_DEFINE_MODULE(ecto_pcl)
 }
 
 ECTO_CELL(ecto_pcl,PointCloud2PointCloudT,"PointCloud2PointCloudT","Convert a generic variant based PointCloud to a strongly typed pcl::PointCloud<pcl::PointT>.")
+

@@ -44,7 +44,7 @@ struct ExtractPolygonalPrismData
 
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    outputs.declare<indices_t::ConstPtr> ("inliers", "Inliers of the model.");
+    outputs.declare<ecto::pcl::Indices::ConstPtr> ("inliers", "Inliers of the model.");
   }
 
   void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
@@ -60,7 +60,7 @@ struct ExtractPolygonalPrismData
               boost::shared_ptr<const pcl::PointCloud<Point> >& input2)
   {
     pcl::ExtractPolygonalPrismData<Point> impl;    
-    indices_t::Ptr inliers ( new indices_t() );
+    pcl::PointIndices::Ptr inliers ( new pcl::PointIndices() );
 
     impl.setHeightLimits (*height_min_, *height_max_);
     impl.setInputPlanarHull(input2);
@@ -74,7 +74,7 @@ struct ExtractPolygonalPrismData
 
   ecto::spore<double> height_min_;
   ecto::spore<double> height_max_;
-  ecto::spore<indices_t::ConstPtr> inliers_;
+  ecto::spore<ecto::pcl::Indices::ConstPtr> inliers_;
 };
 
 const std::string ExtractPolygonalPrismData::SecondInputName = "planar_hull";

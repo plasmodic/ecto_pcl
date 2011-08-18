@@ -31,47 +31,53 @@
 #include "pcl_cell.hpp"
 #include <pcl/filters/extract_indices.h>
 
-struct ExtractIndices
-{
-  static void declare_params(ecto::tendrils& params)
-  {
-    params.declare<bool> ("negative", "Sets whether the indices should be returned, or all points _except_ the indices.", false);
+namespace ecto {
+  namespace pcl {
+
+    struct ExtractIndices
+    {
+      static void declare_params(tendrils& params)
+      {
+        params.declare<bool> ("negative", "Sets whether the indices should be returned, or all points _except_ the indices.", false);
+      }
+
+      static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
+      {
+        inputs.declare<Indices::ConstPtr> ("indices", "The indices to extract.");
+        outputs.declare<PointCloud> ("output", "Filtered Cloud.");
+      }
+
+      void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
+      {
+        negative_ = params["negative"];
+        indices_ = inputs["indices"];
+        output_ = outputs["output"];
+      }
+      
+      template <typename Point>
+      int process(const tendrils& inputs, const tendrils& outputs, 
+                  boost::shared_ptr<const ::pcl::PointCloud<Point> >& input)
+      {
+        ::pcl::ExtractIndices<Point> filter;
+        filter.setNegative(*negative_);
+        filter.setIndices(*indices_);
+        filter.setInputCloud(input);
+              
+        ::pcl::PointCloud<Point> cloud;
+        filter.filter(cloud);
+        cloud.header = input->header;
+        *output_ = xyz_cloud_variant_t(cloud.makeShared());
+
+        return OK;
+      }
+
+      spore<bool> negative_;
+      spore<Indices::ConstPtr> indices_;
+      spore<PointCloud> output_;
+    };
+
   }
+}
 
-  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
-  {
-    inputs.declare<indices_t::ConstPtr> ("indices", "The indices to extract.");
-    outputs.declare<PointCloud> ("output", "Filtered Cloud.");
-  }
-
-  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
-  {
-    negative_ = params["negative"];
-    indices_ = inputs["indices"];
-    output_ = outputs["output"];
-  }
-  
-  template <typename Point>
-  int process(const tendrils& inputs, const tendrils& outputs, 
-              boost::shared_ptr<const pcl::PointCloud<Point> >& input)
-  {
-    pcl::ExtractIndices<Point> filter;
-    filter.setNegative(*negative_);
-    filter.setIndices(*indices_);
-    filter.setInputCloud(input);
-          
-    pcl::PointCloud<Point> cloud;
-    filter.filter(cloud);
-    cloud.header = input->header;
-    *output_ = xyz_cloud_variant_t(cloud.makeShared());
-
-    return ecto::OK;
-  }
-
-  ecto::spore<bool> negative_;
-  ecto::spore<indices_t::ConstPtr> indices_;
-  ecto::spore<PointCloud> output_;
-};
-
-ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ExtractIndices>, "ExtractIndices", "Extract a new cloud given an existing cloud and a set of indices to extract.");
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ecto::pcl::ExtractIndices>, "ExtractIndices", "Extract a new cloud given an existing cloud and a set of indices to extract.");
 

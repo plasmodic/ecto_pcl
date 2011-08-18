@@ -36,8 +36,8 @@ struct ExtractLargestCluster
   static void declare_params(ecto::tendrils& params) { }
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    inputs.declare<cluster_t> ("clusters", "Clusters indices.");
-    outputs.declare<PointCloud> ("output", "Filtered Cloud.");
+    inputs.declare<ecto::pcl::Clusters> ("clusters", "Clusters indices.");
+    outputs.declare<ecto::pcl::PointCloud> ("output", "Filtered Cloud.");
   }
 
   void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
@@ -65,13 +65,13 @@ struct ExtractLargestCluster
     pcl::PointCloud<Point> cloud;
     filter.filter(cloud);
     cloud.header = input->header;
-    *output_ = xyz_cloud_variant_t(cloud.makeShared());
+    *output_ = ecto::pcl::xyz_cloud_variant_t(cloud.makeShared());
 
     return ecto::OK;
   }
 
-  ecto::spore< cluster_t > clusters_;
-  ecto::spore<PointCloud> output_;
+  ecto::spore<ecto::pcl::Clusters> clusters_;
+  ecto::spore<ecto::pcl::PointCloud> output_;
 };
 
 ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ExtractLargestCluster>, "ExtractLargestCluster", "Extract a point cloud corresponding to the largest cluster.");

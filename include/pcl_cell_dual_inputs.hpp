@@ -64,13 +64,15 @@ namespace ecto {
         filter_dispatch(CellType& ft_, const tendrils& input_, const tendrils& output_) : ft(ft_), inputs(input_), outputs(output_) { }
 
         template <typename Point>
-        void operator()(boost::shared_ptr<const ::pcl::PointCloud<Point> >& cloud1, boost::shared_ptr<const ::pcl::PointCloud<Point> >& cloud2) const
+        void operator()(boost::shared_ptr<const ::pcl::PointCloud<Point> >& cloud1,
+                        boost::shared_ptr<const ::pcl::PointCloud<Point> >& cloud2) const
         {   
           ft.process(inputs, outputs, cloud1, cloud2);
         }
 
         template <typename Point, typename Point2>
-        void operator()(boost::shared_ptr<const ::pcl::PointCloud<Point> >& cloud1, boost::shared_ptr<const ::pcl::PointCloud<Point2> >& cloud2) const
+        void operator()(boost::shared_ptr<const ::pcl::PointCloud<Point> >& cloud1,
+                        boost::shared_ptr<const ::pcl::PointCloud<Point2> >& cloud2) const
         {   
           throw std::runtime_error("PclCellDualInput: clouds are not the same type!");
         }
