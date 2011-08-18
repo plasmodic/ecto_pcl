@@ -1,6 +1,6 @@
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-ectomodule(ecto_pcl 
+ectomodule(ecto_pcl
   ecto_pcl.cpp
   features/NormalEstimation.cpp
   features/FPFHEstimation.cpp
@@ -12,8 +12,8 @@ ectomodule(ecto_pcl
   filters/StatisticalOutlier.cpp
   filters/RadiusOutlier.cpp
   filters/VoxelGrid.cpp
-  #io/CloudViewer.cpp
-  #io/KinectGrabber.cpp
+  io/CloudViewer.cpp
+  # io/KinectGrabber.cpp
   io/MergeClouds.cpp
   io/ModelCoefficients.cpp
   io/PCDReader.cpp
@@ -26,6 +26,12 @@ ectomodule(ecto_pcl
   segmentation/SACSegmentationFromNormals.cpp
   surface/ConvexHull.cpp
   )
+
+set_source_files_properties(io/CloudViewer.cpp
+  PROPERTIES
+  COMPILE_FLAGS -Wno-deprecated
+  )
+
 
 link_ecto(ecto_pcl
     ${pcl_LIBRARIES}
