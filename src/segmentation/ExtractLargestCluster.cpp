@@ -31,48 +31,55 @@
 #include "pcl_cell.hpp"
 #include <pcl/filters/extract_indices.h>
 
-struct ExtractLargestCluster
-{
-  static void declare_params(ecto::tendrils& params) { }
-  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
-  {
-    inputs.declare<ecto::pcl::Clusters> ("clusters", "Clusters indices.");
-    outputs.declare<ecto::pcl::PointCloud> ("output", "Filtered Cloud.");
-  }
+namespace ecto {
+  namespace pcl {
 
-  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
-  {
-    clusters_ = inputs["clusters"];
-    output_ = outputs["output"];
-  }
-  
-  template <typename Point>
-  int process(const tendrils& inputs, const tendrils& outputs, 
-              boost::shared_ptr<const pcl::PointCloud<Point> >& input)
-  {
-    pcl::ExtractIndices<Point> filter;
-    int largest = 0;
-    for (size_t i = 0; i < clusters_->size(); i++)
+    struct ExtractLargestCluster
     {
-        if( (*clusters_)[i].indices.size() > (*clusters_)[largest].indices.size() )
+      static void declare_params(tendrils& params) { }
+      static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
+      {
+        inputs.declare<Clusters> ("clusters", "Clusters indices.");
+        outputs.declare<PointCloud> ("output", "Filtered Cloud.");
+      }
+
+      void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
+      {
+        clusters_ = inputs["clusters"];
+        output_ = outputs["output"];
+      }
+      
+      template <typename Point>
+      int process(const tendrils& inputs, const tendrils& outputs, 
+                  boost::shared_ptr<const ::pcl::PointCloud<Point> >& input)
+      {
+        ::pcl::ExtractIndices<Point> filter;
+        int largest = 0;
+        for (size_t i = 0; i < clusters_->size(); i++)
         {
-          largest = i;
+            if( (*clusters_)[i].indices.size() > (*clusters_)[largest].indices.size() )
+            {
+              largest = i;
+            }
         }
-    }
-    filter.setIndices( pcl::PointIndicesPtr( new pcl::PointIndices ((*clusters_)[largest])) );
-    filter.setInputCloud(input);
+        filter.setIndices( ::pcl::PointIndicesPtr( new ::pcl::PointIndices ((*clusters_)[largest])) );
+        filter.setInputCloud(input);
 
-    pcl::PointCloud<Point> cloud;
-    filter.filter(cloud);
-    cloud.header = input->header;
-    *output_ = ecto::pcl::xyz_cloud_variant_t(cloud.makeShared());
+        ::pcl::PointCloud<Point> cloud;
+        filter.filter(cloud);
+        cloud.header = input->header;
+        *output_ = xyz_cloud_variant_t(cloud.makeShared());
 
-    return ecto::OK;
+        return OK;
+      }
+
+      spore<Clusters> clusters_;
+      spore<PointCloud> output_;
+    };
+
   }
+}
 
-  ecto::spore<ecto::pcl::Clusters> clusters_;
-  ecto::spore<ecto::pcl::PointCloud> output_;
-};
-
-ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ExtractLargestCluster>, "ExtractLargestCluster", "Extract a point cloud corresponding to the largest cluster.");
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ecto::pcl::ExtractLargestCluster>, 
+          "ExtractLargestCluster", "Extract a point cloud corresponding to the largest cluster.");
 

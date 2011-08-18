@@ -79,5 +79,6 @@ namespace ecto {
   }
 }
 
-ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ecto::pcl::ExtractIndices>, "ExtractIndices", "Extract a new cloud given an existing cloud and a set of indices to extract.");
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ecto::pcl::ExtractIndices>,
+          "ExtractIndices", "Extract a new cloud given an existing cloud and a set of indices to extract.");
 

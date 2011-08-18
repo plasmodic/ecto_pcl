@@ -133,7 +133,8 @@ namespace ecto
   }
 }
 
-ECTO_CELL(ecto_pcl_ros, ecto::pcl_ros::Message2PointCloud, "Message2PointCloud",
-          "Take a PointCloud Message and converts to pcl type.");
-ECTO_CELL(ecto_pcl_ros, ecto::pcl_ros::PointCloud2Message, "PointCloud2Message", "Take a pcl type and converts to PointCloud Message.");
+ECTO_CELL(ecto_pcl_ros, ecto::pcl_ros::Message2PointCloud,
+          "Message2PointCloud", "Take a PointCloud Message and converts to pcl type.");
+ECTO_CELL(ecto_pcl_ros, ecto::pcl_ros::PointCloud2Message,
+          "PointCloud2Message", "Take a pcl type and converts to PointCloud Message.");
 

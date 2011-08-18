@@ -80,5 +80,6 @@ namespace ecto {
   }
 }
 
-ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ecto::pcl::RadiusOutlierRemoval>, "RadiusOutlierRemoval", "Remove noisy measurements.");
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ecto::pcl::RadiusOutlierRemoval>,
+          "RadiusOutlierRemoval", "Remove noisy measurements.");
 

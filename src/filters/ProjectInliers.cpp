@@ -83,6 +83,7 @@ namespace ecto {
   }
 }
 
-ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ecto::pcl::ProjectInliers>, "ProjectInliers", "Project points of a cloud onto a model that they are inliers of.");
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ecto::pcl::ProjectInliers>,
+          "ProjectInliers", "Project points of a cloud onto a model that they are inliers of.");
 
 

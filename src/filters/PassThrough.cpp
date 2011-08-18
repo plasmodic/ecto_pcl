@@ -90,5 +90,6 @@ namespace ecto {
   }
 }
 
-ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ecto::pcl::PassThrough>, "PassThrough", "PassThrough filter");
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ecto::pcl::PassThrough>,
+          "PassThrough", "PassThrough filter");
 

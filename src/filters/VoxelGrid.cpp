@@ -94,5 +94,6 @@ namespace ecto {
   }
 }
 
-ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ecto::pcl::VoxelGrid>, "VoxelGrid", "Voxel grid filter");
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ecto::pcl::VoxelGrid>,
+          "VoxelGrid", "Voxel grid filter");
 

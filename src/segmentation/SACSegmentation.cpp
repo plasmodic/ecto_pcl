@@ -31,82 +31,87 @@
 #include "pcl_cell.hpp"
 #include <pcl/segmentation/sac_segmentation.h>
 
-struct SACSegmentation
-{
-  static void declare_params(ecto::tendrils& params)
-  {
-    pcl::SACSegmentation<pcl::PointXYZ> default_;
-    params.declare<int> ("model_type", "Type of model to use.", default_.getModelType());
-    params.declare<int> ("method", "Type of sample consensus method to use.", default_.getMethodType());
-    params.declare<double> ("eps_angle", "Angle epsilon (delta) threshold.", default_.getEpsAngle());
-    params.declare<double> ("distance_threshold", "Doistance to model threshold.", default_.getDistanceThreshold());
-    params.declare<int> ("max_iterations", "Maximum number of iterations before giving up.", default_.getMaxIterations());
-    params.declare<bool> ("optimize_coefficients", "True if a coefficient refinement is required.", default_.getOptimizeCoefficients());
-    params.declare<double> ("probability", "Probability of choosing at least one sample free from outliers.", default_.getProbability());
-    double t_min, t_max;
-    default_.getRadiusLimits (t_min, t_max);
-    params.declare<double> ("radius_min", "Minimum allowable radius limits for the model.", t_min);
-    params.declare<double> ("radius_max", "Maximum allowable radius limits for the model.", t_max);
+namespace ecto {
+  namespace pcl {
+
+    struct SACSegmentation
+    {
+      static void declare_params(ecto::tendrils& params)
+      {
+        ::pcl::SACSegmentation< ::pcl::PointXYZ > default_;
+        params.declare<int> ("model_type", "Type of model to use.", default_.getModelType());
+        params.declare<int> ("method", "Type of sample consensus method to use.", default_.getMethodType());
+        params.declare<double> ("eps_angle", "Angle epsilon (delta) threshold.", default_.getEpsAngle());
+        params.declare<double> ("distance_threshold", "Doistance to model threshold.", default_.getDistanceThreshold());
+        params.declare<int> ("max_iterations", "Maximum number of iterations before giving up.", default_.getMaxIterations());
+        params.declare<bool> ("optimize_coefficients", "True if a coefficient refinement is required.", default_.getOptimizeCoefficients());
+        params.declare<double> ("probability", "Probability of choosing at least one sample free from outliers.", default_.getProbability());
+        double t_min, t_max;
+        default_.getRadiusLimits (t_min, t_max);
+        params.declare<double> ("radius_min", "Minimum allowable radius limits for the model.", t_min);
+        params.declare<double> ("radius_max", "Maximum allowable radius limits for the model.", t_max);
+      }
+
+      static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs) {
+        outputs.declare<Indices::ConstPtr> ("inliers", "Inliers of the model.");
+        outputs.declare<ModelCoefficients::ConstPtr> ("model", "Model found during segmentation.");
+      }
+
+      void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
+      {
+        model_type_ = params["model_type"];
+        method_ = params["method"];
+        eps_angle_ = params["eps_angle"];
+        distance_threshold_ = params["distance_threshold"];
+        max_iterations_ = params["max_iterations"];
+        optimize_coefficients_ = params["optimize_coefficients"];
+        probability_ = params["probability"];
+        radius_min_ = params["radius_min"];
+        radius_max_ = params["radius_max"];
+
+        inliers_ = outputs["inliers"];
+        model_ = outputs["model"];
+      }
+
+      template <typename Point>
+      int process(const tendrils& inputs, const tendrils& outputs, 
+                  boost::shared_ptr<const ::pcl::PointCloud<Point> >& input)
+      {
+        ::pcl::SACSegmentation<Point> impl;
+        Indices::Ptr inliers ( new Indices() );
+        ModelCoefficients::Ptr model ( new ModelCoefficients() );
+
+        impl.setModelType(*model_type_);
+        impl.setMethodType(*method_);
+        impl.setEpsAngle(*eps_angle_);
+        impl.setDistanceThreshold(*distance_threshold_);
+        impl.setMaxIterations(*max_iterations_);
+        impl.setOptimizeCoefficients(*optimize_coefficients_);
+        impl.setProbability(*probability_);
+        impl.setRadiusLimits(*radius_min_, *radius_max_);
+        impl.segment (*inliers, *model);
+
+        *model_ = model;
+        *inliers_ = inliers;
+        return OK;
+      }
+
+      spore<int> model_type_;
+      spore<int> method_;
+      spore<double> eps_angle_;
+      spore<double> distance_threshold_;
+      spore<int> max_iterations_;
+      spore<bool> optimize_coefficients_;
+      spore<double> probability_;
+      spore<double> radius_min_;
+      spore<double> radius_max_;
+      spore<Indices::ConstPtr> inliers_;
+      spore<ModelCoefficients::ConstPtr> model_;
+    };
+
   }
+}
 
-  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs) {
-    outputs.declare<ecto::pcl::Indices::ConstPtr> ("inliers", "Inliers of the model.");
-    outputs.declare<ecto::pcl::ModelCoefficients::ConstPtr> ("model", "Model found during segmentation.");
-  }
-
-  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
-  {
-    model_type_ = params["model_type"];
-    method_ = params["method"];
-    eps_angle_ = params["eps_angle"];
-    distance_threshold_ = params["distance_threshold"];
-    max_iterations_ = params["max_iterations"];
-    optimize_coefficients_ = params["optimize_coefficients"];
-    probability_ = params["probability"];
-    radius_min_ = params["radius_min"];
-    radius_max_ = params["radius_max"];
-
-    inliers_ = outputs["inliers"];
-    model_ = outputs["model"];
-  }
-
-  template <typename Point>
-  int process(const tendrils& inputs, const tendrils& outputs, 
-              boost::shared_ptr<const pcl::PointCloud<Point> >& input)
-  {
-    pcl::SACSegmentation<Point> impl;
-    ecto::pcl::Indices::Ptr inliers ( new ecto::pcl::Indices() );
-    ecto::pcl::ModelCoefficients::Ptr model ( new ecto::pcl::ModelCoefficients() );
-
-    impl.setModelType(*model_type_);
-    impl.setMethodType(*method_);
-    impl.setEpsAngle(*eps_angle_);
-    impl.setDistanceThreshold(*distance_threshold_);
-    impl.setMaxIterations(*max_iterations_);
-    impl.setOptimizeCoefficients(*optimize_coefficients_);
-    impl.setProbability(*probability_);
-    impl.setRadiusLimits(*radius_min_, *radius_max_);
-    impl.segment (*inliers, *model);
-
-    *model_ = model;
-    *inliers_ = inliers;
-    return ecto::OK;
-  }
-
-  ecto::spore<int> model_type_;
-  ecto::spore<int> method_;
-  ecto::spore<double> eps_angle_;
-  ecto::spore<double> distance_threshold_;
-  ecto::spore<int> max_iterations_;
-  ecto::spore<bool> optimize_coefficients_;
-  ecto::spore<double> probability_;
-  ecto::spore<double> radius_min_;
-  ecto::spore<double> radius_max_;
-
-  ecto::spore<ecto::pcl::Indices::ConstPtr> inliers_;
-  ecto::spore<ecto::pcl::ModelCoefficients::ConstPtr> model_;
-
-};
-
-ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<SACSegmentation>, "SACSegmentation", "Segmentation using Sample Consensus.");
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ecto::pcl::SACSegmentation>,
+          "SACSegmentation", "Segmentation using Sample Consensus.");
 
