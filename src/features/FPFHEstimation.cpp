@@ -32,7 +32,11 @@
 
 #include "FeatureEstimator.hpp"
 
-typedef Estimation<pcl::FPFHSignature33, pcl::FPFHEstimation> FPFHEstimation;
+namespace ecto {
+  namespace pcl {
+    typedef ecto::pcl::Estimation< ::pcl::FPFHSignature33, ::pcl::FPFHEstimation > FPFHEstimation;
+  }
+}
 
-ECTO_CELL(ecto_pcl, ecto::pcl::PclCellWithNormals<FPFHEstimation>, "FPFHEstimation", "This cell provides Fast Point Feature Histogram estimation.");
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCellWithNormals<ecto::pcl::FPFHEstimation>, "FPFHEstimation", "This cell provides Fast Point Feature Histogram estimation.");
 

@@ -32,7 +32,11 @@
 
 #include "FeatureEstimator.hpp"
 
-typedef Estimation<pcl::VFHSignature308, pcl::VFHEstimation> VFHEstimation;
+namespace ecto {
+  namespace pcl {
+    typedef ecto::pcl::Estimation< ::pcl::VFHSignature308, ::pcl::VFHEstimation > VFHEstimation;
+  }
+}
 
-ECTO_CELL(ecto_pcl, ecto::pcl::PclCellWithNormals<VFHEstimation>, "VFHEstimation", "This cell provides Viewpoint Feature Histogram estimation.");
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCellWithNormals<ecto::pcl::VFHEstimation>, "VFHEstimation", "This cell provides Viewpoint Feature Histogram estimation.");
 

@@ -31,52 +31,58 @@
 #include "pcl_cell.hpp"
 #include <pcl/filters/project_inliers.h>
 
-struct ProjectInliers
-{
-  static void declare_params(ecto::tendrils& params)
-  {
-    params.declare<int> ("model_type", "The type of model to use.", 0);
-    params.declare<bool> ("copy_all_data", "Sets whether all data will be returned, or only the projected inliers.", false);
+namespace ecto {
+  namespace pcl {
+
+    struct ProjectInliers
+    {
+      static void declare_params(tendrils& params)
+      {
+        params.declare<int> ("model_type", "The type of model to use.", 0);
+        params.declare<bool> ("copy_all_data", "Sets whether all data will be returned, or only the projected inliers.", false);
+      }
+
+      static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
+      {
+        inputs.declare<ModelCoefficients::ConstPtr> ("model", "Model to use for projection.");
+        outputs.declare<PointCloud> ("output", "Filtered Cloud.");
+      }
+
+      void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
+      {
+        model_type_ = params["model_type"];
+        copy_all_ = params["copy_all_data"];
+        model_ = inputs["model"];
+        output_ = outputs["output"];
+      }
+      
+      template <typename Point>
+      int process(const tendrils& inputs, const tendrils& outputs, 
+                  boost::shared_ptr<const ::pcl::PointCloud<Point> >& input)
+      {
+        ::pcl::ProjectInliers<Point> filter;
+        filter.setModelType(*model_type_);
+        filter.setCopyAllData(*copy_all_);
+        filter.setModelCoefficients(*model_);
+        filter.setInputCloud(input);
+              
+        ::pcl::PointCloud<Point> cloud;
+        filter.filter(cloud);
+        cloud.header = input->header;
+        *output_ = xyz_cloud_variant_t(cloud.makeShared());
+
+        return OK;
+      }
+
+      spore<int> model_type_;
+      spore<bool> copy_all_;
+      spore<ModelCoefficients::ConstPtr> model_;
+      spore<PointCloud> output_;
+    };
+
   }
+}
 
-  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
-  {
-    inputs.declare<model_t::ConstPtr> ("model", "Model to use for projection.");
-    outputs.declare<PointCloud> ("output", "Filtered Cloud.");
-  }
-
-  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
-  {
-    model_type_ = params["model_type"];
-    copy_all_ = params["copy_all_data"];
-    model_ = inputs["model"];
-    output_ = outputs["output"];
-  }
-  
-  template <typename Point>
-  int process(const tendrils& inputs, const tendrils& outputs, 
-              boost::shared_ptr<const pcl::PointCloud<Point> >& input)
-  {
-    pcl::ProjectInliers<Point> filter;
-    filter.setModelType(*model_type_);
-    filter.setCopyAllData(*copy_all_);
-    filter.setModelCoefficients(*model_);
-    filter.setInputCloud(input);
-          
-    pcl::PointCloud<Point> cloud;
-    filter.filter(cloud);
-    cloud.header = input->header;
-    *output_ = xyz_cloud_variant_t(cloud.makeShared());
-
-    return ecto::OK;
-  }
-
-  ecto::spore<int> model_type_;
-  ecto::spore<bool> copy_all_;
-  ecto::spore<model_t::ConstPtr> model_;
-  ecto::spore<PointCloud> output_;
-};
-
-ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ProjectInliers>, "ProjectInliers", "Project points of a cloud onto a model that they are inliers of.");
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ecto::pcl::ProjectInliers>, "ProjectInliers", "Project points of a cloud onto a model that they are inliers of.");
 
 

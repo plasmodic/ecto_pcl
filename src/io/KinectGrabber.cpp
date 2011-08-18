@@ -150,7 +150,7 @@ struct KinectGrabber
 
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    outputs.declare<PointCloud> ("output", "An XYZ/XYZRGB point cloud from the kinect");
+    outputs.declare<ecto::pcl::PointCloud> ("output", "An XYZ/XYZRGB point cloud from the kinect");
   }
 
   void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
@@ -163,10 +163,10 @@ struct KinectGrabber
   {
     if(format == ecto::pcl::FORMAT_XYZRGB){
       PointCloud p( impl_->getLatestXYZRGBCloud() );
-      outputs.get<PointCloud> ("output") = p;
+      outputs.get<ecto::pcl::PointCloud> ("output") = p;
     }else if(format == ecto::pcl::FORMAT_XYZ){
       PointCloud p( impl_->getLatestXYZCloud() );
-      outputs.get<PointCloud> ("output") = p;
+      outputs.get<ecto::pcl::PointCloud> ("output") = p;
     }else{
       throw std::runtime_error("KinectGrabber supports only XYZ and XYZRGB point clouds!");
     }

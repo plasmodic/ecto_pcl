@@ -58,7 +58,7 @@ namespace ecto
       declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
       {
         inputs.declare<MsgT>("input", "An ROS point cloud message.");
-        outputs.declare<PointCloud>("output", "An XYZ/XYZRGB point cloud from the kinect");
+        outputs.declare<ecto::pcl::PointCloud>("output", "An XYZ/XYZRGB point cloud from the kinect");
       }
 
       void
@@ -93,7 +93,7 @@ namespace ecto
       }
       ecto::spore<int> format_;
       ecto::spore<MsgT> input_;
-      ecto::spore<PointCloud> output_;
+      ecto::spore<ecto::pcl::PointCloud> output_;
     };
 
     struct PointCloud2Message
@@ -107,7 +107,7 @@ namespace ecto
       static void
       declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
       {
-        inputs.declare<PointCloud>("input", "An ROS point cloud message.");
+        inputs.declare<ecto::pcl::PointCloud>("input", "An ROS point cloud message.");
         outputs.declare<MsgT>("output", "An XYZ/XYZRGB point cloud from the kinect");
       }
 
@@ -122,12 +122,12 @@ namespace ecto
       int
       process(const tendrils& /*inputs*/, const tendrils& outputs)
       {
-        xyz_cloud_variant_t v = input_->make_variant();
+        ecto::pcl::xyz_cloud_variant_t v = input_->make_variant();
         *output_ = boost::apply_visitor(to_message(),v);
         return ecto::OK;
       }
       ecto::spore<int> format_;
-      ecto::spore<PointCloud> input_;
+      ecto::spore<ecto::pcl::PointCloud> input_;
       ecto::spore<MsgT> output_;
     };
   }
@@ -136,3 +136,4 @@ namespace ecto
 ECTO_CELL(ecto_pcl_ros, ecto::pcl_ros::Message2PointCloud, "Message2PointCloud",
           "Take a PointCloud Message and converts to pcl type.");
 ECTO_CELL(ecto_pcl_ros, ecto::pcl_ros::PointCloud2Message, "PointCloud2Message", "Take a pcl type and converts to PointCloud Message.");
+

@@ -42,7 +42,7 @@ struct EuclideanClusterExtraction
   }
 
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs) {
-    outputs.declare<cluster_t> ("output", "Clusters.");
+    outputs.declare<ecto::pcl::Clusters> ("output", "Clusters.");
   }
 
   void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
@@ -58,7 +58,7 @@ struct EuclideanClusterExtraction
   int process(const tendrils& inputs, const tendrils& outputs, 
               boost::shared_ptr<const pcl::PointCloud<Point> >& input)
   {
-    cluster_t clusters;
+    ecto::pcl::Clusters clusters;
 
     pcl::EuclideanClusterExtraction<Point> impl;
     impl.setClusterTolerance (*cluster_tolerance_);
@@ -74,7 +74,7 @@ struct EuclideanClusterExtraction
   ecto::spore<double> cluster_tolerance_;
   ecto::spore<int> min_cluster_size_;
   ecto::spore<int> max_cluster_size_;  
-  ecto::spore< cluster_t > output_;
+  ecto::spore<ecto::pcl::Clusters> output_;
 };
 
 ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<EuclideanClusterExtraction>, "EuclideanClusterExtraction", "Segmentation for cluster extraction in a Euclidean sense.");

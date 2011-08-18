@@ -31,62 +31,68 @@
 #include "pcl_cell.hpp"
 #include <pcl/filters/voxel_grid.h>
 
-struct VoxelGrid
-{
-  static void declare_params(ecto::tendrils& params)
-  {
-    pcl::VoxelGrid<pcl::PointXYZ> default_;
-    params.declare<std::string> ("filter_field_name", "The name of the field to use for filtering.", "");
-    double filter_limit_min, filter_limit_max;
-    default_.getFilterLimits(filter_limit_min, filter_limit_max);
-    params.declare<double> ("filter_limit_min", "Minimum value for the filter.", filter_limit_min);
-    params.declare<double> ("filter_limit_max", "Maximum value for the filter.", filter_limit_max);
-    params.declare<bool> ("filter_limit_negative", "To negate the limits or not.", default_.getFilterLimitsNegative());
-    params.declare<float> ("leaf_size", "The size of the leaf(meters), smaller means more points...", 0.05);
+namespace ecto {
+  namespace pcl {
+
+    struct VoxelGrid
+    {
+      static void declare_params(tendrils& params)
+      {
+        ::pcl::VoxelGrid< ::pcl::PointXYZ > default_;
+        params.declare<std::string> ("filter_field_name", "The name of the field to use for filtering.", "");
+        double filter_limit_min, filter_limit_max;
+        default_.getFilterLimits(filter_limit_min, filter_limit_max);
+        params.declare<double> ("filter_limit_min", "Minimum value for the filter.", filter_limit_min);
+        params.declare<double> ("filter_limit_max", "Maximum value for the filter.", filter_limit_max);
+        params.declare<bool> ("filter_limit_negative", "To negate the limits or not.", default_.getFilterLimitsNegative());
+        params.declare<float> ("leaf_size", "The size of the leaf(meters), smaller means more points...", 0.05);
+      }
+
+      static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
+      {
+        outputs.declare<PointCloud> ("output", "Filtered Cloud.");
+      }
+
+      void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
+      {
+        filter_field_name_ = params["filter_field_name"];
+        filter_limit_min_ = params["filter_limit_min"];
+        filter_limit_max_ = params["filter_limit_max"];
+        filter_limit_negative_ = params["filter_limit_negative"];
+        leaf_size = params["leaf_size"];
+
+        output_ = outputs["output"];
+      }
+      
+      template <typename Point>
+      int process(const tendrils& inputs, const tendrils& outputs, 
+                  boost::shared_ptr<const ::pcl::PointCloud<Point> >& input)
+      {
+        ::pcl::VoxelGrid<Point> filter;
+        filter.setFilterFieldName(*filter_field_name_);
+        filter.setFilterLimits(*filter_limit_min_, *filter_limit_max_);
+        filter.setFilterLimitsNegative(*filter_limit_negative_);
+        filter.setLeafSize(*leaf_size, *leaf_size, *leaf_size);
+        filter.setInputCloud(input);
+              
+        ::pcl::PointCloud<Point> cloud;
+        filter.filter(cloud);
+        cloud.header = input->header;
+        *output_ = xyz_cloud_variant_t(cloud.makeShared());
+
+        return ecto::OK;
+      }
+
+      ecto::spore<std::string> filter_field_name_;
+      ecto::spore<double> filter_limit_min_;
+      ecto::spore<double> filter_limit_max_;
+      ecto::spore<bool> filter_limit_negative_;
+      ecto::spore<float> leaf_size;
+      ecto::spore<ecto::pcl::PointCloud> output_;
+    };
+
   }
+}
 
-  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
-  {
-    outputs.declare<PointCloud> ("output", "Filtered Cloud.");
-  }
-
-  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
-  {
-    filter_field_name_ = params["filter_field_name"];
-    filter_limit_min_ = params["filter_limit_min"];
-    filter_limit_max_ = params["filter_limit_max"];
-    filter_limit_negative_ = params["filter_limit_negative"];
-    leaf_size = params["leaf_size"];
-
-    output_ = outputs["output"];
-  }
-  
-  template <typename Point>
-  int process(const tendrils& inputs, const tendrils& outputs, 
-              boost::shared_ptr<const pcl::PointCloud<Point> >& input)
-  {
-    pcl::VoxelGrid<Point> filter;
-    filter.setFilterFieldName(*filter_field_name_);
-    filter.setFilterLimits(*filter_limit_min_, *filter_limit_max_);
-    filter.setFilterLimitsNegative(*filter_limit_negative_);
-    filter.setLeafSize(*leaf_size, *leaf_size, *leaf_size);
-    filter.setInputCloud(input);
-          
-    pcl::PointCloud<Point> cloud;
-    filter.filter(cloud);
-    cloud.header = input->header;
-    *output_ = xyz_cloud_variant_t(cloud.makeShared());
-
-    return ecto::OK;
-  }
-
-  ecto::spore<std::string> filter_field_name_;
-  ecto::spore<double> filter_limit_min_;
-  ecto::spore<double> filter_limit_max_;
-  ecto::spore<bool> filter_limit_negative_;
-  ecto::spore<float> leaf_size;
-  ecto::spore<PointCloud> output_;
-};
-
-ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<VoxelGrid>, "VoxelGrid", "Voxel grid filter");
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ecto::pcl::VoxelGrid>, "VoxelGrid", "Voxel grid filter");
 

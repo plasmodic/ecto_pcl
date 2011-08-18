@@ -32,49 +32,57 @@
 
 #include <boost/variant/get.hpp>
 
-struct CloudViewer
-{
-  static void declare_params(ecto::tendrils& params)
-  {
-    params.declare<std::string> ("window_name", "The window name", "cloud viewer");
+namespace ecto {
+  namespace pcl {
 
-  }
-  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
-  {
-    inputs.declare<PointCloud> ("input", "The cloud to view");
-    outputs.declare<bool> ("stop", "True if stop requested", false);
-  }
-  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
-  {
-    viewer_.reset(new pcl::visualization::CloudViewer(params.get<std::string> ("window_name")));
-  }
+    struct CloudViewer
+    {
+      static void declare_params(tendrils& params)
+      {
+        params.declare<std::string> ("window_name", "The window name", "cloud viewer");
 
-  int process(const tendrils& inputs, const tendrils& outputs)
-  {
-    if (!viewer_)
-      return 1;
-
-    PointCloud cloud = inputs.get<PointCloud> ("input");
-    xyz_cloud_variant_t cv = cloud.make_variant();
-    try{
-      CloudPOINTXYZRGB::ConstPtr c = boost::get<CloudPOINTXYZRGB::ConstPtr>(cv);
-      if(c)
-        viewer_->showCloud(c, "cloud");
-    }catch(boost::bad_get){
-      try{
-        CloudPOINTXYZ::ConstPtr c = boost::get<CloudPOINTXYZ::ConstPtr>(cv);
-        if(c)
-          viewer_->showCloud(c, "cloud");
-      }catch(boost::bad_get){
-        throw std::runtime_error("CloudViewer supports only XYZ and XYZRGB point clouds!");
       }
-    }
-    if (viewer_->wasStopped(10))
-      outputs.get<bool> ("stop") = true;
-    return 0;
-  }
-  boost::shared_ptr<pcl::visualization::CloudViewer> viewer_;
-};
 
-ECTO_CELL(ecto_pcl, CloudViewer, "CloudViewer", "Viewer of clouds");
+      static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
+      {
+        inputs.declare<PointCloud> ("input", "The cloud to view");
+        outputs.declare<bool> ("stop", "True if stop requested", false);
+      }
+
+      void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
+      {
+        viewer_.reset(new ::pcl::visualization::CloudViewer(params.get<std::string> ("window_name")));
+      }
+
+      int process(const tendrils& inputs, const tendrils& outputs)
+      {
+        if (!viewer_)
+          return 1;
+
+        PointCloud cloud = inputs.get<PointCloud> ("input");
+        xyz_cloud_variant_t cv = cloud.make_variant();
+        try{
+          CloudPOINTXYZRGB::ConstPtr c = boost::get<CloudPOINTXYZRGB::ConstPtr>(cv);
+          if(c)
+            viewer_->showCloud(c, "cloud");
+        }catch(boost::bad_get){
+          try{
+            CloudPOINTXYZ::ConstPtr c = boost::get<CloudPOINTXYZ::ConstPtr>(cv);
+            if(c)
+              viewer_->showCloud(c, "cloud");
+          }catch(boost::bad_get){
+            throw std::runtime_error("CloudViewer supports only XYZ and XYZRGB point clouds!");
+          }
+        }
+        if (viewer_->wasStopped(10))
+          outputs.get<bool> ("stop") = true;
+        return 0;
+      }
+      boost::shared_ptr< ::pcl::visualization::CloudViewer > viewer_;
+    };
+
+  }
+}
+
+ECTO_CELL(ecto_pcl, ecto::pcl::CloudViewer, "CloudViewer", "Viewer of clouds");
 

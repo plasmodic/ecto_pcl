@@ -42,7 +42,7 @@ struct PCDReader
 
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    outputs.declare<PointCloud>("output", "A point cloud from the bag file.");
+    outputs.declare<ecto::pcl::PointCloud>("output", "A point cloud from the bag file.");
   }
 
   void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
@@ -66,7 +66,7 @@ struct PCDReader
             return 1;
           }
           std::cout << "Made it this far" << std::endl;
-          PointCloud p( cloud );
+          ecto::pcl::PointCloud p( cloud );
           *output_ = p;
         } break;
       case ecto::pcl::FORMAT_XYZRGB:
@@ -77,7 +77,7 @@ struct PCDReader
             throw std::runtime_error("PCDReader: failed to read PointXYZRGB cloud.");
             return 1;
           }
-          PointCloud p( cloud );
+          ecto::pcl::PointCloud p( cloud );
           *output_ = p;
         } break;
       default:
@@ -86,7 +86,7 @@ struct PCDReader
     return 0;
   }
 
-  ecto::spore<PointCloud> output_;
+  ecto::spore<ecto::pcl::PointCloud> output_;
   ecto::spore<int> format_;
   ecto::spore<std::string> filename_;
 

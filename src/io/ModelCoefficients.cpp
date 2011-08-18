@@ -6,7 +6,7 @@ struct PlaneCoefficientsFromFloat
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
   {
     inputs.declare< std::vector<float> > ("input", "Model coefficients as floats.");
-    outputs.declare< model_t::ConstPtr > ("output", "Model coefficients for use with ecto_pcl.");
+    outputs.declare< ecto::pcl::ModelCoefficients::ConstPtr > ("output", "Model coefficients for use with ecto_pcl.");
   }
 
   void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
@@ -17,14 +17,14 @@ struct PlaneCoefficientsFromFloat
   
   int process(const tendrils& inputs, const tendrils& outputs)
   {
-    model_t::Ptr model ( new model_t() );
+    ecto::pcl::ModelCoefficients::Ptr model ( new ecto::pcl::ModelCoefficients() );
     model->values = *input_;
     *output_ = model;
     return ecto::OK;
   }
 
   ecto::spore< std::vector<float> > input_;
-  ecto::spore< model_t::ConstPtr > output_;
+  ecto::spore< ecto::pcl::ModelCoefficients::ConstPtr > output_;
 };
 
 ECTO_CELL(ecto_pcl, PlaneCoefficientsFromFloat, "PlaneCoefficientsFromFloat", "Convert vector of floats to model coefficients.");

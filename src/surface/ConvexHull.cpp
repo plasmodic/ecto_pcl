@@ -37,7 +37,7 @@ struct ConvexHull
 
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    outputs.declare<PointCloud> ("output", "Points that form the the convex hull.");
+    outputs.declare<ecto::pcl::PointCloud> ("output", "Points that form the the convex hull.");
   }
 
   void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
@@ -55,11 +55,11 @@ struct ConvexHull
     filter.setInputCloud(input);
     filter.reconstruct(cloud);
 
-    *output_ = xyz_cloud_variant_t(cloud.makeShared());
+    *output_ = ecto::pcl::xyz_cloud_variant_t(cloud.makeShared());
     return ecto::OK;
   }
 
-  ecto::spore<PointCloud> output_;
+  ecto::spore<ecto::pcl::PointCloud> output_;
 };
 
 ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ConvexHull>, "ConvexHull", "Using libqhull library.");

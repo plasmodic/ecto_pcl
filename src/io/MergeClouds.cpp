@@ -39,7 +39,7 @@ struct MergeClouds
   static void declare_params(ecto::tendrils& params) { }
   static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
   {
-    outputs.declare<PointCloud> ("output", "Merged cloud.");
+    outputs.declare<ecto::pcl::PointCloud> ("output", "Merged cloud.");
   }
 
   void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
@@ -55,11 +55,11 @@ struct MergeClouds
     pcl::PointCloud<Point> cloud;
     cloud = *input1;
     cloud += *input2;
-    *output_ = xyz_cloud_variant_t(cloud.makeShared());
+    *output_ = ecto::pcl::xyz_cloud_variant_t(cloud.makeShared());
     return 0;
   }
   
-  ecto::spore<PointCloud> output_;
+  ecto::spore<ecto::pcl::PointCloud> output_;
 };
 
 const std::string MergeClouds::SecondInputName = "input2";
