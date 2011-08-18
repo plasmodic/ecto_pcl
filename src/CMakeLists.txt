@@ -18,6 +18,7 @@ ectomodule(ecto_pcl
   io/ModelCoefficients.cpp
   io/PCDReader.cpp
   io/PCDWriter.cpp
+  segmentation/ColorizeClusters.cpp
   segmentation/ExtractPolygonalPrismData.cpp
   segmentation/ExtractLargestCluster.cpp
   segmentation/EuclideanClusterExtraction.cpp
