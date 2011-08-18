@@ -10,9 +10,8 @@ This example shows how to extract points corresponding to objects on a table.
      projected so that a 2D convex hull can be created. 
   4) We then extract the indices of all points that are above the 
      plane formed by the convex hull. 
-  5) We extract the point cloud corresponding to these indices.
-  6) This cloud is then clustered
-  7) The largest cluster is extracted and published as a new cloud. 
+  5) This cloud is then clustered
+  6) The largest cluster is extracted and published as a new cloud. 
 
 """
 
