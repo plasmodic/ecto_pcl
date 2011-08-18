@@ -31,36 +31,43 @@
 #include "pcl_cell.hpp"
 #include <pcl/surface/convex_hull.h>
 
-struct ConvexHull
-{
-  static void declare_params(ecto::tendrils& params) { }
+namespace ecto {
+  namespace pcl {
 
-  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
-  {
-    outputs.declare<ecto::pcl::PointCloud> ("output", "Points that form the the convex hull.");
+    struct ConvexHull
+    {
+      static void declare_params(tendrils& params) { }
+
+      static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
+      {
+        outputs.declare<PointCloud> ("output", "Points that form the the convex hull.");
+      }
+
+      void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
+      {
+        output_ = outputs["output"];
+      }
+      
+      template <typename Point>
+      int process(const tendrils& inputs, const tendrils& outputs, 
+                  boost::shared_ptr<const ::pcl::PointCloud<Point> >& input)
+      {
+        ::pcl::ConvexHull<Point> filter;
+        ::pcl::PointCloud<Point> cloud;
+
+        filter.setInputCloud(input);
+        filter.reconstruct(cloud);
+
+        *output_ = xyz_cloud_variant_t(cloud.makeShared());
+        return ecto::OK;
+      }
+
+      spore<PointCloud> output_;
+    };
+
   }
+}
 
-  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
-  {
-    output_ = outputs["output"];
-  }
-  
-  template <typename Point>
-  int process(const tendrils& inputs, const tendrils& outputs, 
-              boost::shared_ptr<const pcl::PointCloud<Point> >& input)
-  {
-    pcl::ConvexHull<Point> filter;
-    pcl::PointCloud<Point> cloud;
-
-    filter.setInputCloud(input);
-    filter.reconstruct(cloud);
-
-    *output_ = ecto::pcl::xyz_cloud_variant_t(cloud.makeShared());
-    return ecto::OK;
-  }
-
-  ecto::spore<ecto::pcl::PointCloud> output_;
-};
-
-ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ConvexHull>, "ConvexHull", "Using libqhull library.");
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ecto::pcl::ConvexHull>,
+          "ConvexHull", "Using libqhull library.");
 

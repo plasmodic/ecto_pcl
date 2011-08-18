@@ -35,94 +35,100 @@
 
 #include <ros/ros.h>
 
-struct ColorizeClusters
-{
-  static void declare_params(ecto::tendrils& params)
-  {
-    params.declare<int> ("max_clusters", "Maximum number of clusters to output in the cloud.", 100);
-  }
+namespace ecto {
+  namespace pcl {
 
-  static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs) {
-    inputs.declare<ecto::pcl::Clusters> ("clusters", "Indices of clusters.");
-    outputs.declare<ecto::pcl::PointCloud> ("output", "Colorized clusters as a single cloud.");
-  }
-
-  void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
-  {
-    max_clusters_ = params["max_clusters"];
-
-    clusters_ = inputs["clusters"];
-    output_ = outputs["output"];
-  }
-
-  template <typename Point>
-  int process(const tendrils& inputs, const tendrils& outputs, 
-              boost::shared_ptr<const pcl::PointCloud<Point> >& input)
-  {
-    // initialize outputs and filter
-    pcl::PointCloud<Point> output;
-    pcl::ExtractIndices<Point> filter;
-    filter.setInputCloud(input);
-    output.header = input->header;
-
-    // Extract location of rgb (similar to pcl::PackedRGBComparison<T>)
-    std::vector<sensor_msgs::PointField> fields;
-    pcl::getFields(*input, fields);
-    size_t idx;
-    for (idx = 0; idx < fields.size(); idx++)
-    { 
-        if ( fields[idx].name == "rgb" || fields[idx].name == "rgba" )
-            break;
-    }
-    if (idx == fields.size())
+    struct ColorizeClusters
     {
-        throw std::runtime_error("[ColorizeClouds] requires an rgb or rgba field.");
-        return -1;
-    }
+      static void declare_params(tendrils& params)
+      {
+        params.declare<int> ("max_clusters", "Maximum number of clusters to output in the cloud.", 100);
+      }
 
-    // initialize colors
-    int r = 0;
-    int g = 0;
-    int b = 0;
+      static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs) {
+        inputs.declare<Clusters> ("clusters", "Indices of clusters.");
+        outputs.declare<PointCloud> ("output", "Colorized clusters as a single cloud.");
+      }
 
-    for (size_t i = 0; i < clusters_->size(); i++)
-    {
-        pcl::PointCloud<Point> cloud;
-        // extract indices into a cloud
-        filter.setIndices( pcl::PointIndicesPtr( new pcl::PointIndices ((*clusters_)[i])) );
-        filter.filter(cloud);
-        // determine color
-        if(i%3 == 0){
-            r = (r+128)%256;
-        }else if(i%3 == 1){
-            g = (g+128)%256;
-        }else if(i%3 == 2){
-            b = (b+128)%256;
+      void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
+      {
+        max_clusters_ = params["max_clusters"];
+
+        clusters_ = inputs["clusters"];
+        output_ = outputs["output"];
+      }
+
+      template <typename Point>
+      int process(const tendrils& inputs, const tendrils& outputs, 
+                  boost::shared_ptr<const ::pcl::PointCloud<Point> >& input)
+      {
+        // initialize outputs and filter
+        ::pcl::PointCloud<Point> output;
+        ::pcl::ExtractIndices<Point> filter;
+        filter.setInputCloud(input);
+        output.header = input->header;
+
+        // Extract location of rgb (similar to pcl::PackedRGBComparison<T>)
+        std::vector<sensor_msgs::PointField> fields;
+        ::pcl::getFields(*input, fields);
+        size_t idx;
+        for (idx = 0; idx < fields.size(); idx++)
+        { 
+            if ( fields[idx].name == "rgb" || fields[idx].name == "rgba" )
+                break;
         }
-        // colorize cloud
-        for (size_t j = 0; j < cloud.points.size(); j++)
+        if (idx == fields.size())
         {
-            Point &p = cloud.points[j];
-            unsigned char* pt_rgb = (unsigned char*) &p;
-            pt_rgb += fields[idx].offset;
-            (*pt_rgb) = (unsigned char) r;
-            (*(pt_rgb+1)) = (unsigned char) g;
-            (*(pt_rgb+2)) = (unsigned char) b;
+            throw std::runtime_error("[ColorizeClouds] requires an rgb or rgba field.");
+            return -1;
         }
-        // append
-        cloud.header = input->header;
-        output += cloud;
-    }
-    ROS_INFO_STREAM("Colorize Clusters: clusters = " << clusters_->size());
 
-    *output_ = ecto::pcl::xyz_cloud_variant_t(output.makeShared());
-    return ecto::OK;
+        // initialize colors
+        int r = 0;
+        int g = 0;
+        int b = 0;
+
+        for (size_t i = 0; i < clusters_->size(); i++)
+        {
+            ::pcl::PointCloud<Point> cloud;
+            // extract indices into a cloud
+            filter.setIndices( ::pcl::PointIndicesPtr( new ::pcl::PointIndices ((*clusters_)[i])) );
+            filter.filter(cloud);
+            // determine color
+            if(i%3 == 0){
+                r = (r+128)%256;
+            }else if(i%3 == 1){
+                g = (g+128)%256;
+            }else if(i%3 == 2){
+                b = (b+128)%256;
+            }
+            // colorize cloud
+            for (size_t j = 0; j < cloud.points.size(); j++)
+            {
+                Point &p = cloud.points[j];
+                unsigned char* pt_rgb = (unsigned char*) &p;
+                pt_rgb += fields[idx].offset;
+                (*pt_rgb) = (unsigned char) r;
+                (*(pt_rgb+1)) = (unsigned char) g;
+                (*(pt_rgb+2)) = (unsigned char) b;
+            }
+            // append
+            cloud.header = input->header;
+            output += cloud;
+        }
+
+        *output_ = xyz_cloud_variant_t(output.makeShared());
+        return OK;
+      }
+
+      spore<int> max_clusters_;  
+      spore<Clusters> clusters_;
+      spore<PointCloud> output_;
+    };
+
   }
+}
 
-  ecto::spore<int> max_clusters_;  
-  ecto::spore<ecto::pcl::Clusters> clusters_;
-  ecto::spore<ecto::pcl::PointCloud> output_;
-};
-
-ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ColorizeClusters>, "ColorizeClusters", "Concatenate clusters and colr each cluster differently.");
+ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ecto::pcl::ColorizeClusters>,
+          "ColorizeClusters", "Concatenate clusters and colr each cluster differently.");
 
