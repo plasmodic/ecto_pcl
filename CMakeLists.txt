@@ -52,7 +52,7 @@ else()
   endif()
 
   include_directories(${PCL_INCLUDE_DIRS})
-  
+
 endif()
 
 find_package(Boost COMPONENTS signals thread)
@@ -60,3 +60,4 @@ find_package(Boost COMPONENTS signals thread)
 include_directories(include)
 add_subdirectory(src)
 add_subdirectory(test)
+add_subdirectory(samples)

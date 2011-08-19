@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Read a point cloud from a pcd file and display it repeatedly.
+Read a point cloud from a pcd file and display it.
 """
 import sys, ecto, ecto_pcl
 
@@ -14,6 +14,6 @@ plasm.connect(reader[:] >> viewer[:])
 
 if __name__=="__main__":
     sched = ecto.schedulers.Threadpool(plasm)
-    sched.execute(niter=50)
+    sched.execute(niter=150)
 
 

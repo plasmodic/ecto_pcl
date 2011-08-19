@@ -16,6 +16,7 @@ for visualization.
    :maxdepth: 1
 
    pcd_capture
+   pcd_display
    pass_it_on
    tabletop_segmentation
    colorize_clusters
