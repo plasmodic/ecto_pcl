@@ -39,9 +39,14 @@ namespace ecto {
       static void declare_params(tendrils& params)
       {
         ::pcl::EuclideanClusterExtraction< ::pcl::PointXYZ > default_;
-        params.declare<double> ("cluster_tolerance", "Spatial cluster tolerance as a measure in the L2 Euclidean space.", 0.05);
-        params.declare<int> ("min_cluster_size", "Minimum number of points that a cluster needs to contain in order to be considered valid.", 1);
-        params.declare<int> ("max_cluster_size", "Maximum number of points that a cluster needs to contain in order to be considered valid.", default_.getMaxClusterSize());
+        params.declare<double> ("cluster_tolerance",
+                                "Spatial cluster tolerance as a measure in the L2 Euclidean space.", 0.05);
+        params.declare<int> ("min_cluster_size",
+                             "Minimum number of points that a cluster needs to contain"
+                             "in order to be considered valid.", 1);
+        params.declare<int> ("max_cluster_size",
+                             "Maximum number of points that a cluster needs to contain"
+                             "in order to be considered valid.", default_.getMaxClusterSize());
       }
 
       static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs) {
@@ -50,33 +55,32 @@ namespace ecto {
 
       void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
       {
-        cluster_tolerance_ = params["cluster_tolerance"]; 
-        min_cluster_size_ = params["min_cluster_size"]; 
+        cluster_tolerance_ = params["cluster_tolerance"];
+        min_cluster_size_ = params["min_cluster_size"];
         max_cluster_size_ = params["max_cluster_size"];
 
         output_ = outputs["output"];
       }
 
       template <typename Point>
-      int process(const tendrils& inputs, const tendrils& outputs, 
+      int process(const tendrils& inputs, const tendrils& outputs,
                   boost::shared_ptr<const ::pcl::PointCloud<Point> >& input)
       {
-        Clusters clusters;
-
         ::pcl::EuclideanClusterExtraction<Point> impl;
+        output_->resize(0);
+
         impl.setClusterTolerance (*cluster_tolerance_);
         impl.setMinClusterSize (*min_cluster_size_);
         impl.setMaxClusterSize (*max_cluster_size_);
         impl.setInputCloud(input);
-        impl.extract (clusters);
+        impl.extract (*output_);
 
-        *output_ = clusters;
         return OK;
       }
 
       spore<double> cluster_tolerance_;
       spore<int> min_cluster_size_;
-      spore<int> max_cluster_size_;  
+      spore<int> max_cluster_size_;
       spore<Clusters> output_;
     };
 
