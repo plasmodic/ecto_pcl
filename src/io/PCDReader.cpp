@@ -49,6 +49,7 @@ namespace ecto {
         outputs.declare<PointCloud>("output", "A point cloud from the pcd file.");
       }
 
+      PCDReader() { first = true; }
       void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
       {
         output_ = outputs["output"];
@@ -58,6 +59,9 @@ namespace ecto {
 
       int process(const tendrils& /*inputs*/, const tendrils& outputs)
       {
+        if (!first)
+          return OK;
+        first = false;
         switch(*format_)
         {
           case FORMAT_XYZ:
@@ -90,6 +94,7 @@ namespace ecto {
         return OK;
       }
 
+      bool first;
       spore<PointCloud> output_;
       spore<ecto::pcl::Format> format_;
       spore<std::string> filename_;
