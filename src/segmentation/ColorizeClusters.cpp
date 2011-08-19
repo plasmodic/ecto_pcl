@@ -43,6 +43,8 @@ namespace ecto {
       static void declare_params(tendrils& params)
       {
         params.declare<int> ("max_clusters", "Maximum number of clusters to output in the cloud.", 100);
+        params.declare<float> ("saturation", "HSV Saturation of cloud colors on [0, 1]", 0.8);
+        params.declare<float> ("value", "Value (brightness) of cloud colors on [0, 1]", 1.0);
       }
 
       static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs) {
@@ -56,10 +58,43 @@ namespace ecto {
 
         clusters_ = inputs["clusters"];
         output_ = outputs["output"];
+
+        saturation_ = params["saturation"];
+        value_ = params["value"];
+      }
+
+      // see
+      // http://en.wikipedia.org/wiki/HSL_and_HSV#Converting_to_RGB
+      // for points on a dark background you want somewhat lightened
+      // colors generally... back off the saturation (s)
+      static void hsv2rgb(float h, float s, float v, float& r, float& g, float& b)
+      {
+        float c = v * s;
+        float hprime = h/60.0;
+        float x = c * (1.0 - fabs(fmodf(hprime, 2.0f) - 1));
+
+        r = g = b = 0;
+
+        if (hprime < 1) {
+          r = c; g = x;
+        } else if (hprime < 2) {
+          r = x; g = c;
+        } else if (hprime < 3) {
+          g = c; b = x;
+        } else if (hprime < 4) {
+          g = x; b = c;
+        } else if (hprime < 5) {
+          r = x; b = c;
+        } else if (hprime < 6) {
+          r = c; b = x;
+        }
+
+        float m = v - c;
+        r += m; g+=m; b+=m;
       }
 
       template <typename Point>
-      int process(const tendrils& inputs, const tendrils& outputs, 
+      int process(const tendrils& inputs, const tendrils& outputs,
                   boost::shared_ptr<const ::pcl::PointCloud<Point> >& input)
       {
         // initialize outputs and filter
@@ -73,7 +108,7 @@ namespace ecto {
         ::pcl::getFields(*input, fields);
         size_t idx;
         for (idx = 0; idx < fields.size(); idx++)
-        { 
+        {
             if ( fields[idx].name == "rgb" || fields[idx].name == "rgba" )
                 break;
         }
@@ -83,34 +118,27 @@ namespace ecto {
             return -1;
         }
 
-        // initialize colors
-        int r = 0;
-        int g = 0;
-        int b = 0;
-
         for (size_t i = 0; i < clusters_->size(); i++)
         {
             ::pcl::PointCloud<Point> cloud;
             // extract indices into a cloud
             filter.setIndices( ::pcl::PointIndicesPtr( new ::pcl::PointIndices ((*clusters_)[i])) );
             filter.filter(cloud);
-            // determine color
-            if(i%3 == 0){
-                r = (r+128)%256;
-            }else if(i%3 == 1){
-                g = (g+128)%256;
-            }else if(i%3 == 2){
-                b = (b+128)%256;
-            }
+
+            float hue = (360.0 / clusters_->size()) * i;
+
+            float r, g, b;
+            hsv2rgb(hue, *saturation_, *value_, r, g, b);
+
             // colorize cloud
             for (size_t j = 0; j < cloud.points.size(); j++)
             {
                 Point &p = cloud.points[j];
                 unsigned char* pt_rgb = (unsigned char*) &p;
                 pt_rgb += fields[idx].offset;
-                (*pt_rgb) = (unsigned char) r;
-                (*(pt_rgb+1)) = (unsigned char) g;
-                (*(pt_rgb+2)) = (unsigned char) b;
+                (*pt_rgb) = (unsigned char) (r * 255);
+                (*(pt_rgb+1)) = (unsigned char) (g * 255);
+                (*(pt_rgb+2)) = (unsigned char) (b * 255);
             }
             // append
             cloud.header = input->header;
@@ -121,7 +149,8 @@ namespace ecto {
         return OK;
       }
 
-      spore<int> max_clusters_;  
+      spore<float> saturation_, value_;
+      spore<int> max_clusters_;
       spore<Clusters> clusters_;
       spore<PointCloud> output_;
     };

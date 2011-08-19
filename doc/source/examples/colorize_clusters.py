@@ -1,0 +1,1 @@
+../../../samples/ros/colorize_clusters.py
