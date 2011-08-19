@@ -18,11 +18,11 @@ struct ExampleFilter
   {
     /* 
      * A single "ecto::pcl::PointCloud" input is already defined... any others should be here
-     * If you need 2 input PointClouds, use the PclCellDualInputs
+     * If you need 2 input PointClouds, use the ecto::pcl::PclCellDualInputs
      */
 
-    // Most cells will output a PointCloud
-    outputs.declare<PointCloud> ("output", "Cloud after my stufz has run.");
+    // Most cells will output a ecto::pcl::PointCloud
+    outputs.declare<ecto::pcl::PointCloud> ("output", "Cloud after my stufz has run.");
   }
 
   void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
@@ -44,14 +44,14 @@ struct ExampleFilter
     // do something with our params/clouds
     cloud = input;
 
-    // Need to a PointCloud - we have to use this variant to create an ecto::pcl::PointCloud
-    *output_ = xyz_cloud_variant_t(cloud.makeShared());
+    // We have to use this variant to create an ecto::pcl::PointCloud
+    *output_ = ecto::pcl::xyz_cloud_variant_t(cloud.makeShared());
     return ecto::OK;
   }
 
   // Store params/inputs/outputs in spores
   ecto::spore<int> my_param_;
-  ecto::spore<PointCloud> output_;
+  ecto::spore<ecto::pcl::PointCloud> output_;
 };
 
 ECTO_CELL(ecto_pcl, ecto::pcl::PclCell<ExampleFilter>, "ExampleFilter", "Example of creating a custom filter.");
