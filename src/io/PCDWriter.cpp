@@ -41,13 +41,16 @@ namespace ecto {
 
       static void declare_params(tendrils& params)
       {
-        params.declare<std::string> ("filename_format", "The format string for saving pcds, must succeed with a single integer argument.", "cloud_%04d.pcd");
+        params.declare<std::string> ("filename_format",
+                                     "The format string for saving pcds, "
+                                     "must succeed with a single unsigned int argument.",
+                                     "cloud_%04u.pcd");
         params.declare<bool> ("binary", "Use binary encoding.", false);
       }
 
       static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
       {
-        inputs.declare<PointCloud>("input", "A point cloud to put in the bag file.");
+        inputs.declare<PointCloud>("input", "A point cloud to put in a pcd file.");
         outputs.declare<sensor_msgs::PointCloud2ConstPtr>("cloud_message", "the cloud message used for writing.");
       }
 
@@ -84,7 +87,7 @@ namespace ecto {
       };
 
       int process(const tendrils& /*inputs*/, const tendrils& outputs)
-      { 
+      {
         std::string filename = boost::str(boost::format(*filename_format_)%count_++);
         xyz_cloud_variant_t cv = input_->make_variant();
         *cloud_message_ = boost::apply_visitor(write_dispatch(filename,*binary_), cv);

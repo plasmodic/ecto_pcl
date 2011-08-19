@@ -112,15 +112,15 @@ struct PointCloud2PointCloudT
   ecto::spore<ecto::pcl::PointCloud> input_;
   ecto::tendril::ptr output_;
 };
-    
+
 ECTO_DEFINE_MODULE(ecto_pcl)
-{ 
+{
   bp::enum_<pcl::SacModel>("SacModel")
     BOOST_PP_SEQ_FOR_EACH(ENUMSAC, ~, MODELTYPES)
     .export_values()
     ;
 
-  bp::enum_<ecto::pcl::Formats>("Format")
+  bp::enum_<ecto::pcl::Format>("Format")
     .value("XYZ", ecto::pcl::FORMAT_XYZ)
     .value("XYZI", ecto::pcl::FORMAT_XYZI)
     .value("XYZRGB", ecto::pcl::FORMAT_XYZRGB)
@@ -136,5 +136,6 @@ ECTO_DEFINE_MODULE(ecto_pcl)
   bp::scope().attr("KDTREE_ORGANIZED_INDEX") = 1;
 }
 
-ECTO_CELL(ecto_pcl,PointCloud2PointCloudT,"PointCloud2PointCloudT","Convert a generic variant based PointCloud to a strongly typed pcl::PointCloud<pcl::PointT>.")
+ECTO_CELL(ecto_pcl,PointCloud2PointCloudT, "PointCloud2PointCloudT",
+          "Convert a generic variant based PointCloud to a strongly typed pcl::PointCloud<pcl::PointT>.")
 
