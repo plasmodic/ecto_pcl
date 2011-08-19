@@ -93,7 +93,7 @@ namespace ecto{
 
       PointCloud() {}
       xyz_cloud_variant_t make_variant() { return held->make_variant(); }
-  
+
       template<typename T>
       typename T::ConstPtr cast() { return boost::get<typename T::ConstPtr>(held->make_variant());}
     };
@@ -125,7 +125,7 @@ namespace ecto{
     typedef ::pcl::ModelCoefficients ModelCoefficients;
     typedef std::vector< ::pcl::PointIndices > Clusters;
 
-    enum Formats
+    enum Format
     {
       FORMAT_XYZ,
       FORMAT_XYZI,
@@ -136,9 +136,9 @@ namespace ecto{
       FORMAT_FPFHSIGNATURE,
       FORMAT_VFHSIGNATURE
     };
-  
+
   }
-} 
+}
 
 // hacky pcl workaround for private PointCloud
 template <typename PclType, typename PointType>

@@ -39,13 +39,14 @@ namespace ecto {
     {
       static void declare_params(tendrils& params)
       {
-        params.declare<int> ("format", "Format of cloud found in PCD file.", ecto::pcl::FORMAT_XYZRGB);
+        params.declare<ecto::pcl::Format>("format", "Format of cloud found in PCD file.",
+                                           ecto::pcl::FORMAT_XYZRGB);
         params.declare<std::string> ("filename", "Name of the pcd file", "");
       }
 
       static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
       {
-        outputs.declare<PointCloud>("output", "A point cloud from the bag file.");
+        outputs.declare<PointCloud>("output", "A point cloud from the pcd file.");
       }
 
       void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
@@ -56,7 +57,7 @@ namespace ecto {
       }
 
       int process(const tendrils& /*inputs*/, const tendrils& outputs)
-      { 
+      {
         switch(*format_)
         {
           case FORMAT_XYZ:
@@ -90,7 +91,7 @@ namespace ecto {
       }
 
       spore<PointCloud> output_;
-      spore<int> format_;
+      spore<ecto::pcl::Format> format_;
       spore<std::string> filename_;
 
     };
