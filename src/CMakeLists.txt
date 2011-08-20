@@ -16,6 +16,7 @@ ectomodule(ecto_pcl
   # io/KinectGrabber.cpp
   io/MergeClouds.cpp
   io/ModelCoefficients.cpp
+  io/NiConverters.cpp
   io/PCDReader.cpp
   io/PCDWriter.cpp
   segmentation/ColorizeClusters.cpp
