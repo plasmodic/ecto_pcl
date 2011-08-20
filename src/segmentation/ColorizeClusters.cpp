@@ -33,8 +33,6 @@
 #include <pcl/filters/extract_indices.h>
 #include <sensor_msgs/PointField.h>
 
-#include <ros/ros.h>
-
 namespace ecto {
   namespace pcl {
 
