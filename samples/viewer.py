@@ -1,15 +1,14 @@
 #!/usr/bin/env python
 
 """
-This sample shows how to use the cloud viewer with a ROS-based plasm.
+This sample shows how to use the cloud viewer with ecto_openni capture.
 """
 
-import ecto, ecto_pcl
-from ecto_openni import Capture
+import ecto, ecto_pcl, ecto_openni
 
 plasm = ecto.Plasm()
 
-capture = Capture('device')
+capture = ecto_openni.Capture('device')
 verter = ecto_pcl.NiConverter('verter')
 viewer = ecto_pcl.CloudViewer("viewer", window_name="Clouds!")
 
