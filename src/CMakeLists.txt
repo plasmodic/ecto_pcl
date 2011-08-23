@@ -33,9 +33,9 @@ set_source_files_properties(io/CloudViewer.cpp
   COMPILE_FLAGS -Wno-deprecated
   )
 
-
 link_ecto(ecto_pcl
     ${pcl_LIBRARIES}
     )
+
 #install_ecto_module(ecto_pcl)
 add_subdirectory(ros)
