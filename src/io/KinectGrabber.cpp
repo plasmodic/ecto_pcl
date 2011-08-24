@@ -28,7 +28,7 @@
  */
 
 #include <ecto/ecto.hpp>
-#include <ecto_pcl.hpp>
+#include <ecto_pcl/ecto_pcl.hpp>
 
 #undef  BOOST_PARAMETER_MAX_ARITY
 #define BOOST_PARAMETER_MAX_ARITY 7

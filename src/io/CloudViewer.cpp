@@ -27,7 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "ecto_pcl.hpp"
+#include <ecto_pcl/ecto_pcl.hpp>
 #include <pcl/visualization/cloud_viewer.h>
 
 #include <boost/variant/get.hpp>

@@ -28,8 +28,7 @@
  */
 
 #include <ecto/ecto.hpp>
-#include <ecto_pcl.hpp>
-
+#include <ecto_pcl/ecto_pcl.hpp>
 #include <pcl/io/pcd_io.h>
 
 namespace ecto {

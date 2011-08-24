@@ -27,8 +27,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "ecto_pcl.hpp"
-#include "pcl_cell_with_normals.hpp"
+#include <ecto_pcl/ecto_pcl.hpp>
+#include <ecto_pcl/pcl_cell_with_normals.hpp>
 #include <pcl/segmentation/sac_segmentation.h>
 
 namespace ecto {

@@ -27,8 +27,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "ecto_pcl.hpp"
-#include "pcl_cell.hpp"
+#include <ecto_pcl/ecto_pcl.hpp>
+#include <ecto_pcl/pcl_cell.hpp>
 #include <pcl/io/io.h>
 #include <pcl/filters/extract_indices.h>
 #include <sensor_msgs/PointField.h>
