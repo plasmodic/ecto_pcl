@@ -27,8 +27,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "ecto_pcl.hpp"
-#include "pcl_cell.hpp"
+#include <ecto_pcl/ecto_pcl.hpp>
+#include <ecto_pcl/pcl_cell.hpp>
 #include <pcl/surface/convex_hull.h>
 
 namespace ecto {

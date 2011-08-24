@@ -27,8 +27,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "ecto_pcl.hpp"
-#include "pcl_cell_dual_inputs.hpp"
+#include <ecto_pcl/ecto_pcl.hpp>
+#include <ecto_pcl/pcl_cell_dual_inputs.hpp>
 #include <pcl/segmentation/extract_polygonal_prism_data.h>
 
 namespace ecto {

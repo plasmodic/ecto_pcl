@@ -27,8 +27,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "ecto_pcl.hpp"
-#include "pcl_cell.hpp"
+#include <ecto_pcl/ecto_pcl.hpp>
+#include <ecto_pcl/pcl_cell.hpp>
 #include <pcl/filters/statistical_outlier_removal.h>
 
 namespace ecto {

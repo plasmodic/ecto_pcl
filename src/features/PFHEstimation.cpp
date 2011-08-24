@@ -27,9 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "ecto_pcl.hpp"
 #include <pcl/features/pfh.h>
-
 #include "FeatureEstimator.hpp"
 
 namespace ecto {
