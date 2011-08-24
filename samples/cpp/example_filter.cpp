@@ -2,8 +2,8 @@
  * Example of how to create a cell with PclCell
  */
 
-#include "ecto_pcl.hpp"
-#include "pcl_cell.hpp"
+#include <ecto_pcl/ecto_pcl.hpp>
+#include <ecto_pcl/pcl_cell.hpp>
 // other pcl includes!
 
 struct ExampleFilter
