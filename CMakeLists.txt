@@ -69,5 +69,12 @@ find_package(Boost COMPONENTS signals thread)
 include_directories(include)
 add_subdirectory(cmake)
 add_subdirectory(src)
-add_subdirectory(test)
-add_subdirectory(samples)
+
+option(BUILD_TEST "Build tests" ON)
+if(BUILD_TEST)
+
+  enable_testing()
+  add_subdirectory(test)
+  add_subdirectory(samples)
+  
+endif()
