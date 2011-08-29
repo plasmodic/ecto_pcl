@@ -1,1 +1,1 @@
-../../../samples/ros/tabletop_segmentation.py
+../../../samples/tabletop_segmentation.py

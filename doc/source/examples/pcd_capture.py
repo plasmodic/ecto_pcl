@@ -1,1 +1,0 @@
-../../../samples/ros/pcd_capture.py

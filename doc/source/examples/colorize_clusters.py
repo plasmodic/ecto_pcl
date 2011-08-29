@@ -1,1 +1,1 @@
-../../../samples/ros/colorize_clusters.py
+../../../samples/colorize_clusters.py

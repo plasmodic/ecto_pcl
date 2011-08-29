@@ -1,1 +1,0 @@
-../../../samples/ros/pass_it_on.py
