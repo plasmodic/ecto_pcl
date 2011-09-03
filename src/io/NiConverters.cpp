@@ -110,6 +110,7 @@ namespace ecto {
 
                 uint16_t fpz = *(d++);            
                 float z =  fpz / 1000.0f;
+                if(z == 0) z = std::numeric_limits<float>::quiet_NaN();
                 p.x = (u - cx) * z / fx;
                 p.y = (v - cy) * z / fy;
                 p.z = z;            
