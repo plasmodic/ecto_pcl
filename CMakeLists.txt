@@ -4,9 +4,9 @@ project(ecto_pcl)
 find_package(ecto REQUIRED) #brings in rosbuild_lite
 
 set(ECTO_PCL_VERSION 0.1.0)
-set(ECTO_PCL_PREFIX ${PROJECT_NAME}-${ECTO_PCL_VERSION} CACHE PATH "Mangled prefixer" FORCE)
-set(ECTO_PCL_INCLUDE_PREFIX include/${ECTO_PCL_PREFIX} CACHE PATH "Where ecto_ros include will live" FORCE)
-set(ECTO_PCL_SHARE_PREFIX share/${ECTO_PCL_PREFIX} CACHE PATH "Where ecto_ros share will live" FORCE)
+set(ECTO_PCL_PREFIX ${PROJECT_NAME}-${ECTO_PCL_VERSION} CACHE INTERNAL "Mangled prefixer" FORCE)
+set(ECTO_PCL_INCLUDE_PREFIX include/${ECTO_PCL_PREFIX} CACHE INTERNAL "Where ecto_pcl includes will live" FORCE)
+set(ECTO_PCL_SHARE_PREFIX share/${ECTO_PCL_PREFIX} CACHE INTERNAL "Where ecto_pcl share will live" FORCE)
 
 ecto_python_env_gen(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 
