@@ -36,5 +36,5 @@ link_ecto(ecto_pcl
     ${pcl_LIBRARIES}
     )
 
-#install_ecto_module(ecto_pcl)
+install_ecto_module(ecto_pcl)
 add_subdirectory(ros)

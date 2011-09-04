@@ -78,3 +78,8 @@ if(BUILD_TEST)
   add_subdirectory(samples)
   
 endif()
+
+INSTALL(DIRECTORY include
+        DESTINATION ${ECTO_PCL_INCLUDE_PREFIX}
+        COMPONENT main
+        )
