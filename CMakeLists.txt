@@ -11,7 +11,7 @@ set(ECTO_PCL_SHARE_PREFIX share/${ECTO_PCL_PREFIX} CACHE INTERNAL "Where ecto_pc
 ecto_python_env_gen(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 
 if (NOT ECTO_PCL_STANDALONE_OPTION) # first time only
-  if ("$ENV{ROS_ROOT}" STREQUAL "")
+  if (NOT ROS_FOUND)
     message(STATUS "+ Setting default value of ECTO_PCL_STANDALONE to ON")
     message(STATUS "+ Because ROS_ROOT is not set in your environment.")
     option(ECTO_PCL_STANDALONE "Use standalone PCL" ON)
