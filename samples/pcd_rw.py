@@ -5,10 +5,15 @@ This example shows how to read/write pcd files.
 """
 
 import ecto, ecto_pcl
+import sys
 
 plasm = ecto.Plasm()
 
-reader = ecto_pcl.PCDReader("Reader", filename="cb.pcd")
+pcdfile = 'cloud.pcd'
+if len(sys.argv):
+    pcdfile = sys.argv[1]
+
+reader = ecto_pcl.PCDReader("Reader", filename=pcdfile)
 writer = ecto_pcl.PCDWriter("Writer", filename_format="ascii_%04d.pcd", binary=False)
 
 plasm.connect(reader[:] >> writer[:])

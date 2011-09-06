@@ -13,5 +13,3 @@ plasm.connect(reader[:] >> viewer[:])
 if __name__=="__main__":
     sched = ecto.schedulers.Threadpool(plasm)
     sched.execute(niter=1)
-    raw_input()
-
