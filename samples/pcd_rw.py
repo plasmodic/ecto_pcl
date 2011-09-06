@@ -10,7 +10,7 @@ import sys
 plasm = ecto.Plasm()
 
 pcdfile = 'cloud.pcd'
-if len(sys.argv):
+if len(sys.argv) > 1:
     pcdfile = sys.argv[1]
 
 reader = ecto_pcl.PCDReader("Reader", filename=pcdfile)
