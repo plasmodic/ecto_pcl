@@ -1,3 +1,4 @@
+*.pcd
 build/
 *.pyc
 ._*
