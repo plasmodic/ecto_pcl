@@ -29,56 +29,172 @@
 
 #include <ecto_pcl/ecto_pcl.hpp>
 #include <pcl/visualization/cloud_viewer.h>
+#include <pcl/visualization/pcl_visualizer.h>
 
 #include <boost/variant/get.hpp>
 
-namespace ecto {
-  namespace pcl {
-
+namespace ecto
+{
+  namespace pcl
+  {
+    using ::pcl::visualization::PCLVisualizer;
     struct CloudViewer
     {
-      static void declare_params(tendrils& params)
+      CloudViewer()
+          :
+            quit(false)
       {
-        params.declare<std::string> ("window_name", "The window name", "cloud viewer");
-
       }
 
-      static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
+      static void
+      declare_params(tendrils& params)
       {
-        inputs.declare<PointCloud> ("input", "The cloud to view");
-        outputs.declare<bool> ("stop", "True if stop requested", false);
+        params.declare<std::string>("window_name", "The window name", "cloud viewer");
       }
 
-      void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
+      static void
+      declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
       {
-        viewer_.reset(new ::pcl::visualization::CloudViewer(params.get<std::string> ("window_name")));
+        inputs.declare<PointCloud>("input", "The cloud to view");
       }
 
-      int process(const tendrils& inputs, const tendrils& outputs)
+      void
+      configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
       {
-        if (!viewer_)
-          return 1;
+        params["window_name"] >> window_name;
+      }
+      void
+      run()
+      {
+        quit = false;
+        viewer_.reset(new PCLVisualizer(window_name));
+        viewer_->setBackgroundColor(0, 0, 0);
+        viewer_->addCoordinateSystem(0.25);
+        viewer_->initCameraParameters();
 
-        PointCloud cloud = inputs.get<PointCloud> ("input");
-        xyz_cloud_variant_t cv = cloud.make_variant();
-        try{
-          CloudPOINTXYZRGB::ConstPtr c = boost::get<CloudPOINTXYZRGB::ConstPtr>(cv);
-          if(c)
-            viewer_->showCloud(c, "cloud");
-        }catch(boost::bad_get){
-          try{
-            CloudPOINTXYZ::ConstPtr c = boost::get<CloudPOINTXYZ::ConstPtr>(cv);
-            if(c)
-              viewer_->showCloud(c, "cloud");
-          }catch(boost::bad_get){
-            throw std::runtime_error("CloudViewer supports only XYZ and XYZRGB point clouds!");
+        while (!viewer_->wasStopped() && !boost::this_thread::interruption_requested())
+        {
+          {
+            boost::mutex::scoped_try_lock lock(mtx);
+            if (lock)
+            {
+              signal_();
+              jobs_.clear(); //disconnects all the slots.
+            }
+          }
+          viewer_->spinOnce(20);
+        }
+        quit = true;
+      }
+
+      struct show_dispatch: boost::static_visitor<>
+      {
+        show_dispatch(boost::shared_ptr<PCLVisualizer> viewer, const std::string& key)
+            :
+              viewer(viewer),
+              key(key)
+        {
+        }
+
+        //http://pointclouds.org/documentation/tutorials/pcl_visualizer.php#pcl-visualizer
+        template<typename Point>
+        void
+        operator()(boost::shared_ptr<const ::pcl::PointCloud<Point> >& cloud) const
+        {
+          if (!viewer->updatePointCloud<Point>(cloud, key))
+          {
+            viewer->addPointCloud<Point>(cloud, key);
           }
         }
-        if (viewer_->wasStopped(10))
-          outputs.get<bool> ("stop") = true;
+        void
+        operator()(boost::shared_ptr<const CloudPOINTXYZRGB>& cloud) const
+        {
+          ::pcl::visualization::PointCloudColorHandlerRGBField<CloudPOINTXYZRGB::PointType> rgb(cloud);
+          if (!viewer->updatePointCloud(cloud, rgb, key))
+          {
+            viewer->addPointCloud(cloud, rgb, key);
+          }
+        }
+        void
+        operator()(boost::shared_ptr<const CloudPOINTXYZRGBNORMAL>& cloud) const
+        {
+          ::pcl::visualization::PointCloudColorHandlerRGBField<CloudPOINTXYZRGBNORMAL::PointType> rgb(cloud);
+          ::pcl::visualization::PointCloudGeometryHandlerSurfaceNormal<CloudPOINTXYZRGBNORMAL::PointType> normals(
+              cloud);
+
+          if (!viewer->updatePointCloud(cloud, rgb, key))
+          {
+            viewer->addPointCloud(cloud, rgb, key);
+          }
+          viewer->updatePointCloud(cloud,normals,key);
+        }
+
+        boost::shared_ptr<PCLVisualizer> viewer;
+        std::string key;
+      };
+      struct show_dispatch_runner
+      {
+        show_dispatch_runner(const show_dispatch& dispatch, const xyz_cloud_variant_t& varient)
+            :
+              dispatch(dispatch),
+              varient(varient)
+        {
+        }
+        void
+        operator()()
+        {
+          boost::apply_visitor(dispatch, varient);
+        }
+        show_dispatch dispatch;
+        xyz_cloud_variant_t varient;
+      };
+
+      int
+      process(const tendrils& inputs, const tendrils& outputs)
+      {
+        if (quit)
+        {
+          runner_thread_->join();
+          return ecto::QUIT;
+        }
+        if (!runner_thread_)
+        {
+          runner_thread_.reset(new boost::thread(boost::bind(&CloudViewer::run, this)));
+        }
+        while (!viewer_)
+        {
+          boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+        }
+
+        {
+          boost::mutex::scoped_lock lock(mtx);
+          PointCloud cloud = inputs.get<PointCloud>("input");
+          xyz_cloud_variant_t varient = cloud.make_variant();
+          show_dispatch dispatch(viewer_, "main cloud");
+          boost::shared_ptr<boost::signals2::scoped_connection> c(new boost::signals2::scoped_connection);
+          *c = signal_.connect(show_dispatch_runner(dispatch, varient));
+          jobs_.push_back(c);
+        }
+
         return 0;
       }
-      boost::shared_ptr< ::pcl::visualization::CloudViewer > viewer_;
+
+      ~CloudViewer()
+      {
+        if (runner_thread_)
+        {
+          runner_thread_->interrupt();
+          runner_thread_->join();
+        }
+      }
+      std::string window_name;
+      boost::shared_ptr<PCLVisualizer> viewer_;
+      boost::shared_ptr<boost::thread> runner_thread_;
+      boost::signals2::signal<void
+      (void)> signal_;
+      std::vector<boost::shared_ptr<boost::signals2::scoped_connection> > jobs_;
+      boost::mutex mtx;
+      bool quit;
     };
 
   }
