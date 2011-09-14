@@ -44,6 +44,9 @@ namespace ecto {
         params.declare<int> ("k_search", "The number of k nearest neighbors to use for feature estimation.", 0);
         params.declare<double> ("radius_search", "The sphere radius to use for determining the nearest neighbors used for feature estimation.", 0);
         params.declare<int> ("spatial_locator", "The search method to use: FLANN(0), ORGANIZED(1).",0);
+        params.declare<double> ("vp_x", "Viewpoint x component.",0);
+        params.declare<double> ("vp_y", "Viewpoint y component.",0);
+        params.declare<double> ("vp_z", "Viewpoint z component.",0);
       }
 
       static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
@@ -56,8 +59,10 @@ namespace ecto {
         k_ = params["k_search"];
         radius_ = params["radius_search"];
         locator_ = params["spatial_locator"];   
-
         output_ = outputs["output"];
+        vp_x_ = params["vp_x"];
+        vp_y_ = params["vp_y"];
+        vp_z_ = params["vp_z"];
       }
 
       template <typename Point>
@@ -85,7 +90,7 @@ namespace ecto {
         }
         impl.setSearchMethod(tree_);
         impl.setInputCloud(input);
-              
+        impl.setViewPoint(*vp_x_,*vp_y_,*vp_z_);
         impl.compute(normals);
         normals.header = input->header;
         *output_ = ecto::pcl::feature_cloud_variant_t(normals.makeShared());
@@ -93,7 +98,7 @@ namespace ecto {
       }
 
       ecto::spore<int> k_;
-      ecto::spore<double> radius_;
+      ecto::spore<double> radius_,vp_x_,vp_y_,vp_z_;
       ecto::spore<int> locator_;
       ecto::spore<ecto::pcl::FeatureCloud> output_;
     };
