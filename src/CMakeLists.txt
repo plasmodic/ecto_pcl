@@ -18,6 +18,7 @@ ectomodule(ecto_pcl
   io/NiConverters.cpp
   io/PCDReader.cpp
   io/PCDWriter.cpp
+  io/PLYWriter.cpp
   segmentation/ColorizeClusters.cpp
   segmentation/ExtractPolygonalPrismData.cpp
   segmentation/ExtractLargestCluster.cpp
