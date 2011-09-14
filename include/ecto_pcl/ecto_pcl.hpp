@@ -48,7 +48,8 @@
   ((pcl::PointXYZRGB, POINTXYZRGB))                  \
   ((pcl::PointXYZ, POINTXYZ))                        \
   ((pcl::PointXYZI, POINTXYZI))                      \
-  ((pcl::PointXYZRGBA, POINTXYZRGBA))
+  ((pcl::PointXYZRGBA, POINTXYZRGBA))                \
+  ((pcl::PointXYZRGBNormal, POINTXYZRGBNORMAL))
 
 #define ECTO_FEATURE_POINT_TYPES                     \
   ((pcl::Normal, NORMAL))                            \
@@ -131,6 +132,7 @@ namespace ecto{
       FORMAT_XYZI,
       FORMAT_XYZRGB,
       FORMAT_XYZRGBA,
+      FORMAT_XYZRGBNORMAL,
       FORMAT_NORMAL,
       FORMAT_PFHSIGNATURE,
       FORMAT_FPFHSIGNATURE,
