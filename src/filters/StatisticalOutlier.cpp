@@ -39,7 +39,6 @@ namespace ecto {
       static void declare_params(tendrils& params)
       {
         ::pcl::StatisticalOutlierRemoval< ::pcl::PointXYZ > default_;
-        params.declare<std::string> ("filter_field_name", "The name of the field to use for filtering.", "");
         params.declare<int> ("mean_k", "The number of points to use for mean distance estimation.", default_.getMeanK());
         params.declare<double> ("stddev", "The standard deviation multiplier threshold.", default_.getStddevMulThresh());
         params.declare<bool> ("negative", "Sets whether the indices should be returned, or all points _except_ the indices.", default_.getNegative());
