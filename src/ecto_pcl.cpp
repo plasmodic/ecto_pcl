@@ -65,7 +65,7 @@ struct PointCloud2PointCloudT
   static void
   declare_params(tendrils& params)
   {
-    params.declare<int>("format", "Format of cloud to grab.", ecto::pcl::FORMAT_XYZRGB);
+    params.declare<ecto::pcl::Format>("format", "Format of cloud to grab.", ecto::pcl::FORMAT_XYZRGB);
   }
 
   static void
@@ -108,9 +108,76 @@ struct PointCloud2PointCloudT
     }
     return ecto::OK;
   }
-  ecto::spore<int> format_;
+  ecto::spore<ecto::pcl::Format> format_;
   ecto::spore<ecto::pcl::PointCloud> input_;
   ecto::tendril::ptr output_;
+};
+
+struct PointCloudT2PointCloud
+{
+  static void
+  declare_params(tendrils& params)
+  {
+    params.declare<ecto::pcl::Format>("format", "Format of cloud to grab.", ecto::pcl::FORMAT_XYZRGB);
+  }
+
+  static void
+  declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
+  {
+    std::string doc = "An pcl::PointCloud<PointT> type.";
+    switch (params.get<ecto::pcl::Format>("format"))
+    {
+      case ecto::pcl::FORMAT_XYZ:
+        inputs.declare<pcl::PointCloud<pcl::PointXYZ>::ConstPtr >("input",doc );
+        break;
+      case ecto::pcl::FORMAT_XYZRGB:
+        inputs.declare<pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr >("input",doc );
+        break;
+      case ecto::pcl::FORMAT_XYZI:
+        inputs.declare<pcl::PointCloud<pcl::PointXYZI>::ConstPtr >("input",doc );
+        break;
+      case ecto::pcl::FORMAT_XYZRGBA:
+        inputs.declare<pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr >("input",doc );
+        break;
+      default:
+        throw std::runtime_error("Unsupported point cloud type.");
+    }
+    outputs.declare<ecto::pcl::PointCloud>("output", "An variant based PointCloud.");
+  }
+
+  void
+  configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
+  {
+    format_ = params["format"];
+    input_ = inputs["input"];
+    output_ = outputs["output"];
+  }
+
+  int
+  process(const tendrils& /*inputs*/, const tendrils& outputs)
+  {
+    switch (*format_)
+    {
+      case ecto::pcl::FORMAT_XYZ:
+        *output_ = input_->get<pcl::PointCloud<pcl::PointXYZ>::ConstPtr >();
+        break;
+      case ecto::pcl::FORMAT_XYZRGB:
+        *output_ = input_->get<pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr >();
+        break;
+      case ecto::pcl::FORMAT_XYZI:
+        *output_ = input_->get<pcl::PointCloud<pcl::PointXYZI>::ConstPtr >();
+        break;
+      case ecto::pcl::FORMAT_XYZRGBA:
+        *output_ = input_->get<pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr >();
+        break;
+      default:
+        throw std::runtime_error("Unsupported point cloud type.");
+    }
+    return ecto::OK;
+  }
+  ecto::spore<ecto::pcl::Format> format_;
+  ecto::spore<ecto::pcl::PointCloud> output_;
+  ecto::tendril::ptr input_;
 };
 
 ECTO_DEFINE_MODULE(ecto_pcl)
@@ -139,4 +206,6 @@ ECTO_DEFINE_MODULE(ecto_pcl)
 
 ECTO_CELL(ecto_pcl,PointCloud2PointCloudT, "PointCloud2PointCloudT",
           "Convert a generic variant based PointCloud to a strongly typed pcl::PointCloud<pcl::PointT>.")
+ECTO_CELL(ecto_pcl,PointCloudT2PointCloud, "PointCloudT2PointCloud",
+          "Convert a strongly typed pcl::PointCloud<pcl::PointT> to a generic variant based PointCloud.")
 
