@@ -47,6 +47,7 @@
 #define ECTO_XYZ_POINT_TYPES                         \
   ((pcl::PointXYZRGB, POINTXYZRGB))                  \
   ((pcl::PointXYZ, POINTXYZ))                        \
+  ((pcl::PointNormal, POINTNORMAL))                  \
   ((pcl::PointXYZI, POINTXYZI))                      \
   ((pcl::PointXYZRGBA, POINTXYZRGBA))                \
   ((pcl::PointXYZRGBNormal, POINTXYZRGBNORMAL))
@@ -133,6 +134,7 @@ namespace ecto{
       FORMAT_XYZRGB,
       FORMAT_XYZRGBA,
       FORMAT_XYZRGBNORMAL,
+      FORMAT_POINTNORMAL,
       FORMAT_NORMAL,
       FORMAT_PFHSIGNATURE,
       FORMAT_FPFHSIGNATURE,

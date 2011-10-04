@@ -81,6 +81,33 @@ namespace ecto
     }
 
     template<>
+       inline void
+       writePLY<CloudPOINTNORMAL::PointType>(const CloudPOINTNORMAL& cloud_m,
+                                                   const std::string& mesh_file_name)
+       {
+         std::ofstream mesh_file(std::string(mesh_file_name).c_str());
+         mesh_file << "ply\n"
+                   "format ascii 1.0\n"
+                   "element vertex "
+                   << cloud_m.points.size() << "\n"
+                   "property float x\n"
+                   "property float y\n"
+                   "property float z\n"
+                   "property float nx\n"
+                   "property float ny\n"
+                   "property float nz\n"
+                   "end_header\n";
+
+         //<x> <y> <z> <r> <g> <b>
+         for (size_t i = 0; i < cloud_m.points.size(); i++)
+         {
+           const CloudPOINTNORMAL::PointType& p = cloud_m.points[i];
+           mesh_file << p.x << " " << p.y << " " << p.z << " "
+                     << p.normal_x << " " << p.normal_y << " " << p.normal_z << "\n";
+         }
+       }
+
+    template<>
     inline void
     writePLY<CloudPOINTXYZRGBNORMAL::PointType>(const CloudPOINTXYZRGBNORMAL& cloud_m,
                                                 const std::string& mesh_file_name)
@@ -105,7 +132,8 @@ namespace ecto
       for (size_t i = 0; i < cloud_m.points.size(); i++)
       {
         const CloudPOINTXYZRGBNORMAL::PointType& p = cloud_m.points[i];
-        mesh_file << p.x << " " << p.y << " " << p.z << " " << int(p.r) << " " << int(p.g) << " " << int(p.b) << " "
+        mesh_file << p.x << " " << p.y << " " << p.z << " "
+                  << int(p.r) << " " << int(p.g) << " " << int(p.b) << " "
                   << p.normal_x << " " << p.normal_y << " " << p.normal_z << "\n";
       }
     }
