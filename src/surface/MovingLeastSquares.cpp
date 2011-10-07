@@ -29,29 +29,11 @@
 
 #include <ecto_pcl/ecto_pcl.hpp>
 #include <ecto_pcl/pcl_cell.hpp>
+#include <boost/typeof/typeof.hpp>
 #include <pcl/surface/convex_hull.h>
 #include <pcl/kdtree/kdtree_flann.h>
 #include <pcl/surface/mls.h>
-template<typename T>
-struct has_normal
-{
-  typedef char yes;
-  typedef char (&no)[2];
 
-  // SFINAE eliminates this when the type of arg is invalid
-  template<class U>
-  static yes
-  test(BOOST_TYPEOF_TPL(&U::normal));
-  // overload resolution prefers anything at all over "..."
-  template<class U>
-  static no
-  test(...);
-
-  enum
-  {
-    normal = sizeof(test<T>(0)) == sizeof(yes)
-  };
-};
 namespace ecto
 {
   namespace pcl
