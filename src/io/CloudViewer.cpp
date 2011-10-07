@@ -119,14 +119,14 @@ namespace ecto
         operator()(boost::shared_ptr<const CloudPOINTXYZRGBNORMAL>& cloud) const
         {
           ::pcl::visualization::PointCloudColorHandlerRGBField<CloudPOINTXYZRGBNORMAL::PointType> rgb(cloud);
-          ::pcl::visualization::PointCloudGeometryHandlerSurfaceNormal<CloudPOINTXYZRGBNORMAL::PointType> normals(
-              cloud);
+//          ::pcl::visualization::PointCloudGeometryHandlerSurfaceNormal<CloudPOINTXYZRGBNORMAL::PointType> normals(
+//              cloud);
 
           if (!viewer->updatePointCloud(cloud, rgb, key))
           {
             viewer->addPointCloud(cloud, rgb, key);
           }
-          viewer->updatePointCloud(cloud,normals,key);
+//          viewer->updatePointCloud(cloud,normals,key);
         }
 
         boost::shared_ptr<PCLVisualizer> viewer;

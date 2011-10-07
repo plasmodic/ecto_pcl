@@ -26,6 +26,7 @@ ectomodule(ecto_pcl
   segmentation/SACSegmentation.cpp
   segmentation/SACSegmentationFromNormals.cpp
   surface/ConvexHull.cpp
+  surface/MovingLeastSquares.cpp
   )
 
 set_source_files_properties(io/CloudViewer.cpp

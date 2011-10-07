@@ -33,7 +33,7 @@ namespace ecto{
   namespace pcl {
 
     template <typename CellType>
-    struct PclCell
+    struct PclCell : public CellType
     {
       static void declare_params(ecto::tendrils& params)
       {
@@ -49,7 +49,7 @@ namespace ecto{
       void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
       {
         input_ = inputs["input"];
-        impl_.configure(params, inputs, outputs);
+        CellType::configure(params, inputs, outputs);
       }
     
       /* dispatch to handle process */
@@ -71,12 +71,11 @@ namespace ecto{
       int process(const tendrils& inputs, const tendrils& outputs)
       {
         xyz_cloud_variant_t cloud = input_->make_variant();
-        boost::apply_visitor(filter_dispatch(impl_, inputs, outputs), cloud);
+        boost::apply_visitor(filter_dispatch(*this, inputs, outputs), cloud);
         return 0;
       }
 
       ecto::spore<PointCloud> input_;
-      CellType impl_;
     };
 
   }

@@ -94,6 +94,9 @@ struct PointCloud2PointCloudT
       case ecto::pcl::FORMAT_XYZRGB:
         output_ << input_->cast<pcl::PointCloud<pcl::PointXYZRGB> >();
         break;
+      case ecto::pcl::FORMAT_POINTNORMAL:
+        output_ << input_->cast<pcl::PointCloud<pcl::PointNormal> >();
+        break;
       case ecto::pcl::FORMAT_XYZI:
         output_ << input_->cast<pcl::PointCloud<pcl::PointXYZI> >();
         break;
@@ -133,6 +136,9 @@ struct PointCloudT2PointCloud
       case ecto::pcl::FORMAT_XYZRGB:
         inputs.declare<pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr >("input",doc );
         break;
+      case ecto::pcl::FORMAT_POINTNORMAL:
+        inputs.declare<pcl::PointCloud<pcl::PointNormal>::ConstPtr >("input",doc );
+        break;
       case ecto::pcl::FORMAT_XYZI:
         inputs.declare<pcl::PointCloud<pcl::PointXYZI>::ConstPtr >("input",doc );
         break;
@@ -164,6 +170,9 @@ struct PointCloudT2PointCloud
       case ecto::pcl::FORMAT_XYZRGB:
         *output_ = input_->get<pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr >();
         break;
+      case ecto::pcl::FORMAT_POINTNORMAL:
+        *output_ = input_->get<pcl::PointCloud<pcl::PointNormal>::ConstPtr >();
+        break;
       case ecto::pcl::FORMAT_XYZI:
         *output_ = input_->get<pcl::PointCloud<pcl::PointXYZI>::ConstPtr >();
         break;
@@ -193,6 +202,8 @@ ECTO_DEFINE_MODULE(ecto_pcl)
     .value("XYZRGB", ecto::pcl::FORMAT_XYZRGB)
     .value("XYZRGBA", ecto::pcl::FORMAT_XYZRGBA)
     .value("XYZRGBNORMAL",ecto::pcl::FORMAT_XYZRGBNORMAL)
+    .value("POINTNORMAL",ecto::pcl::FORMAT_POINTNORMAL)
+
     .value("NORMAL", ecto::pcl::FORMAT_NORMAL)
     .value("PFHSIGNATURE", ecto::pcl::FORMAT_PFHSIGNATURE)
     .value("FPFHSIGNATURE", ecto::pcl::FORMAT_FPFHSIGNATURE)
