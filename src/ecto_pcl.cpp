@@ -110,7 +110,7 @@ struct PointCloud2PointCloudT
   }
   ecto::spore<ecto::pcl::Format> format_;
   ecto::spore<ecto::pcl::PointCloud> input_;
-  ecto::tendril::ptr output_;
+  ecto::tendril_ptr output_;
 };
 
 struct PointCloudT2PointCloud
@@ -177,7 +177,7 @@ struct PointCloudT2PointCloud
   }
   ecto::spore<ecto::pcl::Format> format_;
   ecto::spore<ecto::pcl::PointCloud> output_;
-  ecto::tendril::ptr input_;
+  ecto::tendril_ptr input_;
 };
 
 ECTO_DEFINE_MODULE(ecto_pcl)
