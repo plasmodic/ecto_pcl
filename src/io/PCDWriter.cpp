@@ -77,7 +77,7 @@ namespace ecto {
             sensor_msgs::PointCloud2Ptr blob(new sensor_msgs::PointCloud2);
             ::pcl::toROSMsg (*cloud, *blob);
             ::pcl::PCDWriter writer;
-            writer.writeASCII(file,*blob,Eigen::Vector4f::Zero(), Eigen::Quaternionf::Identity(),8);
+            writer.writeASCII(file,*blob,cloud->sensor_origin_, cloud->sensor_orientation_,8);
             return blob;
           }
           return sensor_msgs::PointCloud2Ptr();
