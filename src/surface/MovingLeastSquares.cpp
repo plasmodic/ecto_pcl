@@ -100,6 +100,9 @@ namespace ecto
         // Create search tree*
         KdTreePtr mls_tree(new KdTree);
         mls.setSearchMethod(mls_tree);
+        *output_ = xyz_cloud_variant_t(smoothed_cloud);
+        if(input->size() < 1)
+          return ecto::OK;
         // Set parameters
         mls.setInputCloud(input);
         mls.setPolynomialFit(true);

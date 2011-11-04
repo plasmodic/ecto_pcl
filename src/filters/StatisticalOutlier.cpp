@@ -57,18 +57,22 @@ namespace ecto {
 
         output_ = outputs["output"];
       }
-      
+
       template <typename Point>
-      int process(const tendrils& inputs, const tendrils& outputs, 
+      int process(const tendrils& inputs, const tendrils& outputs,
                   boost::shared_ptr<const ::pcl::PointCloud<Point> >& input)
       {
+        ::pcl::PointCloud<Point> cloud;
+        *output_ = xyz_cloud_variant_t(cloud.makeShared());
+
         ::pcl::StatisticalOutlierRemoval<Point> filter;
+        if(input->size() < 1)
+          return ecto::OK;
         filter.setInputCloud(input);
         filter.setMeanK(*mean_k_);
         filter.setStddevMulThresh(*stddev_);
         filter.setNegative(*negative_);
-              
-        ::pcl::PointCloud<Point> cloud;
+
         filter.filter(cloud);
         cloud.header = input->header;
         *output_ = xyz_cloud_variant_t(cloud.makeShared());

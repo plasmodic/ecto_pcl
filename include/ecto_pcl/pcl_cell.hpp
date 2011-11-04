@@ -64,7 +64,7 @@ namespace ecto{
         template <typename Point>
         void operator()(boost::shared_ptr<const ::pcl::PointCloud<Point> >& cloud) const
         {   
-          ft.process(inputs, outputs, cloud);
+            ft.process(inputs, outputs, cloud);
         }
       };
 
