@@ -50,6 +50,9 @@ namespace ecto {
         default_.getRadiusLimits (t_min, t_max);
         params.declare<double> ("radius_min", "Minimum allowable radius limits for the model.", t_min);
         params.declare<double> ("radius_max", "Maximum allowable radius limits for the model.", t_max);
+        params.declare<double> ("axis_x", "X component of desired perpendicular vector for model.", 0.0);
+        params.declare<double> ("axis_y", "Y component of desired perpendicular vector for model.", 0.0);
+        params.declare<double> ("axis_z", "Z component of desired perpendicular vector for model.", 0.0);
       }
 
       static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs) {
@@ -68,6 +71,9 @@ namespace ecto {
         probability_ = params["probability"];
         radius_min_ = params["radius_min"];
         radius_max_ = params["radius_max"];
+        axis_x_ = params["axis_x"];
+        axis_y_ = params["axis_y"];
+        axis_z_ = params["axis_z"];
 
         inliers_ = outputs["inliers"];
         model_ = outputs["model"];
@@ -89,6 +95,7 @@ namespace ecto {
         impl.setOptimizeCoefficients(*optimize_coefficients_);
         impl.setProbability(*probability_);
         impl.setRadiusLimits(*radius_min_, *radius_max_);
+        impl.setAxis(Eigen::Vector3f(*axis_x_, *axis_y_, *axis_z_));
         impl.segment (*inliers, *model);
 
         *model_ = model;
@@ -105,6 +112,7 @@ namespace ecto {
       spore<double> probability_;
       spore<double> radius_min_;
       spore<double> radius_max_;
+      spore<double> axis_x_, axis_y_, axis_z_;
       spore<Indices::ConstPtr> inliers_;
       spore<ModelCoefficients::ConstPtr> model_;
     };
