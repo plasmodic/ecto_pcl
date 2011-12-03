@@ -49,6 +49,9 @@ namespace ecto {
         double t_min, t_max;
         default_.getRadiusLimits (t_min, t_max);
         params.declare<double> ("radius_min", "Minimum allowable radius limits for the model.", t_min);
+        params.declare<double> ("axis_x", "X component of desired perpendicular vector for model.", 0.0);
+        params.declare<double> ("axis_y", "Y component of desired perpendicular vector for model.", 0.0);
+        params.declare<double> ("axis_z", "Z component of desired perpendicular vector for model.", 0.0);
         params.declare<double> ("radius_max", "Maximum allowable radius limits for the model.", t_max);    
         params.declare<double> ("normal_distance_weight", "Relative weight (between 0 and 1) to give to the angular distance (0 to pi/2) betwen point normals and the plane normal.", default_.getNormalDistanceWeight());
       }
@@ -69,6 +72,10 @@ namespace ecto {
         probability_ = params["probability"];
         radius_min_ = params["radius_min"];
         radius_max_ = params["radius_max"];
+        axis_x_ = params["axis_x"];
+        axis_y_ = params["axis_y"];
+        axis_z_ = params["axis_z"];
+
         normal_distance_weight_ = params["normal_distance_weight"];
 
         inliers_ = outputs["inliers"];
@@ -91,6 +98,7 @@ namespace ecto {
         impl.setMaxIterations(*max_iterations_);
         impl.setOptimizeCoefficients(*optimize_coefficients_);
         impl.setProbability(*probability_);
+        impl.setAxis(Eigen::Vector3f(*axis_x_, *axis_y_, *axis_z_));
         impl.setRadiusLimits(*radius_min_, *radius_max_);
 
         impl.setInputNormals(normals);
@@ -111,6 +119,7 @@ namespace ecto {
       spore<double> probability_;
       spore<double> radius_min_;
       spore<double> radius_max_;
+      spore<double> axis_x_, axis_y_, axis_z_;
       spore<double> normal_distance_weight_;
       spore<Indices::ConstPtr> inliers_;
       spore<ModelCoefficients::ConstPtr > model_;
