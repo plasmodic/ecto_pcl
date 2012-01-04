@@ -1,0 +1,11 @@
+Catkin-ProjectName: ecto_pcl
+Version: 0.1.1
+Description: Ecto bindings for common PCL functionality.
+Author: Michael Ferguson <mferguson@willowgarage.com>, Ethan Rublee <erublee@willowgarage.com>, Troy Straszheim <straszheim@willowgarage.com>
+Maintainer:  Ethan Rublee <erublee@willowgarage.com>
+Homepage:  http://ecto.willowgarage.com
+
+Depends: catkin, boost, ecto, pcl
+
+Catkin-CopyrightType:  willowgarage
+
