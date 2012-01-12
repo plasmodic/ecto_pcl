@@ -33,12 +33,14 @@
 
 #include <pcl/kdtree/kdtree.h>
 #include <pcl/kdtree/kdtree_flann.h>
+#ifndef PCL_VERSION_GE_140
 #include <pcl/kdtree/organized_data.h>
+#endif
 
 namespace ecto {
   namespace pcl {
     struct NormalEstimation
-    { 
+    {
       static void declare_params(ecto::tendrils& params)
       {
         params.declare<int> ("k_search", "The number of k nearest neighbors to use for feature estimation.", 0);
@@ -50,7 +52,7 @@ namespace ecto {
       }
 
       static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
-      { 
+      {
         outputs.declare<ecto::pcl::FeatureCloud> ("output", "Cloud of features.");
       }
 
@@ -58,7 +60,7 @@ namespace ecto {
       {
         k_ = params["k_search"];
         radius_ = params["radius_search"];
-        locator_ = params["spatial_locator"];   
+        locator_ = params["spatial_locator"];
         output_ = outputs["output"];
         vp_x_ = params["vp_x"];
         vp_y_ = params["vp_y"];
@@ -66,7 +68,7 @@ namespace ecto {
       }
 
       template <typename Point>
-      int process(const tendrils& inputs, const tendrils& outputs, 
+      int process(const tendrils& inputs, const tendrils& outputs,
                   boost::shared_ptr<const ::pcl::PointCloud<Point> >& input)
       {
         ::pcl::NormalEstimation<Point, ::pcl::Normal> impl;
@@ -74,17 +76,29 @@ namespace ecto {
 
         impl.setKSearch(*k_);
         impl.setRadiusSearch(*radius_);
+#ifdef PCL_VERSION_GE_140
+        typename ::pcl::search::Search<Point>::Ptr tree_;
+#else
         typename ::pcl::KdTree<Point>::Ptr tree_;
+#endif
         switch (*locator_)
         {
           case 0:
           {
+#ifdef PCL_VERSION_GE_140
+            tree_.reset (new ::pcl::search::KdTree<Point>);
+#else
             tree_.reset (new ::pcl::KdTreeFLANN<Point>);
+#endif
             break;
           }
           case 1:
           {
+#ifdef PCL_VERSION_GE_140
+            tree_.reset (new ::pcl::search::OrganizedNeighbor<Point>);
+#else
             tree_.reset (new ::pcl::OrganizedDataIndex<Point>);
+#endif
             break;
           }
         }

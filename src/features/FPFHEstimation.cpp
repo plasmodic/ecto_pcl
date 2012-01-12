@@ -36,5 +36,8 @@ namespace ecto {
   }
 }
 
-ECTO_CELL(ecto_pcl, ecto::pcl::PclCellWithNormals<ecto::pcl::FPFHEstimation>, "FPFHEstimation", "This cell provides Fast Point Feature Histogram estimation.");
+ECTO_CELL(ecto_pcl,
+          ecto::pcl::PclCellWithNormals<ecto::pcl::FPFHEstimation>,
+          "FPFHEstimation",
+          "This cell provides Fast Point Feature Histogram estimation.");
 

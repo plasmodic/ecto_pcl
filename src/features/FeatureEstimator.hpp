@@ -35,7 +35,7 @@ namespace ecto {
 
     template<typename PointT, template <class A, class B, class C> class EstimatorT>
     struct Estimation
-    { 
+    {
       static void declare_params(ecto::tendrils& params)
       {
         params.declare<int> ("k_search", "The number of k nearest neighbors to use for feature estimation.", 0);
@@ -44,7 +44,7 @@ namespace ecto {
       }
 
       static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
-      { 
+      {
         outputs.declare<ecto::pcl::FeatureCloud> ("output", "Cloud of features.");
       }
 
@@ -52,13 +52,13 @@ namespace ecto {
       {
         k_ = params["k_search"];
         radius_ = params["radius_search"];
-        locator_ = params["spatial_locator"];   
+        locator_ = params["spatial_locator"];
 
         output_ = outputs["output"];
       }
 
       template <typename Point>
-      int process(const tendrils& inputs, const tendrils& outputs, 
+      int process(const tendrils& inputs, const tendrils& outputs,
                   boost::shared_ptr<const ::pcl::PointCloud<Point> >& input,
                   boost::shared_ptr<const ::pcl::PointCloud< ::pcl::Normal> >& normals)
       {
@@ -67,11 +67,15 @@ namespace ecto {
 
         impl.setKSearch(*k_);
         impl.setRadiusSearch(*radius_);
+#ifdef PCL_VERSION_GE_140
+        typename ::pcl::search::KdTree<Point>::Ptr tree_ (new ::pcl::search::KdTree<Point>);
+#else
         typename ::pcl::KdTreeFLANN<Point>::Ptr tree_ (new ::pcl::KdTreeFLANN<Point>);
+#endif
         impl.setSearchMethod(tree_);
 
         impl.setInputNormals (normals);
-        impl.setInputCloud(input);          
+        impl.setInputCloud(input);
         impl.compute(output);
 
         output.header = input->header;

@@ -30,6 +30,8 @@
 #include <ecto/ecto.hpp>
 #include <ecto_pcl/ecto_pcl.hpp>
 #include <pcl/io/pcd_io.h>
+#include <boost/format.hpp>
+#include <boost/format/free_funcs.hpp>
 
 namespace ecto {
   namespace pcl {

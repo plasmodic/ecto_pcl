@@ -91,7 +91,11 @@ namespace ecto
         typedef ::pcl::PointCloud<Point> Cloud;
         typedef ::pcl::PointCloud<Normal> Normals;
 
+#ifdef PCL_VERSION_GE_140
+        typedef ::pcl::search::KdTree<Point> KdTree;
+#else
         typedef ::pcl::KdTreeFLANN<Point> KdTree;
+#endif
         typedef/*typename*/KdTree::Ptr KdTreePtr;
         typedef/*typename*/Cloud::Ptr CloudPtr;
         ::pcl::MovingLeastSquares<Point, Normal> mls;

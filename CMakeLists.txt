@@ -10,60 +10,9 @@ set(ECTO_PCL_SHARE_PREFIX share/${ECTO_PCL_PREFIX} CACHE INTERNAL "Where ecto_pc
 
 ecto_python_env_gen(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 
-if (NOT ECTO_PCL_STANDALONE_OPTION) # first time only
-  rosbuild_lite_init() # found in rosbuild_lite
-  if (NOT ROS_FOUND)#rosbuild_lite_init sets this
-    message(STATUS "+ Setting default value of ECTO_PCL_STANDALONE to ON")
-    message(STATUS "+ Because ROS_ROOT is not set in your environment.")
-    option(ECTO_PCL_STANDALONE "Use standalone PCL" ON)
-  else()
-    message(STATUS "+ Setting default value of ECTO_PCL_STANDALONE to OFF")
-    message(STATUS "+ Because ROS_ROOT is set to ${ROS_ROOT}")
-    option(ECTO_PCL_STANDALONE "Use standalone PCL" OFF)
-  endif()
-  set(ECTO_PCL_STANDALONE_OPTION YES CACHE INTERNAL "pcl option guard")
-endif()
+include(cmake/pcl-search.cmake)
 
-set(CMAKE_MODULE_PATH ${ecto_pcl_SOURCE_DIR}/cmake)
-set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
-
-if (NOT ECTO_PCL_STANDALONE)
-  if (NOT pcl_FOUND)
-    message(STATUS "Attempting to find PCL via ROS environment because ECTO_PCL_STANDALONE is OFF.")
-    find_ros_package(pcl)
-  endif()
-
-  if(NOT pcl_FOUND)
-    message("**\n** Disabling build of ${PROJECT_NAME} due to missing dependency PCL\n**")
-    return()
-  endif()
-
-  message(STATUS "+ pcl found.")
-  include_directories(${pcl_INCLUDE_DIRS})
-
-  find_ros_package(sensor_msgs)
-  include_directories(${sensor_msgs_INCLUDE_DIRS})
-
-else()
-
-  message(STATUS "+ Searching for standalone PCL because ECTO_PCL_STANDALONE is ON")
-  find_package(PCL 1.1)
-  if (PCL_FOUND)
-    message(STATUS "+ Found PCL version ${PCL_VERSION}")
-    message(STATUS "*** You will STILL BUILD AN ECTO_PCL_ROS LIBRARY")
-    message(STATUS "*** Which has ecto cell converters from sensor_msgs to point cloud")
-    message(STATUS "*** That may be Dangerous, if your ecto_ros compiles against messages")
-    message(STATUS "*** with the same name but different size, and both run in the same")
-    message(STATUS "*** process simultaneously.")
-    message(STATUS "*** See http://en.wikipedia.org/wiki/One_Definition_Rule")
-  else()
-    message("**\n** Disabling build of ${PROJECT_NAME} due to missing dependency PCL\n**")
-    return()
-  endif()
-
-  include_directories(${PCL_INCLUDE_DIRS})
-
-endif()
+include_directories(${PCL_INCLUDE_DIRS})
 
 find_package(Boost COMPONENTS signals thread)
 
@@ -77,7 +26,7 @@ if(BUILD_TEST)
   enable_testing()
   add_subdirectory(test)
   add_subdirectory(samples)
-  
+
 endif()
 
 INSTALL(DIRECTORY include
