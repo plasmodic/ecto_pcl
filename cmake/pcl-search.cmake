@@ -7,7 +7,7 @@ option(ECTO_PCL_STANDALONE "Use standalone PCL" ON)
 if (ECTO_PCL_STANDALONE)
 
   message(STATUS "+ Looking for PCL 1.4.0...")
-  find_package(PCL 1.4.0 EXACT QUIET)
+  find_package(PCL 1.4.0 QUIET)
   if (PCL_FOUND)
     message(STATUS "+ Found PCL Version ${PCL_VERSION} with config from ${PCL_CONFIG}. ")
     message(STATUS "+ Setting ECTO_PCL_STANDALONE to ON.")
