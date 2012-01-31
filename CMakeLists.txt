@@ -8,8 +8,6 @@ set(ECTO_PCL_PREFIX ${PROJECT_NAME}-${ECTO_PCL_VERSION} CACHE INTERNAL "Mangled 
 set(ECTO_PCL_INCLUDE_PREFIX include/${ECTO_PCL_PREFIX} CACHE INTERNAL "Where ecto_pcl includes will live" FORCE)
 set(ECTO_PCL_SHARE_PREFIX share/${ECTO_PCL_PREFIX} CACHE INTERNAL "Where ecto_pcl share will live" FORCE)
 
-ecto_python_env_gen(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
-
 include(cmake/pcl-search.cmake)
 
 include_directories(${PCL_INCLUDE_DIRS})
