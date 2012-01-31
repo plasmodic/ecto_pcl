@@ -15,7 +15,8 @@ if len(sys.argv) > 1:
     pcdfile = sys.argv[1]
 
 reader = ecto_pcl.PCDReader("Reader", filename=pcdfile)
-writer = ecto_pcl.PCDWriter("Writer", filename_format="ascii_%04d.pcd", binary=False)
+writer = ecto_pcl.PCDWriter("Writer",
+                            filename_format="ascii_%04d.pcd", binary=False)
 
 plasm.connect(reader[:] >> writer[:])
 

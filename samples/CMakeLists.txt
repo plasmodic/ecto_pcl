@@ -15,10 +15,7 @@ macro(data_download PATH_VAR DATA_FILE)
   endif()
 endmacro()
 
-
 validate_sample(pcd_rw)
-
-#validate_sample(pcd_viewer) this test needs args...
 
 macro(desktop_test_sample pyfile)
   string(REPLACE ";" " " args "${ARGN}")
@@ -30,6 +27,9 @@ endmacro()
 if(DESKTOP_TEST)
   data_download(CB_PCD cb.pcd)
   data_download(STILL_LIFE still_life.pcd)
+
+  #opens display
+  validate_sample(pcd_viewer)
 
   desktop_test_sample(pcd_rw ${CB_PCD})
   desktop_test_sample(pcd_viewer ${STILL_LIFE})
