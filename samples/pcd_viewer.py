@@ -2,6 +2,7 @@
 
 import ecto, ecto_pcl
 import sys
+import time
 
 plasm = ecto.Plasm()
 
@@ -13,3 +14,6 @@ plasm.connect(reader[:] >> viewer[:])
 if __name__=="__main__":
     sched = ecto.schedulers.Threadpool(plasm)
     sched.execute(niter=1)
+
+while True:
+    time.sleep(0.1)

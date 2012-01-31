@@ -6,10 +6,11 @@ This example shows how to read/write pcd files.
 
 import ecto, ecto_pcl
 import sys
+import os
 
 plasm = ecto.Plasm()
 
-pcdfile = 'cloud.pcd'
+pcdfile = os.path.join(os.path.dirname(__file__),'cloud.pcd')
 if len(sys.argv) > 1:
     pcdfile = sys.argv[1]
 
