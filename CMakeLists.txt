@@ -1,12 +1,15 @@
 cmake_minimum_required(VERSION 2.8)
 project(ecto_pcl)
 
-find_package(ecto REQUIRED) #brings in rosbuild_lite
+find_package(ecto REQUIRED)
 
 set(ECTO_PCL_VERSION 0.1.0)
-set(ECTO_PCL_PREFIX ${PROJECT_NAME}-${ECTO_PCL_VERSION} CACHE INTERNAL "Mangled prefixer" FORCE)
-set(ECTO_PCL_INCLUDE_PREFIX include/${ECTO_PCL_PREFIX} CACHE INTERNAL "Where ecto_pcl includes will live" FORCE)
-set(ECTO_PCL_SHARE_PREFIX share/${ECTO_PCL_PREFIX} CACHE INTERNAL "Where ecto_pcl share will live" FORCE)
+set(ECTO_PCL_PREFIX ${PROJECT_NAME}-${ECTO_PCL_VERSION}
+  CACHE INTERNAL "Mangled prefixer" FORCE)
+set(ECTO_PCL_INCLUDE_PREFIX include/${ECTO_PCL_PREFIX}
+  CACHE INTERNAL "Where ecto_pcl includes will live" FORCE)
+set(ECTO_PCL_SHARE_PREFIX share/${ECTO_PCL_PREFIX}
+  CACHE INTERNAL "Where ecto_pcl share will live" FORCE)
 
 include(cmake/pcl-search.cmake)
 
@@ -18,14 +21,9 @@ include_directories(include)
 add_subdirectory(cmake)
 add_subdirectory(src)
 
-option(BUILD_TEST "Build tests" ON)
-if(BUILD_TEST)
-
-  enable_testing()
-  add_subdirectory(test)
-  add_subdirectory(samples)
-
-endif()
+enable_testing()
+add_subdirectory(test)
+add_subdirectory(samples)
 
 INSTALL(DIRECTORY include
         DESTINATION ${ECTO_PCL_INCLUDE_PREFIX}
