@@ -1,1 +1,0 @@
-../../../samples/ros_sample.py
