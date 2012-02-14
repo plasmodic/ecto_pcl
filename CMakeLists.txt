@@ -17,7 +17,7 @@ include_directories(${PCL_INCLUDE_DIRS})
 
 find_package(Boost COMPONENTS signals thread)
 
-sphinx(${CMAKE_CURRENT_SOURCE_DIR}/doc doc)
+catkin_sphinx(${CMAKE_CURRENT_SOURCE_DIR}/doc doc)
 
 include_directories(include)
 add_subdirectory(cmake)
