@@ -13,7 +13,7 @@ set(ECTO_PCL_SHARE_PREFIX share/${ECTO_PCL_PREFIX}
 
 include(cmake/pcl-search.cmake)
 
-include_directories(${PCL_INCLUDE_DIRS})
+include_directories(SYSTEM ${PCL_INCLUDE_DIRS})
 
 find_package(Boost COMPONENTS signals thread)
 
