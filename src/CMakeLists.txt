@@ -35,9 +35,8 @@ set_source_files_properties(io/CloudViewer.cpp
   )
 
 link_ecto(ecto_pcl
-    ${pcl_LIBRARIES}
     ${PCL_LIBRARIES}
-    )
+)
 
 install_ecto_module(ecto_pcl)
 
