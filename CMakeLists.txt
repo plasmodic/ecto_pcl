@@ -3,7 +3,7 @@ project(ecto_pcl)
 catkin_stack()
 catkin_project(ecto_pcl
                INCLUDE_DIRS include
-               DEPENDS PCL
+#               DEPENDS PCL
 )
 
 find_package(ecto REQUIRED)
