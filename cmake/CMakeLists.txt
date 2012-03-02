@@ -11,6 +11,6 @@ configure_file(ecto_pclConfig.cmake.in ${CMAKE_BINARY_DIR}/unix_install/ecto_pcl
 
 INSTALL(FILES
   ${CMAKE_BINARY_DIR}/unix_install/ecto_pclConfig.cmake
-  DESTINATION ${ECTO_PCL_SHARE_PREFIX}
+  DESTINATION share
   COMPONENT main
   )
