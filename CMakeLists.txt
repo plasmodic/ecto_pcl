@@ -41,15 +41,5 @@ set(python_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${PYTHON_PACKAGES_PATH}/
 
 set_ecto_install_package_name(ecto_opencv)
 
-# configure and install Python
-configure_file(python/__init__.py.in
-               ${python_LIBRARY_OUTPUT_DIRECTORY}/__init__.py
-               @ONLY
-)
-
-install(FILES ${python_LIBRARY_OUTPUT_DIRECTORY}/__init__.py
-        DESTINATION ${ecto_module_PYTHON_INSTALL} COMPONENT main
-)
-
 # add the catkin hooks (they need PYTHON_PACKAGES_PATH from ecto)
 catkin_add_env_hooks(10.ecto_pcl SHELLS all)
