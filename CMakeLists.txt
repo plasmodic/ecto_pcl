@@ -9,8 +9,6 @@ catkin_project(ecto_pcl
 #               DEPENDS PCL # TODO fix when find_pcl_package is not called anymore
 )
 
-catkin_add_env_hooks(10.ecto_pcl SHELLS all)
-
 # continue with the find_package
 find_package(ecto REQUIRED)
 
@@ -33,6 +31,11 @@ enable_testing()
 add_subdirectory(test)
 add_subdirectory(samples)
 
+# install folders
+if(NOT CMAKE_LIBRARY_OUTPUT_DIRECTORY)
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+endif()
+
 # deal with Python
 set(python_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${PYTHON_PACKAGES_PATH}/ecto_pcl)
 
@@ -47,3 +50,6 @@ configure_file(python/__init__.py.in
 install(FILES ${python_LIBRARY_OUTPUT_DIRECTORY}/__init__.py
         DESTINATION ${ecto_module_PYTHON_INSTALL} COMPONENT main
 )
+
+# add the catkin hooks (they need PYTHON_PACKAGES_PATH from ecto)
+catkin_add_env_hooks(10.ecto_opencv SHELLS all)
