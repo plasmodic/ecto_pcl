@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(ecto_pcl)
 
+# Deal with catkin
 find_package(catkin REQUIRED)
 catkin_stack()
 catkin_project(ecto_pcl
@@ -8,6 +9,9 @@ catkin_project(ecto_pcl
 #               DEPENDS PCL # TODO fix when find_pcl_package is not called anymore
 )
 
+catkin_add_env_hooks(10.ecto_pcl SHELLS all)
+
+# continue with the find_package
 find_package(ecto REQUIRED)
 
 rosbuild_lite_init()
