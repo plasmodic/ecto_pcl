@@ -32,3 +32,18 @@ add_subdirectory(src)
 enable_testing()
 add_subdirectory(test)
 add_subdirectory(samples)
+
+# deal with Python
+set(python_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${PYTHON_PACKAGES_PATH}/ecto_pcl)
+
+set_ecto_install_package_name(ecto_opencv)
+
+# configure and install Python
+configure_file(python/__init__.py.in
+               ${python_LIBRARY_OUTPUT_DIRECTORY}/__init__.py
+               @ONLY
+)
+
+install(FILES ${python_LIBRARY_OUTPUT_DIRECTORY}/__init__.py
+        DESTINATION ${ecto_module_PYTHON_INSTALL} COMPONENT main
+)
