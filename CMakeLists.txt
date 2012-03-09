@@ -52,4 +52,4 @@ install(FILES ${python_LIBRARY_OUTPUT_DIRECTORY}/__init__.py
 )
 
 # add the catkin hooks (they need PYTHON_PACKAGES_PATH from ecto)
-catkin_add_env_hooks(10.ecto_opencv SHELLS all)
+catkin_add_env_hooks(10.ecto_pcl SHELLS all)
