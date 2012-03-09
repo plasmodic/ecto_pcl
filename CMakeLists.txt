@@ -21,7 +21,6 @@ find_package(Boost COMPONENTS signals thread)
 #catkin_sphinx(${CMAKE_CURRENT_SOURCE_DIR}/doc doc)
 
 include_directories(include)
-add_subdirectory(cmake)
 add_subdirectory(src)
 
 enable_testing()
