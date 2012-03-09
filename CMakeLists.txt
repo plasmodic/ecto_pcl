@@ -24,7 +24,15 @@ find_package(Boost COMPONENTS signals thread)
 
 #catkin_sphinx(${CMAKE_CURRENT_SOURCE_DIR}/doc doc)
 
-include_directories(include)
+# install the include directory
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/ecto_pcl
+        DESTINATION include/ecto_pcl
+        COMPONENT main
+)
+
+
 add_subdirectory(src)
 
 enable_testing()
