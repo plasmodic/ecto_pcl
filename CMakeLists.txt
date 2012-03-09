@@ -28,7 +28,7 @@ find_package(Boost COMPONENTS signals thread)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/ecto_pcl
-        DESTINATION include/ecto_pcl
+        DESTINATION include
         COMPONENT main
 )
 
