@@ -12,6 +12,9 @@ catkin_project(ecto_pcl
 # continue with the find_package
 find_package(ecto REQUIRED)
 
+set_ecto_install_package_name()
+
+# deal with ROS
 rosbuild_lite_init()
 
 find_pcl_package()
@@ -43,11 +46,3 @@ add_subdirectory(samples)
 if(NOT CMAKE_LIBRARY_OUTPUT_DIRECTORY)
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 endif()
-
-# deal with Python
-set(python_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${PYTHON_PACKAGES_PATH}/ecto_pcl)
-
-set_ecto_install_package_name(ecto_opencv)
-
-# add the catkin hooks (they need PYTHON_PACKAGES_PATH from ecto)
-catkin_add_env_hooks(10.ecto_pcl SHELLS all)
