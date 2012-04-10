@@ -1,5 +1,5 @@
 Catkin-ProjectName: ecto_pcl
-Version: 0.3.0
+Version: 0.3.1
 Description: Ecto bindings for common PCL functionality.
 Author: Michael Ferguson <mferguson@willowgarage.com>, Ethan Rublee <erublee@willowgarage.com>, Troy Straszheim <straszheim@willowgarage.com>
 Maintainer:  Vincent Rabaud <vrabaud@willowgarage.com>, Ethan Rublee <erublee@willowgarage.com>
