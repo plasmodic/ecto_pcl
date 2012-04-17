@@ -8,7 +8,5 @@ Examples
 
    tabletop_segmentation
    colorize_clusters
+   pcd_viewer
    ros_sample
-   
-
-
