@@ -16,6 +16,7 @@ This example shows how to extract points corresponding to objects on a table.
 """
 
 import ecto
+from ecto.opts import run_plasm, scheduler_options
 from ecto_openni import Capture
 from ecto_pcl import *
 
@@ -61,10 +62,9 @@ plasm = ecto.Plasm()
 plasm.connect(graph)
 
 if __name__ == "__main__":
-    sched = ecto.schedulers.Threadpool(plasm)
-    sched.execute_async()
+    import argparse
+    parser = argparse.ArgumentParser(description='Execute tabletop segmentation.')
+    scheduler_options(parser.add_argument_group('Scheduler'))
+    options = parser.parse_args()
 
-    from IPython.Shell import IPShellEmbed
-    ipshell = IPShellEmbed()
-    ipshell()
-
+    run_plasm(options, plasm)
