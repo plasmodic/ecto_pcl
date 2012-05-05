@@ -65,7 +65,7 @@ graph += [cloud_generator[:] >> extract_stuff["input"],
           extract_indices[:] >> colorize["input"],
           cloud_generator[:] >> merge["input"],
           colorize[:] >> merge["input2"],
-          merge[:] >> viewer[:]
+          colorize[:] >> viewer[:]
           ]
 
 plasm = ecto.Plasm()
