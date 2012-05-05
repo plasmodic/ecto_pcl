@@ -36,6 +36,7 @@ planar_segmentation = SACSegmentationFromNormals("planar_segmentation",
                                                  model_type=SACMODEL_NORMAL_PLANE,
                                                  eps_angle=0.09, distance_threshold=0.1)
 project_inliers = ProjectInliers("project_inliers", model_type=SACMODEL_NORMAL_PLANE)
+nan_filter = PassThrough('nan_removal')
 convex_hull = ConvexHull("convex_hull")
 
 graph += [voxel_grid[:] >> normals[:],
@@ -43,7 +44,8 @@ graph += [voxel_grid[:] >> normals[:],
           normals[:] >> planar_segmentation["normals"],
           voxel_grid[:] >> project_inliers["input"],
           planar_segmentation["model"] >> project_inliers["model"],
-          project_inliers[:] >> convex_hull[:]
+          project_inliers[:] >> nan_filter[:],
+          nan_filter[:] >> convex_hull[:]
           ]
 
 # extract stuff on table from original high-res cloud, find clusters, colorize, merge and show in viewer

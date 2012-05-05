@@ -56,6 +56,7 @@ namespace ecto {
         ::pcl::PointCloud<Point> cloud;
 
         filter.setInputCloud(input);
+        filter.setDimension(3);
         filter.reconstruct(cloud);
 
         *output_ = xyz_cloud_variant_t(cloud.makeShared());
