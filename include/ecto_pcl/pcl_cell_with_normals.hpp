@@ -42,8 +42,8 @@ namespace ecto {
 
       static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
       {
-        inputs.declare<PointCloud> ("input", "Input cloud.");
-        inputs.declare<FeatureCloud> ("normals", "Normals to use.");
+        inputs.declare<PointCloud> ("input", "Input cloud.").required(true);
+        inputs.declare<FeatureCloud> ("normals", "Normals to use.").required(true);
         CellType::declare_io(params, inputs, outputs);
       }
 
