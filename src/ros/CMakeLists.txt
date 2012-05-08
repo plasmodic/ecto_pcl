@@ -4,7 +4,7 @@ ectomodule(ecto_pcl_ros
 )
 
 link_ecto(ecto_pcl_ros
-    ${pcl_LIBRARIES}
-    )
+          ${PCL_LIBRARIES}
+)
     
 install_ecto_module(ecto_pcl_ros)
