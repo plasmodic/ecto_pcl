@@ -83,11 +83,11 @@ namespace ecto {
         {
           if (*image_buffer && *depth_buffer)
           {
-            ::pcl::PointCloud< ::pcl::PointXYZRGB > cloud;
+          typename ::pcl::PointCloud< ::pcl::PointXYZRGB>::Ptr cloud(new typename ::pcl::PointCloud< ::pcl::PointXYZRGB>);
 
-            cloud.width = *depth_width;
-            cloud.height = *depth_height;
-            cloud.points.resize(cloud.width * cloud.height);
+            cloud->width = *depth_width;
+            cloud->height = *depth_height;
+            cloud->points.resize(cloud->width * cloud->height);
             
             //grab camera params
             float fx = 525; //K.at<float>(0, 0);
@@ -99,9 +99,9 @@ namespace ecto {
             const uint8_t* c;
             d = (*depth_buffer)->data();
             c = (*image_buffer)->data();
-            for (size_t v = 0; v < cloud.height; v++)
+            for (size_t v = 0; v < cloud->height; v++)
             { 
-              for (size_t u = 0; u < cloud.width; u++)
+              for (size_t u = 0; u < cloud->width; u++)
               {
                 uint8_t r = *(c++);
                 uint8_t g = *(c++);
@@ -114,12 +114,13 @@ namespace ecto {
                 p.x = (u - cx) * z / fx;
                 p.y = (v - cy) * z / fy;
                 p.z = z;            
-                cloud(u,v) = p;
+              cloud->operator()(u, v) = p;
               }
             }
 
-            *output = ecto::pcl::xyz_cloud_variant_t(cloud.makeShared());
-          }
+            *output = ecto::pcl::xyz_cloud_variant_t(cloud);
+        }
+
           return ecto::OK;
         }
 

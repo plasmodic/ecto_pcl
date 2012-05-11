@@ -53,15 +53,15 @@ namespace ecto {
                   boost::shared_ptr<const ::pcl::PointCloud<Point> >& input)
       {
         ::pcl::ConvexHull<Point> filter;
-        ::pcl::PointCloud<Point> cloud;
+        typename ::pcl::PointCloud<Point>::Ptr cloud(new typename ::pcl::PointCloud<Point>);
 
         filter.setInputCloud(input);
 #ifdef PCL_VERSION_GE_140
         filter.setDimension(3);
 #endif
-        filter.reconstruct(cloud);
+        filter.reconstruct(*cloud);
 
-        *output_ = xyz_cloud_variant_t(cloud.makeShared());
+        *output_ = xyz_cloud_variant_t(cloud);
         return ecto::OK;
       }
 

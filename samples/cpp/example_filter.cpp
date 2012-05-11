@@ -39,13 +39,13 @@ struct ExampleFilter
               boost::shared_ptr<const pcl::PointCloud<Point> >& input)
   {
     // cloud to store our output in
-    pcl::PointCloud<Point> cloud;
+    pcl::PointCloud<Point>::Ptr cloud(new pcl::PointCloud<Point>);
 
     // do something with our params/clouds
-    cloud = input;
+    *cloud = input;
 
     // We have to use this variant to create an ecto::pcl::PointCloud
-    *output_ = ecto::pcl::xyz_cloud_variant_t(cloud.makeShared());
+    *output_ = ecto::pcl::xyz_cloud_variant_t(cloud);
     return ecto::OK;
   }
 

@@ -34,5 +34,5 @@ The key aspects here are:
  - ``ecto::pcl::PclCell`` already declares an input PointCloud called "input". 
  - Our process callback is templated on point type.
  - Our process callback has an extra parameter to a templated ``pcl::PointCloud`` (held in a shared pointer). 
- - To set the value of our output spore we have to use: ``ecto::pcl::xyz_cloud_variant_t`` (``cloud.makeShared()``);
-
+ - To set the value of our output spore we have to use: ``ecto::pcl::xyz_cloud_variant_t`` (``cloud.makeShared()``); You
+   can also use a ``boost_shared`` pointer right away

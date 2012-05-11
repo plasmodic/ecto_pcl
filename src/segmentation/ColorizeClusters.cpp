@@ -96,10 +96,10 @@ namespace ecto {
                   boost::shared_ptr<const ::pcl::PointCloud<Point> >& input)
       {
         // initialize outputs and filter
-        ::pcl::PointCloud<Point> output;
+        typename ::pcl::PointCloud<Point>::Ptr output(new typename ::pcl::PointCloud<Point>);
         ::pcl::ExtractIndices<Point> filter;
         filter.setInputCloud(input);
-        output.header = input->header;
+        output->header = input->header;
 
         // Extract location of rgb (similar to pcl::PackedRGBComparison<T>)
         std::vector<sensor_msgs::PointField> fields;
@@ -140,10 +140,10 @@ namespace ecto {
             }
             // append
             cloud.header = input->header;
-            output += cloud;
+            *output += cloud;
         }
 
-        *output_ = xyz_cloud_variant_t(output.makeShared());
+        *output_ = xyz_cloud_variant_t(output);
         return OK;
       }
 

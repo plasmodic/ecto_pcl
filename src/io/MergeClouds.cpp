@@ -55,10 +55,10 @@ namespace ecto {
                   boost::shared_ptr<const ::pcl::PointCloud<Point> >& input1,
                   boost::shared_ptr<const ::pcl::PointCloud<Point> >& input2)
       {
-        ::pcl::PointCloud<Point> cloud;
-        cloud = *input1;
-        cloud += *input2;
-        *output_ = xyz_cloud_variant_t(cloud.makeShared());
+        typename ::pcl::PointCloud<Point>::Ptr cloud(new typename ::pcl::PointCloud<Point>);
+        *cloud = *input1;
+        *cloud += *input2;
+        *output_ = xyz_cloud_variant_t(cloud);
         return 0;
       }
       

@@ -72,7 +72,7 @@ namespace ecto {
                   boost::shared_ptr<const ::pcl::PointCloud<Point> >& input)
       {
         ::pcl::NormalEstimation<Point, ::pcl::Normal> impl;
-        ::pcl::PointCloud< ::pcl::Normal > normals;
+        typename ::pcl::PointCloud< ::pcl::Normal >::Ptr normals(new typename ::pcl::PointCloud< ::pcl::Normal >);
 
         impl.setKSearch(*k_);
         impl.setRadiusSearch(*radius_);
@@ -105,9 +105,9 @@ namespace ecto {
         impl.setSearchMethod(tree_);
         impl.setInputCloud(input);
         impl.setViewPoint(*vp_x_,*vp_y_,*vp_z_);
-        impl.compute(normals);
-        normals.header = input->header;
-        *output_ = ecto::pcl::feature_cloud_variant_t(normals.makeShared());
+        impl.compute(*normals);
+        normals->header = input->header;
+        *output_ = ecto::pcl::feature_cloud_variant_t(normals);
         return ecto::OK;
       }
 

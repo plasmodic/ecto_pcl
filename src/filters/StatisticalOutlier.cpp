@@ -62,8 +62,8 @@ namespace ecto {
       int process(const tendrils& inputs, const tendrils& outputs,
                   boost::shared_ptr<const ::pcl::PointCloud<Point> >& input)
       {
-        ::pcl::PointCloud<Point> cloud;
-        *output_ = xyz_cloud_variant_t(cloud.makeShared());
+        typename ::pcl::PointCloud<Point>::Ptr cloud(new typename ::pcl::PointCloud<Point>);
+        *output_ = xyz_cloud_variant_t(cloud);
 
         ::pcl::StatisticalOutlierRemoval<Point> filter;
         if(input->size() < 1)
@@ -73,9 +73,9 @@ namespace ecto {
         filter.setStddevMulThresh(*stddev_);
         filter.setNegative(*negative_);
 
-        filter.filter(cloud);
-        cloud.header = input->header;
-        *output_ = xyz_cloud_variant_t(cloud.makeShared());
+        filter.filter(*cloud);
+        cloud->header = input->header;
+        *output_ = xyz_cloud_variant_t(cloud);
 
         return OK;
       }

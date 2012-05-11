@@ -65,10 +65,10 @@ namespace ecto {
         filter.setIndices( ::pcl::PointIndicesPtr( new ::pcl::PointIndices ((*clusters_)[largest])) );
         filter.setInputCloud(input);
 
-        ::pcl::PointCloud<Point> cloud;
-        filter.filter(cloud);
-        cloud.header = input->header;
-        *output_ = xyz_cloud_variant_t(cloud.makeShared());
+        typename ::pcl::PointCloud<Point>::Ptr cloud(new typename ::pcl::PointCloud<Point>);
+        filter.filter(*cloud);
+        cloud->header = input->header;
+        *output_ = xyz_cloud_variant_t(cloud);
 
         return OK;
       }

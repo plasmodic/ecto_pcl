@@ -74,11 +74,11 @@ namespace ecto {
         filter.setFilterLimitsNegative(*filter_limit_negative_);
         filter.setLeafSize(*leaf_size, *leaf_size, *leaf_size);
         filter.setInputCloud(input);
-              
-        ::pcl::PointCloud<Point> cloud;
-        filter.filter(cloud);
-        cloud.header = input->header;
-        *output_ = xyz_cloud_variant_t(cloud.makeShared());
+
+        typename ::pcl::PointCloud<Point>::Ptr cloud(new typename ::pcl::PointCloud<Point>);
+        filter.filter(*cloud);
+        cloud->header = input->header;
+        *output_ = xyz_cloud_variant_t(cloud);
 
         return ecto::OK;
       }
