@@ -16,6 +16,5 @@ plasm.connect(device[:] >> cloud_generator[:],
               cloud_generator[:] >> viewer[:])
 
 if __name__ == "__main__":
-    sched = ecto.schedulers.Threadpool(plasm)
-    sched.execute()
-
+    from ecto.opts import doit
+    doit(plasm, description='View the current point cloud.')

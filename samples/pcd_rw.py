@@ -21,6 +21,5 @@ writer = ecto_pcl.PCDWriter("Writer",
 plasm.connect(reader[:] >> writer[:])
 
 if __name__=="__main__":
-    sched = ecto.schedulers.Threadpool(plasm)
-    sched.execute(niter=1)
-
+    from ecto.opts import doit
+    doit(plasm, description='Read/write pcd.', default_niter=1)

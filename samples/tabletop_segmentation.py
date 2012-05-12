@@ -64,9 +64,5 @@ plasm = ecto.Plasm()
 plasm.connect(graph)
 
 if __name__ == "__main__":
-    import argparse
-    parser = argparse.ArgumentParser(description='Execute tabletop segmentation.')
-    scheduler_options(parser.add_argument_group('Scheduler'))
-    options = parser.parse_args()
-
-    run_plasm(options, plasm)
+    from ecto.opts import doit
+    doit(plasm, description='Execute tabletop segmentation.')

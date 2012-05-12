@@ -20,7 +20,5 @@ plasm.connect(cloud_sub['output'] >> msg2cloud[:],
 
 
 if __name__ == "__main__":
-    ecto_ros.init(sys.argv, "ecto_pcl_ros_sample")
-    sched = ecto.schedulers.Threadpool(plasm)
-    sched.execute()
-
+    from ecto.opts import doit
+    doit(plasm, description='Read a pcd through ROS.')
