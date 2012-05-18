@@ -83,7 +83,7 @@ namespace ecto {
         {
           if (*image_buffer && *depth_buffer)
           {
-          typename ::pcl::PointCloud< ::pcl::PointXYZRGB>::Ptr cloud(new typename ::pcl::PointCloud< ::pcl::PointXYZRGB>);
+            ::pcl::PointCloud< ::pcl::PointXYZRGB>::Ptr cloud(new ::pcl::PointCloud< ::pcl::PointXYZRGB>);
 
             cloud->width = *depth_width;
             cloud->height = *depth_height;
