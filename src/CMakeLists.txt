@@ -40,5 +40,4 @@ link_ecto(ecto_pcl
 
 install_ecto_module(ecto_pcl)
 
-# ROS disabled for a while.
-#add_subdirectory(ros)
+add_subdirectory(ros)
