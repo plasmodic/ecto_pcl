@@ -215,8 +215,15 @@ ECTO_DEFINE_MODULE(ecto_pcl)
   bp::scope().attr("KDTREE_ORGANIZED_INDEX") = 1;
 }
 
-ECTO_CELL(ecto_pcl,PointCloud2PointCloudT, "PointCloud2PointCloudT",
+namespace ecto {
+  namespace pcl {
+    typedef PointCloud2PointCloudT PointCloud2PointCloudT;
+    typedef PointCloudT2PointCloud PointCloudT2PointCloud;
+  }
+}
+
+ECTO_CELL(ecto_pcl, ecto::pcl::PointCloud2PointCloudT, "PointCloud2PointCloudT",
           "Convert a generic variant based PointCloud to a strongly typed pcl::PointCloud<pcl::PointT>.")
-ECTO_CELL(ecto_pcl,PointCloudT2PointCloud, "PointCloudT2PointCloud",
+ECTO_CELL(ecto_pcl, ecto::pcl::PointCloudT2PointCloud, "PointCloudT2PointCloud",
           "Convert a strongly typed pcl::PointCloud<pcl::PointT> to a generic variant based PointCloud.")
 
