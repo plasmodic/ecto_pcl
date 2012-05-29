@@ -5,7 +5,6 @@ find_package(ROS QUIET)
 if (NOT ROS_FOUND)
   return()
 endif()
-find_package(object_recognition_msgs REQUIRED)
 
 if (ROS_ELECTRIC_FOUND)
   find_ros_package(sensor_msgs)
