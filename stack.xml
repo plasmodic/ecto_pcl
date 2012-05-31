@@ -1,0 +1,23 @@
+<stack>
+  <name>ecto_pcl</name>
+  <version>0.3.4</version>
+  <description>Ecto bindings for common PCL functionality.</description>
+  <author email="mferguson@willowgarage.com">Michael Ferguson</author>
+  <author email="erublee@willowgarage.com">Ethan Rublee</author>
+  <author email="straszheim@willowgarage.com">Troy Straszheim</author>
+  <maintainer email="vrabaud@willowgarage.com">Vincent Rabaud</maintainer>
+  <maintainer email="erublee@willowgarage.com">Ethan Rublee</maintainer>
+  <license>BSD</license>
+  <copyright>Willow Garage</copyright>
+
+  <url>http://ecto.willowgarage.com</url>
+  <build_depends>catkin</build_depends>
+  <build_depends>boost</build_depends>
+  <build_depends>ecto</build_depends>
+  <build_depends>ecto_ros</build_depends>
+  <build_depends>pcl</build_depends>
+  <depends>boost</depends>
+  <depends>ecto</depends>
+  <depends>ecto_ros</depends>
+  <depends>pcl</depends>
+</stack>
