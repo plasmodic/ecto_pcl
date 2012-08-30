@@ -40,8 +40,16 @@ namespace ecto {
       {
         ::pcl::PassThrough< ::pcl::PointXYZ > default_;
         params.declare<std::string> ("filter_field_name", "The name of the field to use for filtering.", "");
+#if ROS_ELECTRIC_FOUND
         double filter_limit_min, filter_limit_max;
         default_.getFilterLimits(filter_limit_min, filter_limit_max);
+#elif PCL_VERSION_COMPARE(<,1,6,0)
+        double filter_limit_min, filter_limit_max;
+        default_.getFilterLimits(filter_limit_min, filter_limit_max);
+#else
+        float filter_limit_min, filter_limit_max;
+        default_.getFilterLimits(filter_limit_min, filter_limit_max);
+#endif
         params.declare<double> ("filter_limit_min", "Minimum value for the filter.", filter_limit_min);
         params.declare<double> ("filter_limit_max", "Maximum value for the filter.", filter_limit_max);
         params.declare<bool> ("filter_limit_negative", "To negate the limits or not.", default_.getFilterLimitsNegative());
