@@ -12,8 +12,6 @@ catkin_project(ecto_pcl
 # continue with the find_package
 find_package(ecto REQUIRED)
 
-set_ecto_install_package_name()
-
 # deal with ROS
 rosbuild_lite_init()
 

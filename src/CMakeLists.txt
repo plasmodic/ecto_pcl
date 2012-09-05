@@ -1,6 +1,6 @@
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-ectomodule(ecto_pcl
+ectomodule(ecto_pcl INSTALL
   ecto_pcl.cpp
   features/NormalEstimation.cpp
   features/FPFHEstimation.cpp
@@ -37,7 +37,5 @@ set_source_files_properties(io/CloudViewer.cpp
 link_ecto(ecto_pcl
     ${PCL_LIBRARIES}
 )
-
-install_ecto_module(ecto_pcl)
 
 add_subdirectory(ros)
