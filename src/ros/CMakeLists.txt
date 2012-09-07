@@ -1,15 +1,18 @@
 # create the cells to output messages
 rosbuild_lite_init()
 
-find_package(ROS QUIET)
-if (NOT ROS_FOUND)
+if (NOT ROS_ELECTRIC_FOUND AND NOT ROS_FUERTE_FOUND AND NOT ROS_GROOVY_FOUND)
   return()
 endif()
 
 if (ROS_ELECTRIC_FOUND)
   find_ros_package(sensor_msgs)
 else()
+  if (ROS_FUERTE_FOUND)
   find_package(ROS REQUIRED sensor_msgs)
+  else()
+  find_package(catkin REQUIRED sensor_msgs)
+  endif()
 endif()
 
 include_directories(SYSTEM
