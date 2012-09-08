@@ -1,5 +1,13 @@
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+if (ROS_GROOVY_FOUND)
+find_package(catkin REQUIRED roscpp sensor_msgs)
+
+include_directories(SYSTEM ${sensor_msgs_INCLUDE_DIRS}
+                           ${PCL_INCLUDE_DIRS}
+)
+endif()
+
 ectomodule(ecto_pcl INSTALL
   ecto_pcl.cpp
   features/NormalEstimation.cpp
@@ -13,11 +21,11 @@ ectomodule(ecto_pcl INSTALL
   filters/RadiusOutlier.cpp
   filters/VoxelGrid.cpp
   io/CloudViewer.cpp
-  # io/KinectGrabber.cpp
+#  io/KinectGrabber.cpp
   io/MergeClouds.cpp
   io/NiConverters.cpp
   io/PCDReader.cpp
-  io/PCDWriter.cpp
+#  io/PCDWriter.cpp
   io/PLYWriter.cpp
   segmentation/ColorizeClusters.cpp
   segmentation/ExtractPolygonalPrismData.cpp
@@ -34,8 +42,14 @@ set_source_files_properties(io/CloudViewer.cpp
   COMPILE_FLAGS -Wno-deprecated
   )
 
+if (ROS_GROOVY_FOUND)
+link_ecto(ecto_pcl ${PCL_LIBRARIES}
+                   ${roscpp_LIBRARIES}
+)
+else()
 link_ecto(ecto_pcl
     ${PCL_LIBRARIES}
 )
+endif()
 
 add_subdirectory(ros)

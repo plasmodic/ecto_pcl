@@ -32,6 +32,7 @@
 #include <boost/typeof/typeof.hpp>
 #include <pcl/surface/convex_hull.h>
 #include <pcl/kdtree/kdtree_flann.h>
+#include <pcl/surface/impl/mls.hpp>
 #include <pcl/surface/mls.h>
 
 namespace ecto
