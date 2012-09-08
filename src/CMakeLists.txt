@@ -8,7 +8,7 @@ include_directories(SYSTEM ${sensor_msgs_INCLUDE_DIRS}
 )
 endif()
 
-ectomodule(ecto_pcl INSTALL
+set(ECTO_PCL_FILES
   ecto_pcl.cpp
   features/NormalEstimation.cpp
   features/FPFHEstimation.cpp
@@ -35,7 +35,13 @@ ectomodule(ecto_pcl INSTALL
   segmentation/SACSegmentationFromNormals.cpp
   surface/ConvexHull.cpp
   surface/MovingLeastSquares.cpp
-  )
+)
+
+if (NOT ROS_GROOVY_FOUND)
+  set(ECTO_PCL_FILES ${ECTO_PCL_FILES} io/PCDWriter.cpp)
+endif()
+
+ectomodule(ecto_pcl INSTALL ${ECTO_PCL_FILES})
 
 set_source_files_properties(io/CloudViewer.cpp
   PROPERTIES
