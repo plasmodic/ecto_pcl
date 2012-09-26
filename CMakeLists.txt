@@ -3,9 +3,8 @@ project(ecto_pcl)
 
 # Deal with catkin
 find_package(catkin REQUIRED)
-if (${catkin_VERSION} VERSION_GREATER "0.5.26")
-catkin_package()
-catkin_package_export(INCLUDE_DIRS include)
+if (${catkin_VERSION} VERSION_GREATER "0.5.28")
+catkin_package(INCLUDE_DIRS include)
 else()
 catkin_stack()
 catkin_project(ecto_pcl
