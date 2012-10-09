@@ -1,3 +1,5 @@
+.. _ecto_pcl:
+
 ecto_pcl: Point Cloud Library Wrappers
 ======================================
 

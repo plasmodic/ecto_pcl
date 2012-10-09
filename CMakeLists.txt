@@ -26,7 +26,7 @@ include_directories(SYSTEM
 
 find_package(Boost COMPONENTS signals thread)
 
-#catkin_sphinx(${CMAKE_CURRENT_SOURCE_DIR}/doc doc)
+ecto_sphinx(${CMAKE_CURRENT_SOURCE_DIR}/doc doc)
 
 # install the include directory
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
