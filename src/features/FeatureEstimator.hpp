@@ -67,11 +67,7 @@ namespace ecto {
 
         impl.setKSearch(*k_);
         impl.setRadiusSearch(*radius_);
-#ifdef PCL_VERSION_GE_140
         typename ::pcl::search::KdTree<Point>::Ptr tree_ (new ::pcl::search::KdTree<Point>);
-#else
-        typename ::pcl::KdTreeFLANN<Point>::Ptr tree_ (new ::pcl::KdTreeFLANN<Point>);
-#endif
         impl.setSearchMethod(tree_);
 
         impl.setInputNormals (normals);

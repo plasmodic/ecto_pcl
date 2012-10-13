@@ -3,46 +3,11 @@ Building
 
 .. highlight:: ectosh
 
-With the pcl included in ROS electric
--------------------------------------
+PCL is simply found through a find_package(PCL) macro:
 
-ecto_pcl by default builds against the ROS installation that it finds
-via your environment (this is typically set by the scripts
-``/opt/ros/<version>/setup.sh``).  When ROS is successfully found the
-configuration looks something like this::
-
-  % . /opt/ros/unstable/setup.zsh 
-  % echo $ROS_ROOT
-  /opt/ros/unstable/ros
-  % cmake ../ecto_kitchen 
-  -- The C compiler identification is GNU
-  -- The CXX compiler identification is GNU
-  -- Check for working C compiler: /home/troy/bin/gcc
-    [etc]
+  % cmake ../
   -- -~v/^\v~- pcl
-  -- + Setting default value of ECTO_PCL_STANDALONE to OFF
-  -- + Because ROS_ROOT is set to /opt/ros/unstable/ros
-  -- + pcl found.
-  -- Boost version: 1.40.0
-  -- Found the following Boost libraries:
-  --   signals
-  --   thread
-
-Against standalone PCL
-----------------------
-
-If you want to build against a standalone PCL (e.g. PCL 1.1 as
-available from standard ubuntu packages), pass
-``-DECTO_PCL_STANDALONE=TRUE`` on the commandline or otherwise set
-``ECTO_PCL_STANDALONE`` in your cmake cache.  Looks like this::
-
-  % echo $ROS_ROOT
-
-  % cmake ../ecto_kitchen
-  -- -~v/^\v~- pcl
-  -- + Setting default value of ECTO_PCL_STANDALONE to ON
   -- + Because ROS_ROOT is not set in your environment.
-  -- + Searching for standalone PCL because ECTO_PCL_STANDALONE is ON
   -- Found wxWidgets: TRUE 
   -- + Found PCL version 1.1.0
   -- *** You will STILL BUILD AN ECTO_PCL_ROS LIBRARY
@@ -55,27 +20,10 @@ available from standard ubuntu packages), pass
   -- Found the following Boost libraries:
   --   signals
   --   thread
-  
-Against BOTH
-------------
 
-This is potentially dangerous, (see above) due to ODR violations from
-the copying of point cloude message types, but what can you do.
-Source your ros environment *and* set ``ECTO_PCL_STANDALONE`` to ON::
-  
-  % echo $ROS_ROOT
-  /opt/ros/unstable/ros
-  % cmake -DECTO_PCL_STANDALONE=ON ../ecto_kitchen 
-  -- The C compiler identification is GNU
-  ...
-  
-The output is basically the same as the standalone case.
+If not found you'll get the standardish cmake error message::
 
-
-
-If neither are found you'll get the standardish cmake error message::
-
-  -- + Searching for standalone PCL because ECTO_PCL_STANDALONE is ON
+  -- + Searching for standalone PCL
   CMake Warning at pcl/CMakeLists.txt:38 (find_package):
     Could not find module FindPCL.cmake or a configuration file for package
     PCL.

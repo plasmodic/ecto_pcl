@@ -14,11 +14,7 @@ endif()
 
 # continue with the find_package
 find_package(ecto REQUIRED)
-
-# deal with ROS
-rosbuild_lite_init()
-
-find_pcl_package()
+find_package(PCL REQUIRED)
 
 include_directories(SYSTEM
                     ${PCL_INCLUDE_DIRS}

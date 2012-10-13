@@ -92,16 +92,10 @@ namespace ecto
         typedef ::pcl::PointCloud<Point> Cloud;
         typedef ::pcl::PointCloud<Normal> Normals;
 
-#ifdef PCL_VERSION_GE_140
         typedef ::pcl::search::KdTree<Point> KdTree;
-#else
-        typedef ::pcl::KdTreeFLANN<Point> KdTree;
-#endif
         typedef/*typename*/KdTree::Ptr KdTreePtr;
         typedef/*typename*/Cloud::Ptr CloudPtr;
-#if ROS_ELECTRIC_FOUND
-        ::pcl::MovingLeastSquares<Point, Normal> mls;
-#elif PCL_VERSION_COMPARE(<,1,6,0)
+#if PCL_VERSION_COMPARE(<,1,6,0)
         ::pcl::MovingLeastSquares<Point, Normal> mls;
 #else
         ::pcl::MovingLeastSquares<Point, Point> mls;
@@ -120,23 +114,8 @@ namespace ecto
         mls.setPolynomialOrder(*polynomial_order_);
         mls.setSearchMethod(mls_tree);
         mls.setSearchRadius(*search_radius_);
-#if ROS_ELECTRIC_FOUND
-        mls.setOutputNormals(normals);
-        // Reconstruct
-        mls.reconstruct(*smoothed_cloud);
 
-        for (size_t i = 0, end = normals->size(); i < end; i++)
-        {
-          const float* n = normals->points[i].normal;
-          Point& x = smoothed_cloud->points[i];
-          float* n_r = x.normal;  
-          float sign = n[0] * n_r[0] + n[1] * n_r[1] + n[2] * n_r[2] < 0 ? -1 : 1;
-          n_r[0] = sign * n[0];
-          n_r[1] = sign * n[1];
-          n_r[2] = sign * n[2];
-        }
-
-#elif PCL_VERSION_COMPARE(<,1,6,0)
+#if PCL_VERSION_COMPARE(<,1,6,0)
         mls.setOutputNormals(normals);
         // Reconstruct 
         mls.reconstruct(*smoothed_cloud);

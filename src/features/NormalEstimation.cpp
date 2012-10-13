@@ -33,9 +33,6 @@
 
 #include <pcl/kdtree/kdtree.h>
 #include <pcl/kdtree/kdtree_flann.h>
-#ifndef PCL_VERSION_GE_140
-#include <pcl/kdtree/organized_data.h>
-#endif
 
 namespace ecto {
   namespace pcl {
@@ -76,29 +73,17 @@ namespace ecto {
 
         impl.setKSearch(*k_);
         impl.setRadiusSearch(*radius_);
-#ifdef PCL_VERSION_GE_140
         typename ::pcl::search::Search<Point>::Ptr tree_;
-#else
-        typename ::pcl::KdTree<Point>::Ptr tree_;
-#endif
         switch (*locator_)
         {
           case 0:
           {
-#ifdef PCL_VERSION_GE_140
             tree_.reset (new ::pcl::search::KdTree<Point>);
-#else
-            tree_.reset (new ::pcl::KdTreeFLANN<Point>);
-#endif
             break;
           }
           case 1:
           {
-#ifdef PCL_VERSION_GE_140
             tree_.reset (new ::pcl::search::OrganizedNeighbor<Point>);
-#else
-            tree_.reset (new ::pcl::OrganizedDataIndex<Point>);
-#endif
             break;
           }
         }
