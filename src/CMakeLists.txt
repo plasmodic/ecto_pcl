@@ -25,7 +25,7 @@ set(ECTO_PCL_FILES
   io/MergeClouds.cpp
   io/NiConverters.cpp
   io/PCDReader.cpp
-#  io/PCDWriter.cpp
+  io/PCDWriter.cpp
   io/PLYWriter.cpp
   segmentation/ColorizeClusters.cpp
   segmentation/ExtractPolygonalPrismData.cpp
