@@ -1,6 +1,6 @@
 <package>
   <name>ecto_pcl</name>
-  <version>0.3.8</version>
+  <version>0.3.9</version>
   <description>Ecto bindings for common PCL functionality.</description>
   <author email="mferguson@willowgarage.com">Michael Ferguson</author>
   <author email="erublee@willowgarage.com">Ethan Rublee</author>
@@ -15,9 +15,11 @@
   <build_depend>ecto</build_depend>
   <build_depend>ecto_ros</build_depend>
   <build_depend>pcl</build_depend>
+  <build_depend>roscpp</build_depend>
 
   <run_depend>boost</run_depend>
   <run_depend>ecto</run_depend>
   <run_depend>ecto_ros</run_depend>
   <run_depend>pcl</run_depend>
+  <run_depend>roscpp</run_depend>
 </package>
