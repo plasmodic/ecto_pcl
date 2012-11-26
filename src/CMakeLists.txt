@@ -14,6 +14,7 @@ set(ECTO_PCL_FILES
   features/FPFHEstimation.cpp
   features/PFHEstimation.cpp
   features/VFHEstimation.cpp
+  filters/Cropper.cpp
   filters/ExtractIndices.cpp
   filters/PassThrough.cpp
   filters/ProjectInliers.cpp
