@@ -1,0 +1,361 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Segment the objects from the plane, color them &mdash; ecto_pcl</title>
+    
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="ecto_pcl" href="../index.html" />
+    <link rel="up" title="Examples" href="index.html" />
+    <link rel="next" title="Display a point cloud from a PCD file" href="pcd_viewer.html" />
+    <link rel="prev" title="Tabletop Segmentation" href="tabletop_segmentation.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="pcd_viewer.html" title="Display a point cloud from a PCD file"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tabletop_segmentation.html" title="Tabletop Segmentation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">ecto_pcl</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Examples</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tabletop_segmentation.html"
+                        title="previous chapter">Tabletop Segmentation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="pcd_viewer.html"
+                        title="next chapter">Display a point cloud from a PCD file</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/examples/colorize_clusters.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="segment-the-objects-from-the-plane-color-them">
+<h1>Segment the objects from the plane, color them<a class="headerlink" href="#segment-the-objects-from-the-plane-color-them" title="Permalink to this headline">¶</a></h1>
+<img alt="../_images/colorclusters.jpg" src="../_images/colorclusters.jpg" style="width: 100%;" />
+<p><a class="reference download internal" href="../_downloads/colorize_clusters.py"><tt class="xref download docutils literal"><span class="pre">colorize_clusters.py</span></tt></a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This example shows how to extract points corresponding to objects on a table,</span>
+<span class="sd">    cluster them, colorize the clusters, and republish as a single cloud.</span>
+
+<span class="sd">  1) The example downsamples using a VoxelGrid before estimating</span>
+<span class="sd">     normals for the downsampled cloud.</span>
+<span class="sd">  2) These normals are then used for segmentation using RANSAC.</span>
+<span class="sd">  3) Segmentation produces a planar model to which all inliers are</span>
+<span class="sd">     projected so that a 2D convex hull can be created.</span>
+<span class="sd">  4) We then extract the indices of all points that are above the</span>
+<span class="sd">     plane formed by the convex hull.</span>
+<span class="sd">  5) This cloud is then clustered</span>
+<span class="sd">  6) The clusters are concatenated, with each having a unique color.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">ecto</span>
+<span class="kn">from</span> <span class="nn">ecto.opts</span> <span class="kn">import</span> <span class="n">run_plasm</span><span class="p">,</span> <span class="n">scheduler_options</span>
+<span class="kn">from</span> <span class="nn">ecto_openni</span> <span class="kn">import</span> <span class="n">Capture</span>
+<span class="kn">from</span> <span class="nn">ecto_pcl</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c"># capture from kinect and downsample</span>
+<span class="n">device</span> <span class="o">=</span> <span class="n">Capture</span><span class="p">(</span><span class="s">&#39;device&#39;</span><span class="p">)</span>
+<span class="n">cloud_generator</span> <span class="o">=</span> <span class="n">NiConverter</span><span class="p">(</span><span class="s">&#39;cloud_generator&#39;</span><span class="p">)</span>
+<span class="n">voxel_grid</span> <span class="o">=</span> <span class="n">VoxelGrid</span><span class="p">(</span><span class="s">&quot;voxel_grid&quot;</span><span class="p">,</span> <span class="n">leaf_size</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+
+<span class="n">graph</span> <span class="o">=</span> <span class="p">[</span><span class="n">device</span><span class="p">[:]</span> <span class="o">&gt;&gt;</span> <span class="n">cloud_generator</span><span class="p">[:],</span>
+         <span class="n">cloud_generator</span><span class="p">[:]</span> <span class="o">&gt;&gt;</span> <span class="n">voxel_grid</span><span class="p">[:]</span>
+         <span class="p">]</span>
+
+<span class="c"># estimate normals, segment and find convex hull</span>
+<span class="n">normals</span> <span class="o">=</span> <span class="n">NormalEstimation</span><span class="p">(</span><span class="s">&quot;normals&quot;</span><span class="p">,</span> <span class="n">k_search</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">radius_search</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">planar_segmentation</span> <span class="o">=</span> <span class="n">SACSegmentationFromNormals</span><span class="p">(</span><span class="s">&quot;planar_segmentation&quot;</span><span class="p">,</span>
+                                                 <span class="n">model_type</span><span class="o">=</span><span class="n">SACMODEL_NORMAL_PLANE</span><span class="p">,</span>
+                                                 <span class="n">eps_angle</span><span class="o">=</span><span class="mf">0.09</span><span class="p">,</span> <span class="n">distance_threshold</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">project_inliers</span> <span class="o">=</span> <span class="n">ProjectInliers</span><span class="p">(</span><span class="s">&quot;project_inliers&quot;</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="n">SACMODEL_NORMAL_PLANE</span><span class="p">)</span>
+<span class="n">nan_filter</span> <span class="o">=</span> <span class="n">PassThrough</span><span class="p">(</span><span class="s">&#39;nan_removal&#39;</span><span class="p">)</span>
+<span class="n">convex_hull</span> <span class="o">=</span> <span class="n">ConvexHull</span><span class="p">(</span><span class="s">&quot;convex_hull&quot;</span><span class="p">)</span>
+
+<span class="n">graph</span> <span class="o">+=</span> <span class="p">[</span><span class="n">voxel_grid</span><span class="p">[:]</span> <span class="o">&gt;&gt;</span> <span class="n">normals</span><span class="p">[:],</span>
+          <span class="n">voxel_grid</span><span class="p">[:]</span> <span class="o">&gt;&gt;</span> <span class="n">planar_segmentation</span><span class="p">[</span><span class="s">&quot;input&quot;</span><span class="p">],</span>
+          <span class="n">normals</span><span class="p">[:]</span> <span class="o">&gt;&gt;</span> <span class="n">planar_segmentation</span><span class="p">[</span><span class="s">&quot;normals&quot;</span><span class="p">],</span>
+          <span class="n">voxel_grid</span><span class="p">[:]</span> <span class="o">&gt;&gt;</span> <span class="n">project_inliers</span><span class="p">[</span><span class="s">&quot;input&quot;</span><span class="p">],</span>
+          <span class="n">planar_segmentation</span><span class="p">[</span><span class="s">&quot;model&quot;</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="n">project_inliers</span><span class="p">[</span><span class="s">&quot;model&quot;</span><span class="p">],</span>
+          <span class="n">project_inliers</span><span class="p">[:]</span> <span class="o">&gt;&gt;</span> <span class="n">nan_filter</span><span class="p">[:],</span>
+          <span class="n">nan_filter</span><span class="p">[:]</span> <span class="o">&gt;&gt;</span> <span class="n">convex_hull</span><span class="p">[:]</span>
+          <span class="p">]</span>
+
+<span class="c"># extract stuff on table from original high-res cloud, find clusters, colorize, merge and show in viewer</span>
+<span class="n">extract_stuff</span> <span class="o">=</span> <span class="n">ExtractPolygonalPrismData</span><span class="p">(</span><span class="s">&quot;extract_stuff&quot;</span><span class="p">,</span> <span class="n">height_min</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">height_max</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">extract_indices</span> <span class="o">=</span> <span class="n">ExtractIndices</span><span class="p">(</span><span class="s">&quot;extract_indices&quot;</span><span class="p">,</span> <span class="n">negative</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">extract_clusters</span> <span class="o">=</span> <span class="n">EuclideanClusterExtraction</span><span class="p">(</span><span class="s">&quot;extract_clusters&quot;</span><span class="p">,</span> <span class="n">min_cluster_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">cluster_tolerance</span><span class="o">=</span><span class="mf">0.005</span><span class="p">)</span>
+<span class="n">colorize</span> <span class="o">=</span> <span class="n">ColorizeClusters</span><span class="p">(</span><span class="s">&quot;colorize&quot;</span><span class="p">)</span>
+<span class="n">merge</span> <span class="o">=</span> <span class="n">MergeClouds</span><span class="p">(</span><span class="s">&quot;merge&quot;</span><span class="p">)</span>
+<span class="n">viewer</span> <span class="o">=</span> <span class="n">CloudViewer</span><span class="p">(</span><span class="s">&quot;viewer&quot;</span><span class="p">,</span> <span class="n">window_name</span><span class="o">=</span><span class="s">&quot;Clouds!&quot;</span><span class="p">)</span>
+
+<span class="n">graph</span> <span class="o">+=</span> <span class="p">[</span><span class="n">cloud_generator</span><span class="p">[:]</span> <span class="o">&gt;&gt;</span> <span class="n">extract_stuff</span><span class="p">[</span><span class="s">&quot;input&quot;</span><span class="p">],</span>
+          <span class="n">convex_hull</span><span class="p">[:]</span> <span class="o">&gt;&gt;</span> <span class="n">extract_stuff</span><span class="p">[</span><span class="s">&quot;planar_hull&quot;</span><span class="p">],</span>
+          <span class="n">extract_stuff</span><span class="p">[:]</span> <span class="o">&gt;&gt;</span> <span class="n">extract_indices</span><span class="p">[</span><span class="s">&quot;indices&quot;</span><span class="p">],</span>
+          <span class="n">cloud_generator</span><span class="p">[:]</span> <span class="o">&gt;&gt;</span> <span class="n">extract_indices</span><span class="p">[</span><span class="s">&quot;input&quot;</span><span class="p">],</span>
+          <span class="n">extract_indices</span><span class="p">[:]</span> <span class="o">&gt;&gt;</span> <span class="n">extract_clusters</span><span class="p">[:],</span>
+          <span class="n">extract_clusters</span><span class="p">[:]</span> <span class="o">&gt;&gt;</span> <span class="n">colorize</span><span class="p">[</span><span class="s">&quot;clusters&quot;</span><span class="p">],</span>
+          <span class="n">extract_indices</span><span class="p">[:]</span> <span class="o">&gt;&gt;</span> <span class="n">colorize</span><span class="p">[</span><span class="s">&quot;input&quot;</span><span class="p">],</span>
+          <span class="n">cloud_generator</span><span class="p">[:]</span> <span class="o">&gt;&gt;</span> <span class="n">merge</span><span class="p">[</span><span class="s">&quot;input&quot;</span><span class="p">],</span>
+          <span class="n">colorize</span><span class="p">[:]</span> <span class="o">&gt;&gt;</span> <span class="n">merge</span><span class="p">[</span><span class="s">&quot;input2&quot;</span><span class="p">],</span>
+          <span class="n">colorize</span><span class="p">[:]</span> <span class="o">&gt;&gt;</span> <span class="n">viewer</span><span class="p">[:]</span>
+          <span class="p">]</span>
+
+<span class="n">plasm</span> <span class="o">=</span> <span class="n">ecto</span><span class="o">.</span><span class="n">Plasm</span><span class="p">()</span>
+<span class="n">plasm</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">ecto.opts</span> <span class="kn">import</span> <span class="n">doit</span>
+    <span class="n">doit</span><span class="p">(</span><span class="n">plasm</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s">&#39;Execute tabletop segmentation and colorize clusters.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="graphviz">
+<img src="../_images/graphviz-285a34d75e1b8e9fd9fe7e3cbf491baf63400dd9.png" alt="digraph G {
+graph [rankdir=TB, ranksep=1]
+edge [labelfontsize=8]
+node [shape=plaintext]
+0[label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot; CELLPADDING=&quot;4&quot;&gt;  &lt;TR&gt; &lt;TD ROWSPAN=&quot;9&quot; COLSPAN=&quot;7&quot; BGCOLOR=&quot;khaki&quot;&gt;device&lt;/TD&gt; &lt;TD PORT=&quot;p_depth_fps&quot; BGCOLOR=&quot;lightblue&quot;&gt;depth_fps&lt;/TD&gt;
+ &lt;/TR&gt; &lt;TR&gt; &lt;TD PORT=&quot;p_depth_resolution&quot; BGCOLOR=&quot;lightblue&quot;&gt;depth_resolution&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_device&quot; BGCOLOR=&quot;lightblue&quot;&gt;device&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_device_number&quot; BGCOLOR=&quot;lightblue&quot;&gt;device_number&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_device_uid&quot; BGCOLOR=&quot;lightblue&quot;&gt;device_uid&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_registration&quot; BGCOLOR=&quot;lightblue&quot;&gt;registration&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_rgb_fps&quot; BGCOLOR=&quot;lightblue&quot;&gt;rgb_fps&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_rgb_resolution&quot; BGCOLOR=&quot;lightblue&quot;&gt;rgb_resolution&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_synchronize&quot; BGCOLOR=&quot;lightblue&quot;&gt;synchronize&lt;/TD&gt; &lt;/TR&gt;
+ &lt;TR&gt;
+&lt;TD PORT=&quot;o_depth_buffer&quot; BGCOLOR=&quot;indianred1&quot;&gt;depth_buffer&lt;/TD&gt;
+&lt;TD PORT=&quot;o_depth_height&quot; BGCOLOR=&quot;indianred1&quot;&gt;depth_height&lt;/TD&gt;
+&lt;TD PORT=&quot;o_depth_width&quot; BGCOLOR=&quot;indianred1&quot;&gt;depth_width&lt;/TD&gt;
+&lt;TD PORT=&quot;o_image_buffer&quot; BGCOLOR=&quot;indianred1&quot;&gt;image_buffer&lt;/TD&gt;
+&lt;TD PORT=&quot;o_image_channels&quot; BGCOLOR=&quot;indianred1&quot;&gt;image_channels&lt;/TD&gt;
+&lt;TD PORT=&quot;o_image_height&quot; BGCOLOR=&quot;indianred1&quot;&gt;image_height&lt;/TD&gt;
+&lt;TD PORT=&quot;o_image_width&quot; BGCOLOR=&quot;indianred1&quot;&gt;image_width&lt;/TD&gt;
+&lt;/TR&gt; &lt;/TABLE&gt;&gt;];
+1[label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot; CELLPADDING=&quot;4&quot;&gt; &lt;TR&gt;
+&lt;TD PORT=&quot;i_depth_buffer&quot; BGCOLOR=&quot;springgreen&quot;&gt;depth_buffer&lt;/TD&gt;
+&lt;TD PORT=&quot;i_depth_height&quot; BGCOLOR=&quot;springgreen&quot;&gt;depth_height&lt;/TD&gt;
+&lt;TD PORT=&quot;i_depth_width&quot; BGCOLOR=&quot;springgreen&quot;&gt;depth_width&lt;/TD&gt;
+&lt;TD PORT=&quot;i_image_buffer&quot; BGCOLOR=&quot;springgreen&quot;&gt;image_buffer&lt;/TD&gt;
+&lt;TD PORT=&quot;i_image_channels&quot; BGCOLOR=&quot;springgreen&quot;&gt;image_channels&lt;/TD&gt;
+&lt;TD PORT=&quot;i_image_height&quot; BGCOLOR=&quot;springgreen&quot;&gt;image_height&lt;/TD&gt;
+&lt;TD PORT=&quot;i_image_width&quot; BGCOLOR=&quot;springgreen&quot;&gt;image_width&lt;/TD&gt;
+&lt;/TR&gt; &lt;TR&gt; &lt;TD ROWSPAN=&quot;1&quot; COLSPAN=&quot;7&quot; BGCOLOR=&quot;khaki&quot;&gt;cloud_generator&lt;/TD&gt;  &lt;/TR&gt;  &lt;TR&gt;
+&lt;TD PORT=&quot;o_output&quot; BGCOLOR=&quot;indianred1&quot;&gt;output&lt;/TD&gt;
+&lt;/TR&gt; &lt;/TABLE&gt;&gt;];
+2[label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot; CELLPADDING=&quot;4&quot;&gt; &lt;TR&gt;
+&lt;TD PORT=&quot;i_input&quot; BGCOLOR=&quot;springgreen&quot;&gt;input&lt;/TD&gt;
+&lt;/TR&gt; &lt;TR&gt; &lt;TD ROWSPAN=&quot;5&quot; COLSPAN=&quot;1&quot; BGCOLOR=&quot;khaki&quot;&gt;voxel_grid&lt;/TD&gt; &lt;TD PORT=&quot;p_filter_field_name&quot; BGCOLOR=&quot;lightblue&quot;&gt;filter_field_name&lt;/TD&gt;
+ &lt;/TR&gt; &lt;TR&gt; &lt;TD PORT=&quot;p_filter_limit_max&quot; BGCOLOR=&quot;lightblue&quot;&gt;filter_limit_max&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_filter_limit_min&quot; BGCOLOR=&quot;lightblue&quot;&gt;filter_limit_min&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_filter_limit_negative&quot; BGCOLOR=&quot;lightblue&quot;&gt;filter_limit_negative&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_leaf_size&quot; BGCOLOR=&quot;lightblue&quot;&gt;leaf_size&lt;/TD&gt; &lt;/TR&gt;
+ &lt;TR&gt;
+&lt;TD PORT=&quot;o_output&quot; BGCOLOR=&quot;indianred1&quot;&gt;output&lt;/TD&gt;
+&lt;/TR&gt; &lt;/TABLE&gt;&gt;];
+3[label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot; CELLPADDING=&quot;4&quot;&gt; &lt;TR&gt;
+&lt;TD PORT=&quot;i_input&quot; BGCOLOR=&quot;springgreen&quot;&gt;input&lt;/TD&gt;
+&lt;/TR&gt; &lt;TR&gt; &lt;TD ROWSPAN=&quot;6&quot; COLSPAN=&quot;1&quot; BGCOLOR=&quot;khaki&quot;&gt;normals&lt;/TD&gt; &lt;TD PORT=&quot;p_k_search&quot; BGCOLOR=&quot;lightblue&quot;&gt;k_search&lt;/TD&gt;
+ &lt;/TR&gt; &lt;TR&gt; &lt;TD PORT=&quot;p_radius_search&quot; BGCOLOR=&quot;lightblue&quot;&gt;radius_search&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_spatial_locator&quot; BGCOLOR=&quot;lightblue&quot;&gt;spatial_locator&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_vp_x&quot; BGCOLOR=&quot;lightblue&quot;&gt;vp_x&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_vp_y&quot; BGCOLOR=&quot;lightblue&quot;&gt;vp_y&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_vp_z&quot; BGCOLOR=&quot;lightblue&quot;&gt;vp_z&lt;/TD&gt; &lt;/TR&gt;
+ &lt;TR&gt;
+&lt;TD PORT=&quot;o_output&quot; BGCOLOR=&quot;indianred1&quot;&gt;output&lt;/TD&gt;
+&lt;/TR&gt; &lt;/TABLE&gt;&gt;];
+4[label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot; CELLPADDING=&quot;4&quot;&gt; &lt;TR&gt;
+&lt;TD PORT=&quot;i_input&quot; BGCOLOR=&quot;springgreen&quot;&gt;input&lt;/TD&gt;
+&lt;TD PORT=&quot;i_normals&quot; BGCOLOR=&quot;springgreen&quot;&gt;normals&lt;/TD&gt;
+&lt;/TR&gt; &lt;TR&gt; &lt;TD ROWSPAN=&quot;13&quot; COLSPAN=&quot;2&quot; BGCOLOR=&quot;khaki&quot;&gt;planar_segmentation&lt;/TD&gt; &lt;TD PORT=&quot;p_axis_x&quot; BGCOLOR=&quot;lightblue&quot;&gt;axis_x&lt;/TD&gt;
+ &lt;/TR&gt; &lt;TR&gt; &lt;TD PORT=&quot;p_axis_y&quot; BGCOLOR=&quot;lightblue&quot;&gt;axis_y&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_axis_z&quot; BGCOLOR=&quot;lightblue&quot;&gt;axis_z&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_distance_threshold&quot; BGCOLOR=&quot;lightblue&quot;&gt;distance_threshold&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_eps_angle&quot; BGCOLOR=&quot;lightblue&quot;&gt;eps_angle&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_max_iterations&quot; BGCOLOR=&quot;lightblue&quot;&gt;max_iterations&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_method&quot; BGCOLOR=&quot;lightblue&quot;&gt;method&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_model_type&quot; BGCOLOR=&quot;lightblue&quot;&gt;model_type&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_normal_distance_weight&quot; BGCOLOR=&quot;lightblue&quot;&gt;normal_distance_weight&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_optimize_coefficients&quot; BGCOLOR=&quot;lightblue&quot;&gt;optimize_coefficients&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_probability&quot; BGCOLOR=&quot;lightblue&quot;&gt;probability&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_radius_max&quot; BGCOLOR=&quot;lightblue&quot;&gt;radius_max&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_radius_min&quot; BGCOLOR=&quot;lightblue&quot;&gt;radius_min&lt;/TD&gt; &lt;/TR&gt;
+ &lt;TR&gt;
+&lt;TD PORT=&quot;o_inliers&quot; BGCOLOR=&quot;indianred1&quot;&gt;inliers&lt;/TD&gt;
+&lt;TD PORT=&quot;o_model&quot; BGCOLOR=&quot;indianred1&quot;&gt;model&lt;/TD&gt;
+&lt;/TR&gt; &lt;/TABLE&gt;&gt;];
+5[label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot; CELLPADDING=&quot;4&quot;&gt; &lt;TR&gt;
+&lt;TD PORT=&quot;i_input&quot; BGCOLOR=&quot;springgreen&quot;&gt;input&lt;/TD&gt;
+&lt;TD PORT=&quot;i_model&quot; BGCOLOR=&quot;springgreen&quot;&gt;model&lt;/TD&gt;
+&lt;/TR&gt; &lt;TR&gt; &lt;TD ROWSPAN=&quot;2&quot; COLSPAN=&quot;2&quot; BGCOLOR=&quot;khaki&quot;&gt;project_inliers&lt;/TD&gt; &lt;TD PORT=&quot;p_copy_all_data&quot; BGCOLOR=&quot;lightblue&quot;&gt;copy_all_data&lt;/TD&gt;
+ &lt;/TR&gt; &lt;TR&gt; &lt;TD PORT=&quot;p_model_type&quot; BGCOLOR=&quot;lightblue&quot;&gt;model_type&lt;/TD&gt; &lt;/TR&gt;
+ &lt;TR&gt;
+&lt;TD PORT=&quot;o_output&quot; BGCOLOR=&quot;indianred1&quot;&gt;output&lt;/TD&gt;
+&lt;/TR&gt; &lt;/TABLE&gt;&gt;];
+6[label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot; CELLPADDING=&quot;4&quot;&gt; &lt;TR&gt;
+&lt;TD PORT=&quot;i_input&quot; BGCOLOR=&quot;springgreen&quot;&gt;input&lt;/TD&gt;
+&lt;/TR&gt; &lt;TR&gt; &lt;TD ROWSPAN=&quot;4&quot; COLSPAN=&quot;1&quot; BGCOLOR=&quot;khaki&quot;&gt;nan_removal&lt;/TD&gt; &lt;TD PORT=&quot;p_filter_field_name&quot; BGCOLOR=&quot;lightblue&quot;&gt;filter_field_name&lt;/TD&gt;
+ &lt;/TR&gt; &lt;TR&gt; &lt;TD PORT=&quot;p_filter_limit_max&quot; BGCOLOR=&quot;lightblue&quot;&gt;filter_limit_max&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_filter_limit_min&quot; BGCOLOR=&quot;lightblue&quot;&gt;filter_limit_min&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_filter_limit_negative&quot; BGCOLOR=&quot;lightblue&quot;&gt;filter_limit_negative&lt;/TD&gt; &lt;/TR&gt;
+ &lt;TR&gt;
+&lt;TD PORT=&quot;o_output&quot; BGCOLOR=&quot;indianred1&quot;&gt;output&lt;/TD&gt;
+&lt;/TR&gt; &lt;/TABLE&gt;&gt;];
+7[label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot; CELLPADDING=&quot;4&quot;&gt; &lt;TR&gt;
+&lt;TD PORT=&quot;i_input&quot; BGCOLOR=&quot;springgreen&quot;&gt;input&lt;/TD&gt;
+&lt;/TR&gt; &lt;TR&gt; &lt;TD ROWSPAN=&quot;1&quot; COLSPAN=&quot;1&quot; BGCOLOR=&quot;khaki&quot;&gt;convex_hull&lt;/TD&gt;  &lt;/TR&gt;  &lt;TR&gt;
+&lt;TD PORT=&quot;o_output&quot; BGCOLOR=&quot;indianred1&quot;&gt;output&lt;/TD&gt;
+&lt;/TR&gt; &lt;/TABLE&gt;&gt;];
+8[label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot; CELLPADDING=&quot;4&quot;&gt; &lt;TR&gt;
+&lt;TD PORT=&quot;i_input&quot; BGCOLOR=&quot;springgreen&quot;&gt;input&lt;/TD&gt;
+&lt;TD PORT=&quot;i_planar_hull&quot; BGCOLOR=&quot;springgreen&quot;&gt;planar_hull&lt;/TD&gt;
+&lt;/TR&gt; &lt;TR&gt; &lt;TD ROWSPAN=&quot;2&quot; COLSPAN=&quot;2&quot; BGCOLOR=&quot;khaki&quot;&gt;extract_stuff&lt;/TD&gt; &lt;TD PORT=&quot;p_height_max&quot; BGCOLOR=&quot;lightblue&quot;&gt;height_max&lt;/TD&gt;
+ &lt;/TR&gt; &lt;TR&gt; &lt;TD PORT=&quot;p_height_min&quot; BGCOLOR=&quot;lightblue&quot;&gt;height_min&lt;/TD&gt; &lt;/TR&gt;
+ &lt;TR&gt;
+&lt;TD PORT=&quot;o_inliers&quot; BGCOLOR=&quot;indianred1&quot;&gt;inliers&lt;/TD&gt;
+&lt;/TR&gt; &lt;/TABLE&gt;&gt;];
+9[label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot; CELLPADDING=&quot;4&quot;&gt; &lt;TR&gt;
+&lt;TD PORT=&quot;i_indices&quot; BGCOLOR=&quot;springgreen&quot;&gt;indices&lt;/TD&gt;
+&lt;TD PORT=&quot;i_input&quot; BGCOLOR=&quot;springgreen&quot;&gt;input&lt;/TD&gt;
+&lt;/TR&gt; &lt;TR&gt; &lt;TD ROWSPAN=&quot;1&quot; COLSPAN=&quot;2&quot; BGCOLOR=&quot;khaki&quot;&gt;extract_indices&lt;/TD&gt; &lt;TD PORT=&quot;p_negative&quot; BGCOLOR=&quot;lightblue&quot;&gt;negative&lt;/TD&gt;
+ &lt;/TR&gt;  &lt;TR&gt;
+&lt;TD PORT=&quot;o_output&quot; BGCOLOR=&quot;indianred1&quot;&gt;output&lt;/TD&gt;
+&lt;/TR&gt; &lt;/TABLE&gt;&gt;];
+10[label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot; CELLPADDING=&quot;4&quot;&gt; &lt;TR&gt;
+&lt;TD PORT=&quot;i_input&quot; BGCOLOR=&quot;springgreen&quot;&gt;input&lt;/TD&gt;
+&lt;/TR&gt; &lt;TR&gt; &lt;TD ROWSPAN=&quot;3&quot; COLSPAN=&quot;1&quot; BGCOLOR=&quot;khaki&quot;&gt;extract_clusters&lt;/TD&gt; &lt;TD PORT=&quot;p_cluster_tolerance&quot; BGCOLOR=&quot;lightblue&quot;&gt;cluster_tolerance&lt;/TD&gt;
+ &lt;/TR&gt; &lt;TR&gt; &lt;TD PORT=&quot;p_max_cluster_size&quot; BGCOLOR=&quot;lightblue&quot;&gt;max_cluster_size&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_min_cluster_size&quot; BGCOLOR=&quot;lightblue&quot;&gt;min_cluster_size&lt;/TD&gt; &lt;/TR&gt;
+ &lt;TR&gt;
+&lt;TD PORT=&quot;o_output&quot; BGCOLOR=&quot;indianred1&quot;&gt;output&lt;/TD&gt;
+&lt;/TR&gt; &lt;/TABLE&gt;&gt;];
+11[label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot; CELLPADDING=&quot;4&quot;&gt; &lt;TR&gt;
+&lt;TD PORT=&quot;i_clusters&quot; BGCOLOR=&quot;springgreen&quot;&gt;clusters&lt;/TD&gt;
+&lt;TD PORT=&quot;i_input&quot; BGCOLOR=&quot;springgreen&quot;&gt;input&lt;/TD&gt;
+&lt;/TR&gt; &lt;TR&gt; &lt;TD ROWSPAN=&quot;3&quot; COLSPAN=&quot;2&quot; BGCOLOR=&quot;khaki&quot;&gt;colorize&lt;/TD&gt; &lt;TD PORT=&quot;p_max_clusters&quot; BGCOLOR=&quot;lightblue&quot;&gt;max_clusters&lt;/TD&gt;
+ &lt;/TR&gt; &lt;TR&gt; &lt;TD PORT=&quot;p_saturation&quot; BGCOLOR=&quot;lightblue&quot;&gt;saturation&lt;/TD&gt; &lt;/TR&gt;
+&lt;TR&gt; &lt;TD PORT=&quot;p_value&quot; BGCOLOR=&quot;lightblue&quot;&gt;value&lt;/TD&gt; &lt;/TR&gt;
+ &lt;TR&gt;
+&lt;TD PORT=&quot;o_output&quot; BGCOLOR=&quot;indianred1&quot;&gt;output&lt;/TD&gt;
+&lt;/TR&gt; &lt;/TABLE&gt;&gt;];
+12[label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot; CELLPADDING=&quot;4&quot;&gt; &lt;TR&gt;
+&lt;TD PORT=&quot;i_input&quot; BGCOLOR=&quot;springgreen&quot;&gt;input&lt;/TD&gt;
+&lt;TD PORT=&quot;i_input2&quot; BGCOLOR=&quot;springgreen&quot;&gt;input2&lt;/TD&gt;
+&lt;/TR&gt; &lt;TR&gt; &lt;TD ROWSPAN=&quot;1&quot; COLSPAN=&quot;2&quot; BGCOLOR=&quot;khaki&quot;&gt;merge&lt;/TD&gt;  &lt;/TR&gt;  &lt;TR&gt;
+&lt;TD PORT=&quot;o_output&quot; BGCOLOR=&quot;indianred1&quot;&gt;output&lt;/TD&gt;
+&lt;/TR&gt; &lt;/TABLE&gt;&gt;];
+13[label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot; CELLPADDING=&quot;4&quot;&gt; &lt;TR&gt;
+&lt;TD PORT=&quot;i_input&quot; BGCOLOR=&quot;springgreen&quot;&gt;input&lt;/TD&gt;
+&lt;/TR&gt; &lt;TR&gt; &lt;TD ROWSPAN=&quot;1&quot; COLSPAN=&quot;1&quot; BGCOLOR=&quot;khaki&quot;&gt;viewer&lt;/TD&gt; &lt;TD PORT=&quot;p_window_name&quot; BGCOLOR=&quot;lightblue&quot;&gt;window_name&lt;/TD&gt;
+ &lt;/TR&gt;   &lt;/TABLE&gt;&gt;];
+0-&gt;1 [headport=&quot;i_depth_buffer&quot; tailport=&quot;o_depth_buffer&quot;];
+0-&gt;1 [headport=&quot;i_depth_height&quot; tailport=&quot;o_depth_height&quot;];
+0-&gt;1 [headport=&quot;i_depth_width&quot; tailport=&quot;o_depth_width&quot;];
+0-&gt;1 [headport=&quot;i_image_buffer&quot; tailport=&quot;o_image_buffer&quot;];
+0-&gt;1 [headport=&quot;i_image_channels&quot; tailport=&quot;o_image_channels&quot;];
+0-&gt;1 [headport=&quot;i_image_height&quot; tailport=&quot;o_image_height&quot;];
+0-&gt;1 [headport=&quot;i_image_width&quot; tailport=&quot;o_image_width&quot;];
+1-&gt;2 [headport=&quot;i_input&quot; tailport=&quot;o_output&quot;];
+2-&gt;3 [headport=&quot;i_input&quot; tailport=&quot;o_output&quot;];
+2-&gt;4 [headport=&quot;i_input&quot; tailport=&quot;o_output&quot;];
+3-&gt;4 [headport=&quot;i_normals&quot; tailport=&quot;o_output&quot;];
+2-&gt;5 [headport=&quot;i_input&quot; tailport=&quot;o_output&quot;];
+4-&gt;5 [headport=&quot;i_model&quot; tailport=&quot;o_model&quot;];
+5-&gt;6 [headport=&quot;i_input&quot; tailport=&quot;o_output&quot;];
+6-&gt;7 [headport=&quot;i_input&quot; tailport=&quot;o_output&quot;];
+1-&gt;8 [headport=&quot;i_input&quot; tailport=&quot;o_output&quot;];
+7-&gt;8 [headport=&quot;i_planar_hull&quot; tailport=&quot;o_output&quot;];
+8-&gt;9 [headport=&quot;i_indices&quot; tailport=&quot;o_inliers&quot;];
+1-&gt;9 [headport=&quot;i_input&quot; tailport=&quot;o_output&quot;];
+9-&gt;10 [headport=&quot;i_input&quot; tailport=&quot;o_output&quot;];
+10-&gt;11 [headport=&quot;i_clusters&quot; tailport=&quot;o_output&quot;];
+9-&gt;11 [headport=&quot;i_input&quot; tailport=&quot;o_output&quot;];
+1-&gt;12 [headport=&quot;i_input&quot; tailport=&quot;o_output&quot;];
+11-&gt;12 [headport=&quot;i_input2&quot; tailport=&quot;o_output&quot;];
+11-&gt;13 [headport=&quot;i_input&quot; tailport=&quot;o_output&quot;];
+}" />
+</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="pcd_viewer.html" title="Display a point cloud from a PCD file"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tabletop_segmentation.html" title="Tabletop Segmentation"
+             >previous</a> |</li>
+        <li><a href="../index.html">ecto_pcl</a> &raquo;</li>
+          <li><a href="index.html" >Examples</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012,  Willow Garage, Inc.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

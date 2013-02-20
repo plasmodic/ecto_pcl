@@ -1,0 +1,162 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Display a point cloud from a PCD file &mdash; ecto_pcl</title>
+    
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="ecto_pcl" href="../index.html" />
+    <link rel="up" title="Examples" href="index.html" />
+    <link rel="next" title="Using ecto_pcl with ROS" href="ros_sample.html" />
+    <link rel="prev" title="Segment the objects from the plane, color them" href="colorize_clusters.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="ros_sample.html" title="Using ecto_pcl with ROS"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="colorize_clusters.html" title="Segment the objects from the plane, color them"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">ecto_pcl</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Examples</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="colorize_clusters.html"
+                        title="previous chapter">Segment the objects from the plane, color them</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ros_sample.html"
+                        title="next chapter">Using ecto_pcl with ROS</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/examples/pcd_viewer.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="display-a-point-cloud-from-a-pcd-file">
+<h1>Display a point cloud from a PCD file<a class="headerlink" href="#display-a-point-cloud-from-a-pcd-file" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference download internal" href="../_downloads/pcd_viewer.py"><tt class="xref download docutils literal"><span class="pre">pcd_viewer.py</span></tt></a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
+
+<span class="kn">import</span> <span class="nn">ecto</span><span class="o">,</span> <span class="nn">ecto_pcl</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">plasm</span> <span class="o">=</span> <span class="n">ecto</span><span class="o">.</span><span class="n">Plasm</span><span class="p">()</span>
+<span class="n">pcdfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">),</span>
+                       <span class="s">&#39;cloud.pcd&#39;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="n">pcdfile</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">reader</span> <span class="o">=</span> <span class="n">ecto_pcl</span><span class="o">.</span><span class="n">PCDReader</span><span class="p">(</span><span class="s">&quot;Reader&quot;</span><span class="p">,</span>
+                            <span class="n">filename</span><span class="o">=</span><span class="n">pcdfile</span><span class="p">)</span>
+
+<span class="n">viewer</span> <span class="o">=</span> <span class="n">ecto_pcl</span><span class="o">.</span><span class="n">CloudViewer</span><span class="p">(</span><span class="s">&quot;viewer&quot;</span><span class="p">,</span>
+                              <span class="n">window_name</span><span class="o">=</span><span class="s">&quot;PCD Viewer&quot;</span><span class="p">)</span>
+
+<span class="n">plasm</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">reader</span><span class="p">[:]</span> <span class="o">&gt;&gt;</span> <span class="n">viewer</span><span class="p">[:])</span>
+
+<span class="k">if</span> <span class="n">__name__</span><span class="o">==</span><span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">sched</span> <span class="o">=</span> <span class="n">ecto</span><span class="o">.</span><span class="n">schedulers</span><span class="o">.</span><span class="n">Threadpool</span><span class="p">(</span><span class="n">plasm</span><span class="p">)</span>
+    <span class="n">sched</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">niter</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c">#sleep 2 seconds and exit.</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="graphviz">
+<img src="../_images/graphviz-55b45f10eb077d92aea5036a8f0509059ea1c003.png" alt="digraph G {
+graph [rankdir=TB, ranksep=1]
+edge [labelfontsize=8]
+node [shape=plaintext]
+0[label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot; CELLPADDING=&quot;4&quot;&gt;  &lt;TR&gt; &lt;TD ROWSPAN=&quot;2&quot; COLSPAN=&quot;1&quot; BGCOLOR=&quot;khaki&quot;&gt;Reader&lt;/TD&gt; &lt;TD PORT=&quot;p_filename&quot; BGCOLOR=&quot;lightblue&quot;&gt;filename&lt;/TD&gt;
+ &lt;/TR&gt; &lt;TR&gt; &lt;TD PORT=&quot;p_format&quot; BGCOLOR=&quot;lightblue&quot;&gt;format&lt;/TD&gt; &lt;/TR&gt;
+ &lt;TR&gt;
+&lt;TD PORT=&quot;o_output&quot; BGCOLOR=&quot;indianred1&quot;&gt;output&lt;/TD&gt;
+&lt;/TR&gt; &lt;/TABLE&gt;&gt;];
+1[label=&lt;&lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot; CELLPADDING=&quot;4&quot;&gt; &lt;TR&gt;
+&lt;TD PORT=&quot;i_input&quot; BGCOLOR=&quot;springgreen&quot;&gt;input&lt;/TD&gt;
+&lt;/TR&gt; &lt;TR&gt; &lt;TD ROWSPAN=&quot;1&quot; COLSPAN=&quot;1&quot; BGCOLOR=&quot;khaki&quot;&gt;viewer&lt;/TD&gt; &lt;TD PORT=&quot;p_window_name&quot; BGCOLOR=&quot;lightblue&quot;&gt;window_name&lt;/TD&gt;
+ &lt;/TR&gt;   &lt;/TABLE&gt;&gt;];
+0-&gt;1 [headport=&quot;i_input&quot; tailport=&quot;o_output&quot;];
+}" />
+</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="ros_sample.html" title="Using ecto_pcl with ROS"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="colorize_clusters.html" title="Segment the objects from the plane, color them"
+             >previous</a> |</li>
+        <li><a href="../index.html">ecto_pcl</a> &raquo;</li>
+          <li><a href="index.html" >Examples</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012,  Willow Garage, Inc.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

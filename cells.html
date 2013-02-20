@@ -1,0 +1,1004 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>All ecto_pcl cells &mdash; ecto_pcl</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="ecto_pcl" href="index.html" />
+    <link rel="prev" title="Using ecto_pcl with ROS" href="examples/ros_sample.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="examples/ros_sample.html" title="Using ecto_pcl with ROS"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">ecto_pcl</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="examples/ros_sample.html"
+                        title="previous chapter">Using ecto_pcl with ROS</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/cells.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="all-ecto-pcl-cells">
+<h1>All <tt class="docutils literal"><span class="pre">ecto_pcl</span></tt> cells<a class="headerlink" href="#all-ecto-pcl-cells" title="Permalink to this headline">¶</a></h1>
+<h1>ecto_pcl<a class="headerlink" href="#all-ecto-pcl-cells" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="PointCloudT2PointCloud">
+<span id="index-0"></span><span id="ecto_pcl.PointCloudT2PointCloud"></span><h2>PointCloudT2PointCloud<a class="headerlink" href="#PointCloudT2PointCloud" title="Permalink to this headline">¶</a></h2>
+<p></p>
+<div class="topic">
+<p class="topic-title first">Brief doc<p>Convert a strongly typed pcl::PointCloud&lt;pcl::PointT&gt; to a generic variant based PointCloud.</p>
+</p>
+<p class="topic-title first">Parameters<ul>
+<li><p class="first"><strong>format</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::Format</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">XYZRGB</span></tt><p><em>Legal Values: </em><tt class="docutils literal"><span class="pre">XYZ</span> <span class="pre">(0)</span>&nbsp;&nbsp; </tt><tt class="docutils literal"><span class="pre">XYZI</span> <span class="pre">(1)</span>&nbsp;&nbsp; </tt><tt class="docutils literal"><span class="pre">XYZRGB</span> <span class="pre">(2)</span>&nbsp;&nbsp; </tt><tt class="docutils literal"><span class="pre">XYZRGBA</span> <span class="pre">(3)</span>&nbsp;&nbsp; </tt><tt class="docutils literal"><span class="pre">XYZRGBNORMAL</span> <span class="pre">(4)</span>&nbsp;&nbsp; </tt><tt class="docutils literal"><span class="pre">POINTNORMAL</span> <span class="pre">(5)</span>&nbsp;&nbsp; </tt><tt class="docutils literal"><span class="pre">NORMAL</span> <span class="pre">(6)</span>&nbsp;&nbsp; </tt><tt class="docutils literal"><span class="pre">PFHSIGNATURE</span> <span class="pre">(7)</span>&nbsp;&nbsp; </tt><tt class="docutils literal"><span class="pre">FPFHSIGNATURE</span> <span class="pre">(8)</span>&nbsp;&nbsp; </tt><tt class="docutils literal"><span class="pre">VFHSIGNATURE</span> <span class="pre">(9)</span>&nbsp;&nbsp; </tt></p>
+</p>
+<p>Format of cloud to grab.</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Inputs<ul>
+<li><p class="first"><strong>input</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">boost::shared_ptr&lt;pcl::PointCloud&lt;pcl::PointXYZRGB&gt;</span> <span class="pre">const&gt;</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>An pcl::PointCloud&lt;PointT&gt; type.</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Outputs<ul>
+<li><p class="first"><strong>output</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>An variant based PointCloud.</p>
+</li>
+</ul>
+</p>
+</div>
+</div>
+<div class="section" id="PCDWriter">
+<span id="index-1"></span><span id="ecto_pcl.PCDWriter"></span><h2>PCDWriter<a class="headerlink" href="#PCDWriter" title="Permalink to this headline">¶</a></h2>
+<p></p>
+<div class="topic">
+<p class="topic-title first">Brief doc<p>Write a cloud to a PCD file</p>
+</p>
+<p class="topic-title first">Parameters<ul>
+<li><p class="first"><strong>binary</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">bool</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">False</span></tt></p>
+<p>Use binary encoding.</p>
+</li>
+<li><p class="first"><strong>filename_format</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">std::string</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">cloud_%04u.pcd</span></tt></p>
+<p>The format string for saving pcds, must succeed with a single unsigned int argument.</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Inputs<ul>
+<li><p class="first"><strong>input</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>A point cloud to put in a pcd file.</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Outputs<ul>
+<li><p class="first"><strong>cloud_message</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">boost::shared_ptr&lt;sensor_msgs::PointCloud2_&lt;std::allocator&lt;void&gt;</span> <span class="pre">&gt;</span> <span class="pre">const&gt;</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>the cloud message used for writing.</p>
+</li>
+</ul>
+</p>
+</div>
+</div>
+<div class="section" id="MovingLeastSquares">
+<span id="index-2"></span><span id="ecto_pcl.MovingLeastSquares"></span><h2>MovingLeastSquares<a class="headerlink" href="#MovingLeastSquares" title="Permalink to this headline">¶</a></h2>
+<p></p>
+<div class="topic">
+<p class="topic-title first">Brief doc<p>Smooth a cloud with MLS.</p>
+</p>
+<p class="topic-title first">Parameters<ul>
+<li><p class="first"><strong>polynomial_order</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">int</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">2</span></tt></p>
+<p>The polynomial order to fit.</p>
+</li>
+<li><p class="first"><strong>search_radius</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0.03</span></tt></p>
+<p>Sphere to be considered a neighbor.</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Inputs<ul>
+<li><p class="first"><strong>input</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>The cloud to filter</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Outputs<ul>
+<li><p class="first"><strong>output</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>The smoothed cloud.</p>
+</li>
+</ul>
+</p>
+</div>
+</div>
+<div class="section" id="VFHEstimation">
+<span id="index-3"></span><span id="ecto_pcl.VFHEstimation"></span><h2>VFHEstimation<a class="headerlink" href="#VFHEstimation" title="Permalink to this headline">¶</a></h2>
+<p></p>
+<div class="topic">
+<p class="topic-title first">Brief doc<p>This cell provides Viewpoint Feature Histogram estimation.</p>
+</p>
+<p class="topic-title first">Parameters<ul>
+<li><p class="first"><strong>k_search</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">int</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0</span></tt></p>
+<p>The number of k nearest neighbors to use for feature estimation.</p>
+</li>
+<li><p class="first"><strong>radius_search</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0.0</span></tt></p>
+<p>The sphere radius to use for determining the nearest neighbors used for feature estimation.</p>
+</li>
+<li><p class="first"><strong>spatial_locator</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">int</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0</span></tt></p>
+<p>The search method to use: FLANN(0), ORGANIZED(1).</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Inputs<ul>
+<li><p class="first"><strong>input</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Input cloud.</p>
+</li>
+<li><p class="first"><strong>normals</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::FeatureCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Normals to use.</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Outputs<ul>
+<li><p class="first"><strong>output</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::FeatureCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Cloud of features.</p>
+</li>
+</ul>
+</p>
+</div>
+</div>
+<div class="section" id="SACSegmentationFromNormals">
+<span id="index-4"></span><span id="ecto_pcl.SACSegmentationFromNormals"></span><h2>SACSegmentationFromNormals<a class="headerlink" href="#SACSegmentationFromNormals" title="Permalink to this headline">¶</a></h2>
+<p></p>
+<div class="topic">
+<p class="topic-title first">Brief doc<p>Segmentation using Sample Consensus from Normals.</p>
+</p>
+<p class="topic-title first">Parameters<ul>
+<li><p class="first"><strong>axis_x</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0.0</span></tt></p>
+<p>X component of desired perpendicular vector for model.</p>
+</li>
+<li><p class="first"><strong>axis_y</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0.0</span></tt></p>
+<p>Y component of desired perpendicular vector for model.</p>
+</li>
+<li><p class="first"><strong>axis_z</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0.0</span></tt></p>
+<p>Z component of desired perpendicular vector for model.</p>
+</li>
+<li><p class="first"><strong>distance_threshold</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0.0</span></tt></p>
+<p>Doistance to model threshold.</p>
+</li>
+<li><p class="first"><strong>eps_angle</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0.0</span></tt></p>
+<p>Angle epsilon (delta) threshold.</p>
+</li>
+<li><p class="first"><strong>max_iterations</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">int</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">50</span></tt></p>
+<p>Maximum number of iterations before giving up.</p>
+</li>
+<li><p class="first"><strong>method</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">int</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0</span></tt></p>
+<p>Type of sample consensus method to use.</p>
+</li>
+<li><p class="first"><strong>model_type</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">int</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">-1</span></tt></p>
+<p>Type of model to use.</p>
+</li>
+<li><p class="first"><strong>normal_distance_weight</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0.1</span></tt></p>
+<p>Relative weight (between 0 and 1) to give to the angular distance (0 to pi/2) betwen point normals and the plane normal.</p>
+</li>
+<li><p class="first"><strong>optimize_coefficients</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">bool</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">True</span></tt></p>
+<p>True if a coefficient refinement is required.</p>
+</li>
+<li><p class="first"><strong>probability</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0.99</span></tt></p>
+<p>Probability of choosing at least one sample free from outliers.</p>
+</li>
+<li><p class="first"><strong>radius_max</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">1.79769313486e+308</span></tt></p>
+<p>Maximum allowable radius limits for the model.</p>
+</li>
+<li><p class="first"><strong>radius_min</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">-1.79769313486e+308</span></tt></p>
+<p>Minimum allowable radius limits for the model.</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Inputs<ul>
+<li><p class="first"><strong>input</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Input cloud.</p>
+</li>
+<li><p class="first"><strong>normals</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::FeatureCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Normals to use.</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Outputs<ul>
+<li><p class="first"><strong>inliers</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">boost::shared_ptr&lt;pcl::PointIndices_&lt;std::allocator&lt;void&gt;</span> <span class="pre">&gt;</span> <span class="pre">const&gt;</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Inliers of the model.</p>
+</li>
+<li><p class="first"><strong>model</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">boost::shared_ptr&lt;pcl::ModelCoefficients_&lt;std::allocator&lt;void&gt;</span> <span class="pre">&gt;</span> <span class="pre">const&gt;</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Model found during segmentation.</p>
+</li>
+</ul>
+</p>
+</div>
+</div>
+<div class="section" id="PLYWriter">
+<span id="index-5"></span><span id="ecto_pcl.PLYWriter"></span><h2>PLYWriter<a class="headerlink" href="#PLYWriter" title="Permalink to this headline">¶</a></h2>
+<p></p>
+<div class="topic">
+<p class="topic-title first">Brief doc<p>Write a cloud to a PLY file</p>
+</p>
+<p class="topic-title first">Parameters<ul>
+<li><p class="first"><strong>filename_format</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">std::string</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">cloud_%04u.ply</span></tt></p>
+<p>The format string for saving PLY files, must succeed with a single unsigned int argument.</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Inputs<ul>
+<li><p class="first"><strong>input</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>A point cloud to put in a pcd file.</p>
+</li>
+</ul>
+</p>
+<p></p>
+</div>
+</div>
+<div class="section" id="RadiusOutlierRemoval">
+<span id="index-6"></span><span id="ecto_pcl.RadiusOutlierRemoval"></span><h2>RadiusOutlierRemoval<a class="headerlink" href="#RadiusOutlierRemoval" title="Permalink to this headline">¶</a></h2>
+<p></p>
+<div class="topic">
+<p class="topic-title first">Brief doc<p>Remove noisy measurements.</p>
+</p>
+<p class="topic-title first">Parameters<ul>
+<li><p class="first"><strong>min_neighbors</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">int</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">1</span></tt></p>
+<p>The minimum number of neighbors in the radius.</p>
+</li>
+<li><p class="first"><strong>search_radius</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0.0</span></tt></p>
+<p>The number of points to use for mean distance estimation.</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Inputs<ul>
+<li><p class="first"><strong>input</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>The cloud to filter</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Outputs<ul>
+<li><p class="first"><strong>output</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Filtered Cloud.</p>
+</li>
+</ul>
+</p>
+</div>
+</div>
+<div class="section" id="ProjectInliers">
+<span id="index-7"></span><span id="ecto_pcl.ProjectInliers"></span><h2>ProjectInliers<a class="headerlink" href="#ProjectInliers" title="Permalink to this headline">¶</a></h2>
+<p></p>
+<div class="topic">
+<p class="topic-title first">Brief doc<p>Project points of a cloud onto a model that they are inliers of.</p>
+</p>
+<p class="topic-title first">Parameters<ul>
+<li><p class="first"><strong>copy_all_data</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">bool</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">False</span></tt></p>
+<p>Sets whether all data will be returned, or only the projected inliers.</p>
+</li>
+<li><p class="first"><strong>model_type</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">int</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0</span></tt></p>
+<p>The type of model to use.</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Inputs<ul>
+<li><p class="first"><strong>input</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>The cloud to filter</p>
+</li>
+<li><p class="first"><strong>model</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">boost::shared_ptr&lt;pcl::ModelCoefficients_&lt;std::allocator&lt;void&gt;</span> <span class="pre">&gt;</span> <span class="pre">const&gt;</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Model to use for projection.</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Outputs<ul>
+<li><p class="first"><strong>output</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Filtered Cloud.</p>
+</li>
+</ul>
+</p>
+</div>
+</div>
+<div class="section" id="ExtractIndices">
+<span id="index-8"></span><span id="ecto_pcl.ExtractIndices"></span><h2>ExtractIndices<a class="headerlink" href="#ExtractIndices" title="Permalink to this headline">¶</a></h2>
+<p></p>
+<div class="topic">
+<p class="topic-title first">Brief doc<p>Extract a new cloud given an existing cloud and a set of indices to extract.</p>
+</p>
+<p class="topic-title first">Parameters<ul>
+<li><p class="first"><strong>negative</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">bool</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">False</span></tt></p>
+<p>Sets whether the indices should be returned, or all points _except_ the indices.</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Inputs<ul>
+<li><p class="first"><strong>indices</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">boost::shared_ptr&lt;pcl::PointIndices_&lt;std::allocator&lt;void&gt;</span> <span class="pre">&gt;</span> <span class="pre">const&gt;</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>The indices to extract.</p>
+</li>
+<li><p class="first"><strong>input</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>The cloud to filter</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Outputs<ul>
+<li><p class="first"><strong>output</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Filtered Cloud.</p>
+</li>
+</ul>
+</p>
+</div>
+</div>
+<div class="section" id="Cropper">
+<span id="index-9"></span><span id="ecto_pcl.Cropper"></span><h2>Cropper<a class="headerlink" href="#Cropper" title="Permalink to this headline">¶</a></h2>
+<p></p>
+<div class="topic">
+<p class="topic-title first">Brief doc<p>Crops and keeps organized a given point cloud.</p>
+</p>
+<p class="topic-title first">Parameters<ul>
+<li><p class="first"><strong>crop_enabled</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">bool</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">True</span></tt></p>
+<p>If the cropper cell is enabled</p>
+</li>
+<li><p class="first"><strong>x_max</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">float</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">3.40282346639e+38</span></tt></p>
+<p>The maximum x value (in the camera reference frame)</p>
+</li>
+<li><p class="first"><strong>x_min</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">float</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">-3.40282346639e+38</span></tt></p>
+<p>The minimum x value (in the camera reference frame)</p>
+</li>
+<li><p class="first"><strong>y_max</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">float</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">3.40282346639e+38</span></tt></p>
+<p>The maximum y value (in the camera reference frame)</p>
+</li>
+<li><p class="first"><strong>y_min</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">float</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">-3.40282346639e+38</span></tt></p>
+<p>The minimum y value (in the camera reference frame)</p>
+</li>
+<li><p class="first"><strong>z_max</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">float</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">3.40282346639e+38</span></tt></p>
+<p>The maximum z value (in the camera reference frame)</p>
+</li>
+<li><p class="first"><strong>z_min</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">float</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">-3.40282346639e+38</span></tt></p>
+<p>The minimum z value (in the camera reference frame)</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Inputs<ul>
+<li><p class="first"><strong>input</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>The cloud to filter</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Outputs<ul>
+<li><p class="first"><strong>output</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>The cropped cloud.</p>
+</li>
+</ul>
+</p>
+</div>
+</div>
+<div class="section" id="CloudViewer">
+<span id="index-10"></span><span id="ecto_pcl.CloudViewer"></span><h2>CloudViewer<a class="headerlink" href="#CloudViewer" title="Permalink to this headline">¶</a></h2>
+<p></p>
+<div class="topic">
+<p class="topic-title first">Brief doc<p>Viewer of clouds</p>
+</p>
+<p class="topic-title first">Parameters<ul>
+<li><p class="first"><strong>window_name</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">std::string</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">cloud</span> <span class="pre">viewer</span></tt></p>
+<p>The window name</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Inputs<ul>
+<li><p class="first"><strong>input</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>The cloud to view</p>
+</li>
+</ul>
+</p>
+<p></p>
+</div>
+</div>
+<div class="section" id="FPFHEstimation">
+<span id="index-11"></span><span id="ecto_pcl.FPFHEstimation"></span><h2>FPFHEstimation<a class="headerlink" href="#FPFHEstimation" title="Permalink to this headline">¶</a></h2>
+<p></p>
+<div class="topic">
+<p class="topic-title first">Brief doc<p>This cell provides Fast Point Feature Histogram estimation.</p>
+</p>
+<p class="topic-title first">Parameters<ul>
+<li><p class="first"><strong>k_search</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">int</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0</span></tt></p>
+<p>The number of k nearest neighbors to use for feature estimation.</p>
+</li>
+<li><p class="first"><strong>radius_search</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0.0</span></tt></p>
+<p>The sphere radius to use for determining the nearest neighbors used for feature estimation.</p>
+</li>
+<li><p class="first"><strong>spatial_locator</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">int</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0</span></tt></p>
+<p>The search method to use: FLANN(0), ORGANIZED(1).</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Inputs<ul>
+<li><p class="first"><strong>input</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Input cloud.</p>
+</li>
+<li><p class="first"><strong>normals</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::FeatureCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Normals to use.</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Outputs<ul>
+<li><p class="first"><strong>output</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::FeatureCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Cloud of features.</p>
+</li>
+</ul>
+</p>
+</div>
+</div>
+<div class="section" id="NormalEstimation">
+<span id="index-12"></span><span id="ecto_pcl.NormalEstimation"></span><h2>NormalEstimation<a class="headerlink" href="#NormalEstimation" title="Permalink to this headline">¶</a></h2>
+<p></p>
+<div class="topic">
+<p class="topic-title first">Brief doc<p>Normal estimation</p>
+</p>
+<p class="topic-title first">Parameters<ul>
+<li><p class="first"><strong>k_search</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">int</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0</span></tt></p>
+<p>The number of k nearest neighbors to use for feature estimation.</p>
+</li>
+<li><p class="first"><strong>radius_search</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0.0</span></tt></p>
+<p>The sphere radius to use for determining the nearest neighbors used for feature estimation.</p>
+</li>
+<li><p class="first"><strong>spatial_locator</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">int</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0</span></tt></p>
+<p>The search method to use: FLANN(0), ORGANIZED(1).</p>
+</li>
+<li><p class="first"><strong>vp_x</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0.0</span></tt></p>
+<p>Viewpoint x component.</p>
+</li>
+<li><p class="first"><strong>vp_y</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0.0</span></tt></p>
+<p>Viewpoint y component.</p>
+</li>
+<li><p class="first"><strong>vp_z</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0.0</span></tt></p>
+<p>Viewpoint z component.</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Inputs<ul>
+<li><p class="first"><strong>input</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>The cloud to filter</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Outputs<ul>
+<li><p class="first"><strong>output</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::FeatureCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Cloud of features.</p>
+</li>
+</ul>
+</p>
+</div>
+</div>
+<div class="section" id="PFHEstimation">
+<span id="index-13"></span><span id="ecto_pcl.PFHEstimation"></span><h2>PFHEstimation<a class="headerlink" href="#PFHEstimation" title="Permalink to this headline">¶</a></h2>
+<p></p>
+<div class="topic">
+<p class="topic-title first">Brief doc<p>This cell provides Point Feature Histogram estimation.</p>
+</p>
+<p class="topic-title first">Parameters<ul>
+<li><p class="first"><strong>k_search</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">int</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0</span></tt></p>
+<p>The number of k nearest neighbors to use for feature estimation.</p>
+</li>
+<li><p class="first"><strong>radius_search</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0.0</span></tt></p>
+<p>The sphere radius to use for determining the nearest neighbors used for feature estimation.</p>
+</li>
+<li><p class="first"><strong>spatial_locator</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">int</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0</span></tt></p>
+<p>The search method to use: FLANN(0), ORGANIZED(1).</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Inputs<ul>
+<li><p class="first"><strong>input</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Input cloud.</p>
+</li>
+<li><p class="first"><strong>normals</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::FeatureCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Normals to use.</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Outputs<ul>
+<li><p class="first"><strong>output</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::FeatureCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Cloud of features.</p>
+</li>
+</ul>
+</p>
+</div>
+</div>
+<div class="section" id="ExtractPolygonalPrismData">
+<span id="index-14"></span><span id="ecto_pcl.ExtractPolygonalPrismData"></span><h2>ExtractPolygonalPrismData<a class="headerlink" href="#ExtractPolygonalPrismData" title="Permalink to this headline">¶</a></h2>
+<p></p>
+<div class="topic">
+<p class="topic-title first">Brief doc<p>Uses a set of point indices that respresent a            planar model, and together with a given height, generates a 3D polygonal prism.</p>
+</p>
+<p class="topic-title first">Parameters<ul>
+<li><p class="first"><strong>height_max</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">1.0</span></tt></p>
+<p>Maximum allowable height limits for the model.</p>
+</li>
+<li><p class="first"><strong>height_min</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0.0</span></tt></p>
+<p>Minimum allowable height limits for the model.</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Inputs<ul>
+<li><p class="first"><strong>input</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Input cloud.</p>
+</li>
+<li><p class="first"><strong>planar_hull</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Planar hull to use.</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Outputs<ul>
+<li><p class="first"><strong>inliers</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">boost::shared_ptr&lt;pcl::PointIndices_&lt;std::allocator&lt;void&gt;</span> <span class="pre">&gt;</span> <span class="pre">const&gt;</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Inliers of the model.</p>
+</li>
+</ul>
+</p>
+</div>
+</div>
+<div class="section" id="PassThrough">
+<span id="index-15"></span><span id="ecto_pcl.PassThrough"></span><h2>PassThrough<a class="headerlink" href="#PassThrough" title="Permalink to this headline">¶</a></h2>
+<p></p>
+<div class="topic">
+<p class="topic-title first">Brief doc<p>PassThrough filter</p>
+</p>
+<p class="topic-title first">Parameters<ul>
+<li><p class="first"><strong>filter_field_name</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">std::string</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"></tt></p>
+<p>The name of the field to use for filtering.</p>
+</li>
+<li><p class="first"><strong>filter_limit_max</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">3.40282346639e+38</span></tt></p>
+<p>Maximum value for the filter.</p>
+</li>
+<li><p class="first"><strong>filter_limit_min</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">1.17549435082e-38</span></tt></p>
+<p>Minimum value for the filter.</p>
+</li>
+<li><p class="first"><strong>filter_limit_negative</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">bool</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">False</span></tt></p>
+<p>To negate the limits or not.</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Inputs<ul>
+<li><p class="first"><strong>input</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>The cloud to filter</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Outputs<ul>
+<li><p class="first"><strong>output</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Filtered Cloud.</p>
+</li>
+</ul>
+</p>
+</div>
+</div>
+<div class="section" id="PCDReader">
+<span id="index-16"></span><span id="ecto_pcl.PCDReader"></span><h2>PCDReader<a class="headerlink" href="#PCDReader" title="Permalink to this headline">¶</a></h2>
+<p></p>
+<div class="topic">
+<p class="topic-title first">Brief doc<p>Read a cloud from a PCD file</p>
+</p>
+<p class="topic-title first">Parameters<ul>
+<li><p class="first"><strong>filename</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">std::string</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"></tt></p>
+<p>Name of the pcd file</p>
+</li>
+<li><p class="first"><strong>format</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::Format</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">XYZRGB</span></tt><p><em>Legal Values: </em><tt class="docutils literal"><span class="pre">XYZ</span> <span class="pre">(0)</span>&nbsp;&nbsp; </tt><tt class="docutils literal"><span class="pre">XYZI</span> <span class="pre">(1)</span>&nbsp;&nbsp; </tt><tt class="docutils literal"><span class="pre">XYZRGB</span> <span class="pre">(2)</span>&nbsp;&nbsp; </tt><tt class="docutils literal"><span class="pre">XYZRGBA</span> <span class="pre">(3)</span>&nbsp;&nbsp; </tt><tt class="docutils literal"><span class="pre">XYZRGBNORMAL</span> <span class="pre">(4)</span>&nbsp;&nbsp; </tt><tt class="docutils literal"><span class="pre">POINTNORMAL</span> <span class="pre">(5)</span>&nbsp;&nbsp; </tt><tt class="docutils literal"><span class="pre">NORMAL</span> <span class="pre">(6)</span>&nbsp;&nbsp; </tt><tt class="docutils literal"><span class="pre">PFHSIGNATURE</span> <span class="pre">(7)</span>&nbsp;&nbsp; </tt><tt class="docutils literal"><span class="pre">FPFHSIGNATURE</span> <span class="pre">(8)</span>&nbsp;&nbsp; </tt><tt class="docutils literal"><span class="pre">VFHSIGNATURE</span> <span class="pre">(9)</span>&nbsp;&nbsp; </tt></p>
+</p>
+<p>Format of cloud found in PCD file.</p>
+</li>
+</ul>
+</p>
+<p></p>
+<p class="topic-title first">Outputs<ul>
+<li><p class="first"><strong>output</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>A point cloud from the pcd file.</p>
+</li>
+</ul>
+</p>
+</div>
+</div>
+<div class="section" id="NiConverter">
+<span id="index-17"></span><span id="ecto_pcl.NiConverter"></span><h2>NiConverter<a class="headerlink" href="#NiConverter" title="Permalink to this headline">¶</a></h2>
+<p></p>
+<div class="topic">
+<p class="topic-title first">Brief doc<p>Read images from a directory.</p>
+</p>
+<p></p>
+<p class="topic-title first">Inputs<ul>
+<li><p class="first"><strong>depth_buffer</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">boost::shared_ptr&lt;std::vector&lt;unsigned</span> <span class="pre">short,</span> <span class="pre">std::allocator&lt;unsigned</span> <span class="pre">short&gt;</span> <span class="pre">&gt;</span> <span class="pre">const&gt;</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p></p>
+</li>
+<li><p class="first"><strong>depth_height</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">int</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Depth frame height.</p>
+</li>
+<li><p class="first"><strong>depth_width</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">int</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Depth frame width.</p>
+</li>
+<li><p class="first"><strong>image_buffer</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">boost::shared_ptr&lt;std::vector&lt;unsigned</span> <span class="pre">char,</span> <span class="pre">std::allocator&lt;unsigned</span> <span class="pre">char&gt;</span> <span class="pre">&gt;</span> <span class="pre">const&gt;</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p></p>
+</li>
+<li><p class="first"><strong>image_channels</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">int</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Number of image channels.</p>
+</li>
+<li><p class="first"><strong>image_height</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">int</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Image frame height.</p>
+</li>
+<li><p class="first"><strong>image_width</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">int</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Image frame width.</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Outputs<ul>
+<li><p class="first"><strong>output</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p></p>
+</li>
+</ul>
+</p>
+</div>
+</div>
+<div class="section" id="StatisticalOutlierRemoval">
+<span id="index-18"></span><span id="ecto_pcl.StatisticalOutlierRemoval"></span><h2>StatisticalOutlierRemoval<a class="headerlink" href="#StatisticalOutlierRemoval" title="Permalink to this headline">¶</a></h2>
+<p></p>
+<div class="topic">
+<p class="topic-title first">Brief doc<p>Remove noisy measurements.</p>
+</p>
+<p class="topic-title first">Parameters<ul>
+<li><p class="first"><strong>mean_k</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">int</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">1</span></tt></p>
+<p>The number of points to use for mean distance estimation.</p>
+</li>
+<li><p class="first"><strong>negative</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">bool</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">False</span></tt></p>
+<p>Sets whether the indices should be returned, or all points _except_ the indices.</p>
+</li>
+<li><p class="first"><strong>stddev</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0.0</span></tt></p>
+<p>The standard deviation multiplier threshold.</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Inputs<ul>
+<li><p class="first"><strong>input</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>The cloud to filter</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Outputs<ul>
+<li><p class="first"><strong>output</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Filtered Cloud.</p>
+</li>
+</ul>
+</p>
+</div>
+</div>
+<div class="section" id="SACSegmentation">
+<span id="index-19"></span><span id="ecto_pcl.SACSegmentation"></span><h2>SACSegmentation<a class="headerlink" href="#SACSegmentation" title="Permalink to this headline">¶</a></h2>
+<p></p>
+<div class="topic">
+<p class="topic-title first">Brief doc<p>Segmentation using Sample Consensus.</p>
+</p>
+<p class="topic-title first">Parameters<ul>
+<li><p class="first"><strong>axis_x</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0.0</span></tt></p>
+<p>X component of desired perpendicular vector for model.</p>
+</li>
+<li><p class="first"><strong>axis_y</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0.0</span></tt></p>
+<p>Y component of desired perpendicular vector for model.</p>
+</li>
+<li><p class="first"><strong>axis_z</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0.0</span></tt></p>
+<p>Z component of desired perpendicular vector for model.</p>
+</li>
+<li><p class="first"><strong>distance_threshold</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0.0</span></tt></p>
+<p>Doistance to model threshold.</p>
+</li>
+<li><p class="first"><strong>eps_angle</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0.0</span></tt></p>
+<p>Angle epsilon (delta) threshold.</p>
+</li>
+<li><p class="first"><strong>max_iterations</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">int</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">50</span></tt></p>
+<p>Maximum number of iterations before giving up.</p>
+</li>
+<li><p class="first"><strong>method</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">int</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0</span></tt></p>
+<p>Type of sample consensus method to use.</p>
+</li>
+<li><p class="first"><strong>model_type</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">int</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">-1</span></tt></p>
+<p>Type of model to use.</p>
+</li>
+<li><p class="first"><strong>optimize_coefficients</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">bool</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">True</span></tt></p>
+<p>True if a coefficient refinement is required.</p>
+</li>
+<li><p class="first"><strong>probability</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0.99</span></tt></p>
+<p>Probability of choosing at least one sample free from outliers.</p>
+</li>
+<li><p class="first"><strong>radius_max</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">1.79769313486e+308</span></tt></p>
+<p>Maximum allowable radius limits for the model.</p>
+</li>
+<li><p class="first"><strong>radius_min</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">-1.79769313486e+308</span></tt></p>
+<p>Minimum allowable radius limits for the model.</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Inputs<ul>
+<li><p class="first"><strong>input</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>The cloud to filter</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Outputs<ul>
+<li><p class="first"><strong>inliers</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">boost::shared_ptr&lt;pcl::PointIndices_&lt;std::allocator&lt;void&gt;</span> <span class="pre">&gt;</span> <span class="pre">const&gt;</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Inliers of the model.</p>
+</li>
+<li><p class="first"><strong>model</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">boost::shared_ptr&lt;pcl::ModelCoefficients_&lt;std::allocator&lt;void&gt;</span> <span class="pre">&gt;</span> <span class="pre">const&gt;</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Model found during segmentation.</p>
+</li>
+</ul>
+</p>
+</div>
+</div>
+<div class="section" id="PointCloud2PointCloudT">
+<span id="index-20"></span><span id="ecto_pcl.PointCloud2PointCloudT"></span><h2>PointCloud2PointCloudT<a class="headerlink" href="#PointCloud2PointCloudT" title="Permalink to this headline">¶</a></h2>
+<p></p>
+<div class="topic">
+<p class="topic-title first">Brief doc<p>Convert a generic variant based PointCloud to a strongly typed pcl::PointCloud&lt;pcl::PointT&gt;.</p>
+</p>
+<p class="topic-title first">Parameters<ul>
+<li><p class="first"><strong>format</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::Format</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">XYZRGB</span></tt><p><em>Legal Values: </em><tt class="docutils literal"><span class="pre">XYZ</span> <span class="pre">(0)</span>&nbsp;&nbsp; </tt><tt class="docutils literal"><span class="pre">XYZI</span> <span class="pre">(1)</span>&nbsp;&nbsp; </tt><tt class="docutils literal"><span class="pre">XYZRGB</span> <span class="pre">(2)</span>&nbsp;&nbsp; </tt><tt class="docutils literal"><span class="pre">XYZRGBA</span> <span class="pre">(3)</span>&nbsp;&nbsp; </tt><tt class="docutils literal"><span class="pre">XYZRGBNORMAL</span> <span class="pre">(4)</span>&nbsp;&nbsp; </tt><tt class="docutils literal"><span class="pre">POINTNORMAL</span> <span class="pre">(5)</span>&nbsp;&nbsp; </tt><tt class="docutils literal"><span class="pre">NORMAL</span> <span class="pre">(6)</span>&nbsp;&nbsp; </tt><tt class="docutils literal"><span class="pre">PFHSIGNATURE</span> <span class="pre">(7)</span>&nbsp;&nbsp; </tt><tt class="docutils literal"><span class="pre">FPFHSIGNATURE</span> <span class="pre">(8)</span>&nbsp;&nbsp; </tt><tt class="docutils literal"><span class="pre">VFHSIGNATURE</span> <span class="pre">(9)</span>&nbsp;&nbsp; </tt></p>
+</p>
+<p>Format of cloud to grab.</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Inputs<ul>
+<li><p class="first"><strong>input</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>An variant based PointCloud.</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Outputs<ul>
+<li><p class="first"><strong>output</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::tendril::none</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>An pcl::PointCloud&lt;PointT&gt; type.</p>
+</li>
+</ul>
+</p>
+</div>
+</div>
+<div class="section" id="ConvexHull">
+<span id="index-21"></span><span id="ecto_pcl.ConvexHull"></span><h2>ConvexHull<a class="headerlink" href="#ConvexHull" title="Permalink to this headline">¶</a></h2>
+<p></p>
+<div class="topic">
+<p class="topic-title first">Brief doc<p>Using libqhull library.</p>
+</p>
+<p></p>
+<p class="topic-title first">Inputs<ul>
+<li><p class="first"><strong>input</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>The cloud to filter</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Outputs<ul>
+<li><p class="first"><strong>output</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Points that form the the convex hull.</p>
+</li>
+</ul>
+</p>
+</div>
+</div>
+<div class="section" id="MergeClouds">
+<span id="index-22"></span><span id="ecto_pcl.MergeClouds"></span><h2>MergeClouds<a class="headerlink" href="#MergeClouds" title="Permalink to this headline">¶</a></h2>
+<p></p>
+<div class="topic">
+<p class="topic-title first">Brief doc<p>Merges two clouds of the same type.</p>
+</p>
+<p></p>
+<p class="topic-title first">Inputs<ul>
+<li><p class="first"><strong>input</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Input cloud.</p>
+</li>
+<li><p class="first"><strong>input2</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Second cloud to merge</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Outputs<ul>
+<li><p class="first"><strong>output</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Merged cloud.</p>
+</li>
+</ul>
+</p>
+</div>
+</div>
+<div class="section" id="VoxelGrid">
+<span id="index-23"></span><span id="ecto_pcl.VoxelGrid"></span><h2>VoxelGrid<a class="headerlink" href="#VoxelGrid" title="Permalink to this headline">¶</a></h2>
+<p></p>
+<div class="topic">
+<p class="topic-title first">Brief doc<p>Voxel grid filter</p>
+</p>
+<p class="topic-title first">Parameters<ul>
+<li><p class="first"><strong>filter_field_name</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">std::string</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"></tt></p>
+<p>The name of the field to use for filtering.</p>
+</li>
+<li><p class="first"><strong>filter_limit_max</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">3.40282346639e+38</span></tt></p>
+<p>Maximum value for the filter.</p>
+</li>
+<li><p class="first"><strong>filter_limit_min</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">-3.40282346639e+38</span></tt></p>
+<p>Minimum value for the filter.</p>
+</li>
+<li><p class="first"><strong>filter_limit_negative</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">bool</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">False</span></tt></p>
+<p>To negate the limits or not.</p>
+</li>
+<li><p class="first"><strong>leaf_size</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">float</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0.0500000007451</span></tt></p>
+<p>The size of the leaf(meters), smaller means more points...</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Inputs<ul>
+<li><p class="first"><strong>input</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>The cloud to filter</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Outputs<ul>
+<li><p class="first"><strong>output</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Filtered Cloud.</p>
+</li>
+</ul>
+</p>
+</div>
+</div>
+<div class="section" id="EuclideanClusterExtraction">
+<span id="index-24"></span><span id="ecto_pcl.EuclideanClusterExtraction"></span><h2>EuclideanClusterExtraction<a class="headerlink" href="#EuclideanClusterExtraction" title="Permalink to this headline">¶</a></h2>
+<p></p>
+<div class="topic">
+<p class="topic-title first">Brief doc<p>Segmentation for cluster extraction in a Euclidean sense.</p>
+</p>
+<p class="topic-title first">Parameters<ul>
+<li><p class="first"><strong>cluster_tolerance</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">double</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0.05</span></tt></p>
+<p>Spatial cluster tolerance as a measure in the L2 Euclidean space.</p>
+</li>
+<li><p class="first"><strong>max_cluster_size</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">int</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">2147483647</span></tt></p>
+<p>Maximum number of points that a cluster needs to containin order to be considered valid.</p>
+</li>
+<li><p class="first"><strong>min_cluster_size</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">int</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">1</span></tt></p>
+<p>Minimum number of points that a cluster needs to containin order to be considered valid.</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Inputs<ul>
+<li><p class="first"><strong>input</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>The cloud to filter</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Outputs<ul>
+<li><p class="first"><strong>output</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">std::vector&lt;pcl::PointIndices_&lt;std::allocator&lt;void&gt;</span> <span class="pre">&gt;,</span> <span class="pre">std::allocator&lt;pcl::PointIndices_&lt;std::allocator&lt;void&gt;</span> <span class="pre">&gt;</span> <span class="pre">&gt;</span> <span class="pre">&gt;</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Clusters.</p>
+</li>
+</ul>
+</p>
+</div>
+</div>
+<div class="section" id="ExtractLargestCluster">
+<span id="index-25"></span><span id="ecto_pcl.ExtractLargestCluster"></span><h2>ExtractLargestCluster<a class="headerlink" href="#ExtractLargestCluster" title="Permalink to this headline">¶</a></h2>
+<p></p>
+<div class="topic">
+<p class="topic-title first">Brief doc<p>Extract a point cloud corresponding to the largest cluster.</p>
+</p>
+<p></p>
+<p class="topic-title first">Inputs<ul>
+<li><p class="first"><strong>clusters</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">std::vector&lt;pcl::PointIndices_&lt;std::allocator&lt;void&gt;</span> <span class="pre">&gt;,</span> <span class="pre">std::allocator&lt;pcl::PointIndices_&lt;std::allocator&lt;void&gt;</span> <span class="pre">&gt;</span> <span class="pre">&gt;</span> <span class="pre">&gt;</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Clusters indices.</p>
+</li>
+<li><p class="first"><strong>input</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>The cloud to filter</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Outputs<ul>
+<li><p class="first"><strong>output</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Filtered Cloud.</p>
+</li>
+</ul>
+</p>
+</div>
+</div>
+<div class="section" id="ColorizeClusters">
+<span id="index-26"></span><span id="ecto_pcl.ColorizeClusters"></span><h2>ColorizeClusters<a class="headerlink" href="#ColorizeClusters" title="Permalink to this headline">¶</a></h2>
+<p></p>
+<div class="topic">
+<p class="topic-title first">Brief doc<p>Concatenate clusters and colr each cluster differently.</p>
+</p>
+<p class="topic-title first">Parameters<ul>
+<li><p class="first"><strong>max_clusters</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">int</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">100</span></tt></p>
+<p>Maximum number of clusters to output in the cloud.</p>
+</li>
+<li><p class="first"><strong>saturation</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">float</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">0.800000011921</span></tt></p>
+<p>HSV Saturation of cloud colors on [0, 1]</p>
+</li>
+<li><p class="first"><strong>value</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">float</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt><em> not </em><em>required</em><tt class="docutils literal">&nbsp;&nbsp; </tt><em> default: </em><tt class="docutils literal"><span class="pre">1.0</span></tt></p>
+<p>Value (brightness) of cloud colors on [0, 1]</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Inputs<ul>
+<li><p class="first"><strong>clusters</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">std::vector&lt;pcl::PointIndices_&lt;std::allocator&lt;void&gt;</span> <span class="pre">&gt;,</span> <span class="pre">std::allocator&lt;pcl::PointIndices_&lt;std::allocator&lt;void&gt;</span> <span class="pre">&gt;</span> <span class="pre">&gt;</span> <span class="pre">&gt;</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Indices of clusters.</p>
+</li>
+<li><p class="first"><strong>input</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>The cloud to filter</p>
+</li>
+</ul>
+</p>
+<p class="topic-title first">Outputs<ul>
+<li><p class="first"><strong>output</strong><tt class="docutils literal">&nbsp;&nbsp; </tt><em>   type: </em><tt class="docutils literal"><span class="pre">ecto::pcl::PointCloud</span> </tt><tt class="docutils literal">&nbsp;&nbsp; </tt></p>
+<p>Colorized clusters as a single cloud.</p>
+</li>
+</ul>
+</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="examples/ros_sample.html" title="Using ecto_pcl with ROS"
+             >previous</a> |</li>
+        <li><a href="index.html">ecto_pcl</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012,  Willow Garage, Inc.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

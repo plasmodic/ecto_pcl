@@ -1,0 +1,131 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Using ecto_pcl with ROS &mdash; ecto_pcl</title>
+    
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="ecto_pcl" href="../index.html" />
+    <link rel="up" title="Examples" href="index.html" />
+    <link rel="next" title="All ecto_pcl cells" href="../cells.html" />
+    <link rel="prev" title="Display a point cloud from a PCD file" href="pcd_viewer.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../cells.html" title="All ecto_pcl cells"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="pcd_viewer.html" title="Display a point cloud from a PCD file"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">ecto_pcl</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Examples</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="pcd_viewer.html"
+                        title="previous chapter">Display a point cloud from a PCD file</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../cells.html"
+                        title="next chapter">All <tt class="docutils literal docutils literal"><span class="pre">ecto_pcl</span></tt> cells</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/examples/ros_sample.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="using-ecto-pcl-with-ros">
+<h1>Using ecto_pcl with ROS<a class="headerlink" href="#using-ecto-pcl-with-ros" title="Permalink to this headline">¶</a></h1>
+<p>The ecto_pcl package includes ROS bindings for publishing and subscribing to
+ROS topics with point clouds.</p>
+<p>The syntax for a cloud subscriber is a bit involved as we must first subscribe
+to a topic using an ecto_pcl_ros cell, and then convert the output of that cell
+from a sensor_msgs::PointCloud into a pcl::PointCloud. We must be explicit about
+the format of the generated cloud when doing this conversion, using one of the
+defined cloud formats such as <cite>ecto_pcl.XYZRGB</cite> or <cite>ecto_pcl.XYZ</cite>.</p>
+<p><a class="reference download internal" href="../_downloads/ros_sample.py"><tt class="xref download docutils literal"><span class="pre">ros_sample.py</span></tt></a></p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Temporarily disabled pending decisions on wtf to do about ROS</p>
+</div>
+<div class="highlight-python"><pre>.. literalinclude:: ros_sample.py
+
+.. ectoplot:: ros_sample.py plasm</pre>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../cells.html" title="All ecto_pcl cells"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="pcd_viewer.html" title="Display a point cloud from a PCD file"
+             >previous</a> |</li>
+        <li><a href="../index.html">ecto_pcl</a> &raquo;</li>
+          <li><a href="index.html" >Examples</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012,  Willow Garage, Inc.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
