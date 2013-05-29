@@ -68,7 +68,7 @@ namespace ecto
       {
         quit = false;
         viewer_.reset(new PCLVisualizer(window_name));
-        viewer_->setBackgroundColor(0, 0, 0);
+        viewer_->setBackgroundColor(0, 0, 255);
         viewer_->addCoordinateSystem(0.25);
         viewer_->initCameraParameters();
 
