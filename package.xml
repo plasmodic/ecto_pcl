@@ -6,10 +6,9 @@
   <author email="erublee@willowgarage.com">Ethan Rublee</author>
   <author email="straszheim@willowgarage.com">Troy Straszheim</author>
   <maintainer email="vrabaud@willowgarage.com">Vincent Rabaud</maintainer>
-  <maintainer email="erublee@willowgarage.com">Ethan Rublee</maintainer>
   <license>BSD</license>
 
-  <url>http://ecto.willowgarage.com</url>
+  <url>http://plasmodic.github.io/ecto_pcl</url>
 
   <build_depend>boost</build_depend>
   <build_depend>ecto</build_depend>
