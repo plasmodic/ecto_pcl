@@ -16,8 +16,12 @@
   <build_depends>ecto</build_depends>
   <build_depends>ecto_ros</build_depends>
   <build_depends>pcl</build_depends>
+  <build_depends>pcl_ros</build_depends>
+  <build_depends>sensor_msgs</build_depends>
   <depends>boost</depends>
   <depends>ecto</depends>
   <depends>ecto_ros</depends>
   <depends>pcl</depends>
+  <depends>pcl_ros</depends>
+  <depends>sensor_msgs</depends>
 </stack>

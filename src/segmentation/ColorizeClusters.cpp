@@ -102,7 +102,12 @@ namespace ecto {
         output->header = input->header;
 
         // Extract location of rgb (similar to pcl::PackedRGBComparison<T>)
+#if PCL_VERSION_COMPARE(<,1,7,0)
         std::vector<sensor_msgs::PointField> fields;
+#else
+        typedef ::pcl::PCLPointField PCLPointField;
+        std::vector<PCLPointField> fields;
+#endif
         ::pcl::getFields(*input, fields);
         size_t idx;
         for (idx = 0; idx < fields.size(); idx++)

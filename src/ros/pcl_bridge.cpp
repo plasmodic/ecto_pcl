@@ -16,6 +16,11 @@
 #include <iostream>
 
 #include <sensor_msgs/PointCloud2.h>
+
+#if PCL_VERSION_COMPARE(>=,1,7,0)
+#include <pcl_conversions/pcl_conversions.h>
+#endif
+
 typedef sensor_msgs::PointCloud2::ConstPtr MsgT;
 
 namespace ecto
@@ -29,7 +34,13 @@ namespace ecto
       typedef typename ::pcl::PointCloud<PointT> CloudT;
       typedef typename CloudT::Ptr PtrT;
       PtrT p(new CloudT);
+#if PCL_VERSION_COMPARE(<,1,7,0)
       ::pcl::fromROSMsg(*msg, *p);
+#else
+      ::pcl::PCLPointCloud2 pcd_tmp;
+      pcl_conversions::toPCL(*msg, pcd_tmp);
+      ::pcl::fromPCLPointCloud2(pcd_tmp, *p);
+#endif
       return p;
     }
 
@@ -41,7 +52,13 @@ namespace ecto
       operator()(CloudType& i) const
       {
         sensor_msgs::PointCloud2::Ptr msg(new sensor_msgs::PointCloud2);
+#if PCL_VERSION_COMPARE(<,1,7,0)
         ::pcl::toROSMsg(*i, *msg);
+#else
+        ::pcl::PCLPointCloud2 pcd_tmp;
+        ::pcl::toPCLPointCloud2(*i, pcd_tmp);
+        pcl_conversions::fromPCL(pcd_tmp, *msg);
+#endif
         return msg;
       }
     };

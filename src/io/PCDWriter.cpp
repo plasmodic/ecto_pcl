@@ -52,7 +52,6 @@ namespace ecto {
       static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
       {
         inputs.declare<PointCloud>("input", "A point cloud to put in a pcd file.");
-        outputs.declare<sensor_msgs::PointCloud2ConstPtr>("cloud_message", "the cloud message used for writing.");
       }
 
       void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
@@ -60,30 +59,30 @@ namespace ecto {
         input_ = inputs["input"];
         filename_format_ = params["filename_format"];
         binary_ = params["binary"];
-        cloud_message_ = outputs["cloud_message"];
       }
 
-      struct write_dispatch : boost::static_visitor<sensor_msgs::PointCloud2ConstPtr>
+      struct write_dispatch : boost::static_visitor<void>
       {
         std::string file;
         bool binary;
         write_dispatch(std::string f,bool binary = false) : file(f),binary(binary) {}
 
         template <typename CloudType>
-        result_type operator()(CloudType& cloud) const
+        void operator()(CloudType& cloud) const
         {
           if(binary)
             ::pcl::io::savePCDFileBinary(file, *cloud);
           else
           {
+            ::pcl::PCDWriter writer;
+#if PCL_VERSION_COMPARE(<,1,7,0)
             sensor_msgs::PointCloud2Ptr blob(new sensor_msgs::PointCloud2);
             ::pcl::toROSMsg (*cloud, *blob);
-            ::pcl::PCDWriter writer;
             writer.writeASCII(file,*blob,cloud->sensor_origin_, cloud->sensor_orientation_,8);
-            return blob;
+#else
+            writer.writeASCII(file,*cloud,8);
+#endif
           }
-          return sensor_msgs::PointCloud2Ptr();
-
         }
       };
 
@@ -91,14 +90,13 @@ namespace ecto {
       {
         std::string filename = boost::str(boost::format(*filename_format_)%count_++);
         xyz_cloud_variant_t cv = input_->make_variant();
-        *cloud_message_ = boost::apply_visitor(write_dispatch(filename,*binary_), cv);
+        boost::apply_visitor(write_dispatch(filename,*binary_), cv);
         return 0;
       }
 
       spore<PointCloud> input_;
       spore<std::string> filename_format_;
       spore<bool> binary_;
-      spore<sensor_msgs::PointCloud2ConstPtr> cloud_message_;
       unsigned count_;
 
     };
