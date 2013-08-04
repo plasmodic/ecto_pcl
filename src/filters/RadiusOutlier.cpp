@@ -39,8 +39,8 @@ namespace ecto {
       static void declare_params(ecto::tendrils& params)
       {
         ::pcl::RadiusOutlierRemoval< ::pcl::PointXYZ > default_;
-        params.declare<double> ("search_radius", "The number of points to use for mean distance estimation.", default_.getRadiusSearch());
-        params.declare<int> ("min_neighbors", "The minimum number of neighbors in the radius.", default_.getMinNeighborsInRadius());
+        params.declare(&RadiusOutlierRemoval::radius_, "search_radius", "The number of points to use for mean distance estimation.", default_.getRadiusSearch());
+        params.declare(&RadiusOutlierRemoval::min_, "min_neighbors", "The minimum number of neighbors in the radius.", default_.getMinNeighborsInRadius());
       }
 
       static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
@@ -50,23 +50,27 @@ namespace ecto {
 
       void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
       {
-        radius_ = params["search_radius"];
-        min_ = params["min_neighbors"];
 
         output_ = outputs["output"];
       }
-      
+
       template <typename Point>
       int process(const tendrils& inputs, const tendrils& outputs, 
                   boost::shared_ptr<const ::pcl::PointCloud<Point> >& input)
       {
-        ::pcl::RadiusOutlierRemoval<Point> filter;
-        filter.setMinNeighborsInRadius(*min_);
-        filter.setInputCloud(input);
-              
         typename ::pcl::PointCloud<Point>::Ptr cloud(new typename ::pcl::PointCloud<Point>);
-        filter.filter(*cloud);
         cloud->header = input->header;
+
+        if (!input->empty())
+        {
+          ::pcl::RadiusOutlierRemoval<Point> filter;
+          filter.setMinNeighborsInRadius(*min_);
+          filter.setInputCloud(input);
+          filter.setRadiusSearch(*radius_);
+
+          filter.filter(*cloud);
+        }
+
         *output_ = xyz_cloud_variant_t(cloud);
 
         return OK;
