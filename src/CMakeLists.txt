@@ -1,13 +1,3 @@
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-
-if (ROS_GROOVY_FOUND)
-find_package(catkin REQUIRED roscpp sensor_msgs)
-
-include_directories(SYSTEM ${sensor_msgs_INCLUDE_DIRS}
-                           ${PCL_INCLUDE_DIRS}
-)
-endif()
-
 set(ECTO_PCL_FILES
   ecto_pcl.cpp
   features/NormalEstimation.cpp
@@ -38,7 +28,9 @@ set(ECTO_PCL_FILES
   surface/MovingLeastSquares.cpp
 )
 
-if (NOT ROS_GROOVY_FOUND)
+if (${catkin_VERSION} VERSION_GREATER "0.5.28")
+add_subdirectory(ros)
+else()
   set(ECTO_PCL_FILES ${ECTO_PCL_FILES} io/PCDWriter.cpp)
 endif()
 
@@ -49,14 +41,6 @@ set_source_files_properties(io/CloudViewer.cpp
   COMPILE_FLAGS -Wno-deprecated
   )
 
-if (ROS_GROOVY_FOUND)
 link_ecto(ecto_pcl ${PCL_LIBRARIES}
-                   ${roscpp_LIBRARIES}
+                   ${catkin_LIBRARIES}
 )
-else()
-link_ecto(ecto_pcl
-    ${PCL_LIBRARIES}
-)
-endif()
-
-add_subdirectory(ros)
