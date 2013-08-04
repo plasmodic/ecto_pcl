@@ -56,7 +56,6 @@ namespace ecto
 				}
 
 				::pcl::PassThrough<PointType> pass_filter;
-				pass_filter.setKeepOrganized(true);
 
 				typename ::pcl::PointCloud<PointType>::Ptr z_cloud_filtered_ptr(new ::pcl::PointCloud<PointType>()),
 						y_cloud_filtered_ptr(new ::pcl::PointCloud<PointType>()),
