@@ -1,6 +1,6 @@
 <stack>
   <name>ecto_pcl</name>
-  <version>0.3.12</version>
+  <version>0.3.13</version>
   <description>Ecto bindings for common PCL functionality.</description>
   <author email="mferguson@willowgarage.com">Michael Ferguson</author>
   <author email="erublee@willowgarage.com">Ethan Rublee</author>
