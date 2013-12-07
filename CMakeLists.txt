@@ -3,22 +3,10 @@ project(ecto_pcl)
 
 # Deal with catkin
 find_package(catkin REQUIRED)
-if (${catkin_VERSION} VERSION_GREATER "0.5.28")
 find_package(catkin REQUIRED ecto sensor_msgs)
 catkin_package(INCLUDE_DIRS include
                CATKIN_DEPENDS pcl_ros sensor_msgs
 )
-else()
-catkin_stack()
-find_package(ROS REQUIRED ecto sensor_msgs)
-catkin_project(ecto_pcl
-               INCLUDE_DIRS include
-)
-set(catkin_LIBRARIES ${ROS_LIBRARIES})
-set(catkin_INCLUDE_DIRS ${ROS_INCLUDE_DIRS})
-set(CATKIN_PACKAGE_INCLUDE_DESTINATION include/${PROJECT_NAME})
-set(CATKIN_PACKAGE_LIB_DESTINATION lib)
-endif()
 
 # continue with the find_package
 find_package(PCL REQUIRED)
