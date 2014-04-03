@@ -1,5 +1,5 @@
-Forthcoming
------------
+0.4.0 (2014-04-04)
+------------------
 * depend on pcl_conversions which is lighter
 * drop Fuerte support
 * Contributors: Vincent Rabaud
