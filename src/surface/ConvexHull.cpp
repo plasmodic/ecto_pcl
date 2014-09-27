@@ -36,7 +36,10 @@ namespace ecto {
 
     struct ConvexHull
     {
-      static void declare_params(tendrils& params) { }
+      static void declare_params(tendrils& params)
+      {
+        params.declare(&ConvexHull::dimensionality_, "dimensionality", "Dimensionality of the data (valid: 2 and 3)", 3);
+      }
 
       static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
       {
@@ -47,22 +50,23 @@ namespace ecto {
       {
         output_ = outputs["output"];
       }
-      
+
       template <typename Point>
-      int process(const tendrils& inputs, const tendrils& outputs, 
+      int process(const tendrils& inputs, const tendrils& outputs,
                   boost::shared_ptr<const ::pcl::PointCloud<Point> >& input)
       {
         ::pcl::ConvexHull<Point> filter;
         typename ::pcl::PointCloud<Point>::Ptr cloud(new typename ::pcl::PointCloud<Point>);
 
         filter.setInputCloud(input);
-        filter.setDimension(3);
+        filter.setDimension(*dimensionality_);
         filter.reconstruct(*cloud);
 
         *output_ = xyz_cloud_variant_t(cloud);
         return ecto::OK;
       }
 
+      spore<int> dimensionality_;
       spore<PointCloud> output_;
     };
 
