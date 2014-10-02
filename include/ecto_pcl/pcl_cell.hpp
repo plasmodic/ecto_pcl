@@ -51,9 +51,9 @@ namespace ecto{
         input_ = inputs["input"];
         CellType::configure(params, inputs, outputs);
       }
-    
+
       /* dispatch to handle process */
-      struct filter_dispatch : boost::static_visitor<void>
+      struct filter_dispatch : boost::static_visitor<int>
       {
         CellType& ft;
         const tendrils& inputs;
@@ -62,17 +62,16 @@ namespace ecto{
         filter_dispatch(CellType& ft_, const tendrils& input_, const tendrils& output_) : ft(ft_), inputs(input_), outputs(output_) { }
 
         template <typename Point>
-        void operator()(boost::shared_ptr<const ::pcl::PointCloud<Point> >& cloud) const
-        {   
-            ft.process(inputs, outputs, cloud);
+        int operator()(boost::shared_ptr<const ::pcl::PointCloud<Point> >& cloud) const
+        {
+            return ft.process(inputs, outputs, cloud);
         }
       };
 
       int process(const tendrils& inputs, const tendrils& outputs)
       {
         xyz_cloud_variant_t cloud = input_->make_variant();
-        boost::apply_visitor(filter_dispatch(*this, inputs, outputs), cloud);
-        return 0;
+        return boost::apply_visitor(filter_dispatch(*this, inputs, outputs), cloud);
       }
 
       ecto::spore<PointCloud> input_;
