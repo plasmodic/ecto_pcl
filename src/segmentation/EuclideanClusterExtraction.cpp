@@ -25,6 +25,8 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Adjusted by Michael Goerner in 2014 to handle input indices
  */
 
 #include <ecto_pcl/ecto_pcl.hpp>
@@ -50,6 +52,8 @@ namespace ecto {
       }
 
       static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs) {
+        inputs.declare< ::pcl::PointIndices::ConstPtr >("indices", "relevant indices of the input cloud [optional].");
+
         outputs.declare<Clusters> ("output", "Clusters.");
       }
 
@@ -59,6 +63,7 @@ namespace ecto {
         min_cluster_size_ = params["min_cluster_size"];
         max_cluster_size_ = params["max_cluster_size"];
 
+        indices_ = inputs["indices"];
         output_ = outputs["output"];
       }
 
@@ -73,11 +78,14 @@ namespace ecto {
         impl.setMinClusterSize (*min_cluster_size_);
         impl.setMaxClusterSize (*max_cluster_size_);
         impl.setInputCloud(input);
+        if(indices_.user_supplied())
+          impl.setIndices(*indices_);
         impl.extract (*output_);
 
         return OK;
       }
 
+      spore< ::pcl::PointIndices::ConstPtr > indices_;
       spore<double> cluster_tolerance_;
       spore<int> min_cluster_size_;
       spore<int> max_cluster_size_;
