@@ -7,6 +7,7 @@ set(ECTO_PCL_FILES
   filters/Cropper.cpp
   filters/ExtractIndices.cpp
   filters/PassThrough.cpp
+  filters/PassThroughIndices.cpp
   filters/ProjectInliers.cpp
   filters/StatisticalOutlier.cpp
   filters/RadiusOutlier.cpp
