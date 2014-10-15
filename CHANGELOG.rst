@@ -1,5 +1,5 @@
-Forthcoming
------------
+0.4.1 (2014-10-15)
+------------------
 * Merge pull request `#34 <https://github.com/plasmodic/ecto_pcl/issues/34>`_ from v4hn/pass-through-indices
   Add PassThrough for index extraction
 * Merge pull request `#33 <https://github.com/plasmodic/ecto_pcl/issues/33>`_ from v4hn/euclidean-cluster-extraction-indices
