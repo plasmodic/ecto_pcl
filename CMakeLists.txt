@@ -10,6 +10,10 @@ catkin_package(INCLUDE_DIRS include
 
 # continue with the find_package
 find_package(PCL REQUIRED)
+# use pcl_conversions for pcl >= 1.7.0
+if(NOT ${PCL_VERSION} VERSION_LESS 1.7.0)
+  find_package(catkin REQUIRED pcl_conversions)
+endif()
 include_directories(SYSTEM
                     ${PCL_INCLUDE_DIRS}
 )
