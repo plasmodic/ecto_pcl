@@ -11,14 +11,15 @@
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 
-#include <pcl/ros/conversions.h>
-
 #include <iostream>
 
 #include <sensor_msgs/PointCloud2.h>
 
 #if PCL_VERSION_COMPARE(>=,1,7,0)
+#include <pcl/conversions.h>
 #include <pcl_conversions/pcl_conversions.h>
+#else
+#include <pcl/ros/conversions.h>
 #endif
 
 typedef sensor_msgs::PointCloud2::ConstPtr MsgT;
