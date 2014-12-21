@@ -3,7 +3,7 @@ project(ecto_pcl)
 
 # Deal with catkin
 find_package(catkin REQUIRED)
-find_package(catkin REQUIRED ecto sensor_msgs)
+find_package(catkin REQUIRED ecto sensor_msgs pcl_conversions)
 catkin_package(INCLUDE_DIRS include
                CATKIN_DEPENDS pcl_conversions sensor_msgs
 )
