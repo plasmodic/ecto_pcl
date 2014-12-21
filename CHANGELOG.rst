@@ -1,5 +1,5 @@
-Forthcoming
------------
+0.4.2 (2014-12-21)
+------------------
 * Use the new header with PCL 1.7.0+
 * Always find pcl_conversions
   Should be okay since it's a package dependency.
