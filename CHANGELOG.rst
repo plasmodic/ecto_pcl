@@ -1,3 +1,13 @@
+Forthcoming
+-----------
+* Use the new header with PCL 1.7.0+
+* Always find pcl_conversions
+  Should be okay since it's a package dependency.
+* Find pcl_conversions if building against PCL 1.7.0+
+  It gets included depending on the PCL version in src/ros/pcl_bridge.cpp
+* fix sample with newer API
+* Contributors: Vincent Rabaud, pgorczak
+
 0.4.1 (2014-10-15)
 ------------------
 * Merge pull request `#34 <https://github.com/plasmodic/ecto_pcl/issues/34>`_ from v4hn/pass-through-indices
