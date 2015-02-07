@@ -25,4 +25,6 @@
   <run_depend>sensor_msgs</run_depend>
 
   <buildtool_depend>catkin</buildtool_depend>
+
+  <test_depend>unittest</test_depend>
 </package>
