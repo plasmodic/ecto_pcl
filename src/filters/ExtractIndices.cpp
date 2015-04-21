@@ -39,6 +39,7 @@ namespace ecto {
       static void declare_params(tendrils& params)
       {
         params.declare<bool> ("negative", "Sets whether the indices should be returned, or all points _except_ the indices.", false);
+        params.declare<bool> ("keep_organized", "Sets whether the resultant cloud should remain organized", false);
       }
 
       static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
@@ -50,6 +51,7 @@ namespace ecto {
       void configure(const tendrils& params, const tendrils& inputs, const tendrils& outputs)
       {
         negative_ = params["negative"];
+        keep_organized_ = params["keep_organized"];
         indices_ = inputs["indices"];
         output_ = outputs["output"];
       }
@@ -60,6 +62,7 @@ namespace ecto {
       {
         ::pcl::ExtractIndices<Point> filter;
         filter.setNegative(*negative_);
+        filter.setKeepOrganized(*keep_organized_);
         filter.setIndices(*indices_);
         filter.setInputCloud(input);
               
@@ -72,6 +75,7 @@ namespace ecto {
       }
 
       spore<bool> negative_;
+      spore<bool> keep_organized_;
       spore<Indices::ConstPtr> indices_;
       spore<PointCloud> output_;
     };
