@@ -37,8 +37,8 @@ if(DESKTOP_TEST)
   desktop_test_sample(openni_viewer)
   desktop_test_sample(tabletop_segmentation)
 
-endif()
-
 if (ROS_TEST)
   validate_sample(ros_sample)
+endif()
+
 endif()
