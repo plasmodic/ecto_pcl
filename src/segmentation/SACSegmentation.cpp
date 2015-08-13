@@ -96,8 +96,8 @@ namespace ecto {
         impl.setProbability(*probability_);
         impl.setRadiusLimits(*radius_min_, *radius_max_);
         impl.setAxis(Eigen::Vector3f(*axis_x_, *axis_y_, *axis_z_));
-        impl.segment (*inliers, *model);
         impl.setInputCloud(input);
+        impl.segment (*inliers, *model);
 
         *model_ = model;
         *inliers_ = inliers;
