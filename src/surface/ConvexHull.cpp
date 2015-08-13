@@ -43,6 +43,7 @@ namespace ecto {
 
       static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs)
       {
+        inputs.declare(&ConvexHull::indices_, "indices", "Indices of points of interest in input.");
         outputs.declare<PointCloud> ("output", "Points that form the the convex hull.");
       }
 
@@ -59,6 +60,8 @@ namespace ecto {
         typename ::pcl::PointCloud<Point>::Ptr cloud(new typename ::pcl::PointCloud<Point>);
 
         filter.setInputCloud(input);
+        if(indices_.user_supplied())
+          filter.setIndices(*indices_);
         filter.setDimension(*dimensionality_);
         filter.reconstruct(*cloud);
 
@@ -67,6 +70,7 @@ namespace ecto {
       }
 
       spore<int> dimensionality_;
+      spore< ::pcl::PointIndices::ConstPtr > indices_;
       spore<PointCloud> output_;
     };
 
