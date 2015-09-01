@@ -56,6 +56,7 @@ namespace ecto {
       }
 
       static void declare_io(const tendrils& params, tendrils& inputs, tendrils& outputs) {
+        inputs.declare<Indices::ConstPtr>("indices", "Indices of points of interest in input.");
         outputs.declare<Indices::ConstPtr> ("inliers", "Inliers of the model.");
         outputs.declare<ModelCoefficients::ConstPtr> ("model", "Model found during segmentation.");
       }
@@ -75,6 +76,7 @@ namespace ecto {
         axis_y_ = params["axis_y"];
         axis_z_ = params["axis_z"];
 
+        indices_ = inputs["indices"];
         inliers_ = outputs["inliers"];
         model_ = outputs["model"];
       }
@@ -96,8 +98,10 @@ namespace ecto {
         impl.setProbability(*probability_);
         impl.setRadiusLimits(*radius_min_, *radius_max_);
         impl.setAxis(Eigen::Vector3f(*axis_x_, *axis_y_, *axis_z_));
-        impl.segment (*inliers, *model);
         impl.setInputCloud(input);
+        if(indices_.user_supplied())
+          impl.setIndices(*indices_);
+        impl.segment (*inliers, *model);
 
         *model_ = model;
         *inliers_ = inliers;
@@ -114,6 +118,7 @@ namespace ecto {
       spore<double> radius_min_;
       spore<double> radius_max_;
       spore<double> axis_x_, axis_y_, axis_z_;
+      spore<Indices::ConstPtr> indices_;
       spore<Indices::ConstPtr> inliers_;
       spore<ModelCoefficients::ConstPtr> model_;
     };
