@@ -1,5 +1,5 @@
-Forthcoming
------------
+0.4.3 (2015-09-01)
+------------------
 * SACSegmentationFromNormals: support input indices
 * SACSegmentation: support input indices
 * fix SACSegmentation cell
