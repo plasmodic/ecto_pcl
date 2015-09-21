@@ -45,7 +45,7 @@ graph += [voxel_grid[:] >> normals[:],
           voxel_grid[:] >> project_inliers["input"],
           planar_segmentation["model"] >> project_inliers["model"],
           project_inliers[:] >> nan_filter[:],
-          nan_filter[:] >> convex_hull[:]
+          nan_filter[:] >> convex_hull['input']
           ]
 
 # extract stuff on table from original high-res cloud, find clusters, colorize, merge and show in viewer
