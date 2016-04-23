@@ -10,6 +10,9 @@ catkin_package(INCLUDE_DIRS include
 
 # continue with the find_package
 find_package(PCL REQUIRED)
+# Remove vtkproj4 from PCL_LIBRARIES as bug
+# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=819741
+list(REMOVE_ITEM PCL_LIBRARIES vtkproj4)
 include_directories(SYSTEM
                     ${PCL_INCLUDE_DIRS}
 )
