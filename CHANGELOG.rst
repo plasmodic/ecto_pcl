@@ -1,5 +1,5 @@
-Forthcoming
------------
+0.4.5 (2016-04-24)
+------------------
 * add dependency on proj to fix PCL compilation on kinetic
 * remove useless dependency on ecto_ros
 * Contributors: Vincent Rabaud
