@@ -1,3 +1,9 @@
+Forthcoming
+-----------
+* compile on Xenial
+* fix running examples for doc
+* Contributors: Vincent Rabaud
+
 0.4.3 (2015-09-01)
 ------------------
 * SACSegmentationFromNormals: support input indices
