@@ -1,3 +1,9 @@
+Forthcoming
+-----------
+* add dependency on proj to fix PCL compilation on kinetic
+* remove useless dependency on ecto_ros
+* Contributors: Vincent Rabaud
+
 0.4.4 (2016-04-24)
 ------------------
 * compile on Xenial
