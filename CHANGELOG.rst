@@ -1,5 +1,5 @@
-Forthcoming
------------
+0.4.4 (2016-04-24)
+------------------
 * compile on Xenial
 * fix running examples for doc
 * Contributors: Vincent Rabaud
