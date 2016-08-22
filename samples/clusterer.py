@@ -41,7 +41,7 @@ class EctoPlasm():
                       msg2cloud[:] >> nan_filter[:],
                       nan_filter[:] >> voxel_grid[:],
                       voxel_grid[:] >> cropper[:],
-                      cropper[:] >> extract_clusters[:],
+                      cropper["output"] >> extract_clusters["input"],
                       extract_clusters[:] >> colorize["clusters"],
                       cropper[:] >> colorize["input"],
                       colorize[:] >> cloud2msg[:],
@@ -54,4 +54,3 @@ if __name__ == "__main__":
         ecto_plasm = EctoPlasm()
     except KeyboardInterrupt:
         print "Shutting down Ecto demo."
-
