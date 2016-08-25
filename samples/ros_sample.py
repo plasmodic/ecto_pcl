@@ -4,7 +4,7 @@
 This sample shows how to interact with ROS cloud subscribers and publishers.
 """
 
-import sys, ecto, ecto_pcl, ecto_ros, ecto_pcl_ros, ecto_sensor_msgs
+import sys, ecto, ecto_pcl, ecto_ros, ecto_pcl_ros, ecto_ros.ecto_sensor_msgs as ecto_sensor_msgs
 
 plasm = ecto.Plasm()
 
@@ -21,4 +21,6 @@ plasm.connect(cloud_sub['output'] >> msg2cloud[:],
 
 if __name__ == "__main__":
     from ecto.opts import doit
+    ecto_ros.init(sys.argv,"ecto_pcl_rossample")
+    ecto.view_plasm(plasm)
     doit(plasm, description='Read a pcd through ROS.')
